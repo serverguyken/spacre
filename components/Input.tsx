@@ -23,7 +23,7 @@ const Input = ({ id, styleToRender, type, hasLabel, label, placeholder, value, s
     autoFocus?: boolean;
     max?: number | any;
     min?: number | any;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onChange: (e: React.ChangeEvent<HTMLInputElement> | any) => void;
     onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
     onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
     cancelShown?: boolean;

@@ -23,6 +23,7 @@
     "@mantine/notifications": "^4.0.4",
     "@mantine/rte": "^4.0.4",
     "@types/draft-js": "^0.11.9",
+    "axios": "^0.26.1",
     "dayjs": "^1.10.8",
     "draft-js": "^0.11.7",
     "firebase": "^9.6.8",

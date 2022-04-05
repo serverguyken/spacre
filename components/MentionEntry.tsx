@@ -76,9 +76,6 @@ const MentionEntry = (props: MentionEntryProps) => {
                                         @{mention.username}
                                     </div>
                                 </div>
-                                <div>
-                                    {searchValue}
-                                </div>
                             </div>
                         </div>
                     </div>
