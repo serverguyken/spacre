@@ -1,0 +1,22 @@
+.footer_contents {
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+.footer_links_contents {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.footer_link {
+    margin: 0 10px;
+    color: var(--color-dimGray);
+}
+
+.footer_bottom {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 15px;
+}

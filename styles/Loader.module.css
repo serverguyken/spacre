@@ -1,0 +1,113 @@
+.spinner_element {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.spinner_container svg {
+    animation: rotate 3.6s linear infinite;
+}
+
+.spinner_container svg circle {
+    fill: none;
+    stroke-width: 8px;
+    stroke-dasharray: 300;
+    animation: outline 2s cubic-bezier(0.77, 0, 0.18, 1) infinite;
+}
+
+@keyframes outline {
+    0% {
+        stroke-dashoffset: 0;
+    }
+
+    50% {
+        stroke-dashoffset: 300;
+    }
+
+    100% {
+        stroke-dashoffset: 600;
+    }
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0turn);
+    }
+
+    to {
+        transform: rotate(-1turn);
+    }
+}
+
+.loader {
+    width: 100%;
+    height: 4px;
+    margin-bottom: 3rem;
+    background-color: white;
+    position: fixed;
+    top: 0;
+}
+
+.loader_dark {
+    width: 100%;
+    height: 4px;
+    margin-bottom: 3rem;
+    background-color: white;
+    position: fixed;
+    top: 0;
+}
+
+.loader:after {
+    content: "";
+    position: absolute;
+    display: block;
+    height: 100%;
+    background-color: #888;
+    left: 0%;
+    right: 100%;
+    animation: loading 2s ease infinite;
+}
+
+.loader_dark:after {
+    content: "";
+    position: absolute;
+    display: block;
+    height: 100%;
+    background-color: #888;
+    left: 0%;
+    right: 100%;
+    animation: loading 2s ease infinite;
+}
+
+.loader.gradient {
+    background-image: linear-gradient(to right, #3273a1, #4595d0);
+}
+
+.loader_dark.gradient {
+    background-image: linear-gradient(to right, #3273a1, #4595d0);
+}
+
+.loader.gradient:after {
+    background-color: #ffffff;
+}
+
+.loader_dark.gradient:after {
+    background-color: #000000;
+}
+
+@keyframes loading {
+    0% {
+        left: 0;
+        right: 100%;
+    }
+
+    50% {
+        left: 0;
+        right: 0;
+    }
+
+    100% {
+        left: 100%;
+        right: 0;
+    }
+}
