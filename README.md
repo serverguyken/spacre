@@ -17,4 +17,4 @@ Technologies
 1. Next.js - for server side rendering
 2. Firebase - for authentication and database
 3. Tailwind - for styling
-4. Netlify - for deployment
+4. Heroku - for deployment
