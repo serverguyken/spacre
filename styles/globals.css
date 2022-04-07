@@ -611,6 +611,10 @@ body {
   transition: all 0.2s ease-in-out;
 }
 
+.feed_post_contents_card {
+  animation: slow_fade_in 0.3s ease-in-out;
+}
+
 
 
 
@@ -635,7 +639,14 @@ body {
   }
 }
   
-
+@keyframes slow_fade_in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
 /* Device Media Queries */
 
 /* Touch Devices */
