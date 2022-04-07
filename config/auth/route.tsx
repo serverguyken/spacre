@@ -12,16 +12,9 @@ export const WithAuth = (user: User, reload: boolean, onLoad: boolean, action: {
     onAuthFail: (error: string) => void
 }, shouldRedirect?: boolean) => {
     const [loading, setLoading] = useState(false);
-    
+
     const router = useRouter();
-    if (isBrowser()) {
-        window.onload = () => {
-            setLoading(true);
-            setTimeout(() => {
-                setLoading(false);
-            }, generateLoadingTime(1000, 3000));
-        };
-    }
+
     if (isBrowser()) {
         if (onLoad) {
             window.onload = () => {
@@ -32,8 +25,8 @@ export const WithAuth = (user: User, reload: boolean, onLoad: boolean, action: {
             };
         }
 
-        
-        const renderOnAuthSuccess = () =>{
+
+        const renderOnAuthSuccess = () => {
             return action.onAuthSuccess(user);
         }
         const renderOnAuthFail = () => {
@@ -52,17 +45,18 @@ export const WithAuth = (user: User, reload: boolean, onLoad: boolean, action: {
             }
         }
 
-        
-        
+
+
         return (
             <div>
-                {loading ? <div className="flex justify-center items-center h-screen">
-                    <div>
-                        <div className="reveal_blink">
-                            <Icon type='logo' color={'bg-primary'} width='80' height="90" />
+                {loading ?
+                    <div className="flex justify-center items-center h-screen">
+                        <div>
+                            <div className="reveal_blink">
+                                <Icon type='logo' color={'bg-primary'} width='80' height="90" />
+                            </div>
                         </div>
-                    </div>
-                </div> :
+                    </div> :
                     <div>
                         {setAuthRender()}
                     </div>
@@ -70,6 +64,6 @@ export const WithAuth = (user: User, reload: boolean, onLoad: boolean, action: {
             </div>
         )
     }
-    return (<></>)
+    return <div></div>
 }
 

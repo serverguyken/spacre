@@ -5,11 +5,11 @@ import { print, generateLoadingTime } from '../utils'
 import { Spinner } from '../utils/loader'
 import { BadgeCheckIcon, SearchIcon } from '@heroicons/react/outline'
 import { NextLink } from '@mantine/next'
+import store from '../store'
 
 
 
-
-const SearchBox = ({ isSearch, searchTerm, searchList, renderNoSearch}: {
+const SearchBox = ({ isSearch, searchTerm, searchList, renderNoSearch }: {
     isSearch: boolean;
     searchTerm: string;
     searchList: [] | any;
@@ -17,15 +17,17 @@ const SearchBox = ({ isSearch, searchTerm, searchList, renderNoSearch}: {
 }) => {
     const [loading, setLoading] = useState(true)
     const [value, setValue] = useState('')
+    const searches = store.get('searchList')
+    const emptySearch = store.get('renderNoSearch')
     const renderSearchBox = () => {
         setTimeout(() => {
-            setLoading(false)
+            setLoading(true)
         }, generateLoadingTime(1000, 2000))
     }
     function handleSearchChange(term: any) {
         setValue(term)
     }
-    const isHashtag = (term: string) => { 
+    const isHashtag = (term: string) => {
         return term.startsWith('#')
     }
     const renderSearch = () => {
@@ -41,12 +43,12 @@ const SearchBox = ({ isSearch, searchTerm, searchList, renderNoSearch}: {
                 <h2 className='text-gray-400 text-sm'>Try searching for something</h2>
             </div>
         } else if (!loading && isSearch) {
-            return searchList.map((item: any) => {
+            return searches.map((item: any) => {
                 return (
-                    <div key={item.id} className="pt-1 pb-2">
+                    <div key={item.id} className="pt-2 pb-2">
                         {
-                            renderNoSearch ? <div>
-                                <NextLink key={item.id} href={item.link} className='flex items-center p-3 border-b border-gray-200 hover:bg-gray-100 dark:border-none dark:hover:bg-darkModeBg'
+                            emptySearch ? <div>
+                                <NextLink  href={item.link} className='flex items-center p-3 border-gray-200 hover:bg-gray-100 dark:border-none dark:hover:bg-darkModeBg dark:hover:bg-opacity-20'
 
                                     onMouseDown={(event: any) => {
                                         event.preventDefault()
@@ -54,30 +56,43 @@ const SearchBox = ({ isSearch, searchTerm, searchList, renderNoSearch}: {
                                     }}
                                 >
 
-                                    <span>Search for</span> &quot;{searchTerm}&quot;
+                                    <div className='flex space-x-1'>
+                                        <div >
+                                            Search for
+                                        </div>
+                                        <div className='max-w-[480px]'>
+                                            &quot;{searchTerm}&quot;
+                                        </div>
+                                    </div>
                                 </NextLink>
                                 {
-                                    !isHashtag(searchTerm) && <NextLink key={item.id} href={`/${searchTerm}`} className=' flex items-center p-3 border-b border-gray-200 hover:bg-gray-100 dark:border-none dark:hover:bg-darkModeBg'
+                                    !isHashtag(searchTerm) && <NextLink  href={`/${searchTerm}`} className=' flex items-center p-3 border-gray-200 hover:bg-gray-100 dark:border-none dark:hover:bg-darkModeBg dark:hover:bg-opacity-20'
 
                                         onMouseDown={(event: any) => {
                                             event.preventDefault()
                                         }}
                                     >
-
-                                        <span>Go to</span> &quot;{searchTerm}&quot;
+                                        <div className='flex space-x-1'>
+                                            <div>
+                                                Go to
+                                            </div>
+                                            <div className='max-w-[512px]'>
+                                                &quot;{searchTerm}&quot;
+                                            </div>
+                                        </div>
                                     </NextLink>
                                 }
                             </div>
-                                : 
-                                
-                                <NextLink key={item.id} href={item.link} className='flex items-center p-3 border-b border-gray-200 hover:bg-gray-100 dark:border-none dark:hover:bg-darkModeBg'
+                                :
+
+                                <NextLink  href={item.link} className='flex items-center p-3  border-gray-200 hover:bg-gray-100 dark:border-none dark:hover:bg-darkModeBg dark:hover:bg-opacity-20'
 
                                     onMouseDown={(event: any) => {
                                         event.preventDefault()
                                     }}
-                                    // onClick={(event: any) => {
-                                    //     event.preventDefault()
-                                    // }}
+                                // onClick={(event: any) => {
+                                //     event.preventDefault()
+                                // }}
                                 >
                                     <div className='flex items-center'>
                                         {
@@ -105,6 +120,7 @@ const SearchBox = ({ isSearch, searchTerm, searchList, renderNoSearch}: {
                                                     <div className='font-bold text-sm'>{item.content}</div>
                                             }
                                         </div>
+
                                     </div>
 
                                 </NextLink>
@@ -117,9 +133,9 @@ const SearchBox = ({ isSearch, searchTerm, searchList, renderNoSearch}: {
         }
     }
     return (
-        <div className='w-full'>
-            <div className='search_box_man  bg-white dark:bg-darkMode dark:shadow-lg dark:ring-1 dark:ring-blue-300 dark:ring-opacity-10 dark:border-none shadow-lg border border-gray-100 rounded-lg'>
-                
+        <div className='w-full screen-sm:mt-7'>
+            <div className='search_box_main max-w-auto max-h-80 overflow-auto  bg-white dark:bg-darkMode dark:shadow-lg dark:ring-1 dark:ring-blue-300 dark:ring-opacity-10 dark:border-none shadow-lg border border-gray-100 rounded-lg'>
+
                 {renderSearch()}
             </div>
 

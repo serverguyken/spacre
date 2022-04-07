@@ -36,7 +36,8 @@
     "react-dom": "17.0.2",
     "react-quill": "^1.3.5",
     "react-simple-pull-to-refresh": "^1.3.0",
-    "tabler-icons-react": "^1.37.0"
+    "tabler-icons-react": "^1.37.0",
+    "valtio": "^1.5.1"
   },
   "devDependencies": {
     "@types/node": "17.0.21",

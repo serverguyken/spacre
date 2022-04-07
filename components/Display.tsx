@@ -90,16 +90,16 @@ const Display = () => {
                         </p>
                     </div>
                 </div>
-                <div className="theme_select mt-6 flex space-x-3">
+                <div className="theme_select mt-6 flex space-x-3 screen-sm:block screen-sm:space-x-0 ">
                     <div className="flex space-x-2 items-center relative">
                         <div className="absolute left-10">
                             <CheckCircleIcon className={setClass("w-4 h-4", `${light ? 'text-primary' : 'text-black'}`)} />
                         </div>
-                        <DefaultButton text='Light' textStyle={setClass('text-black text-lg')} styles={setClass('bg-white font-medium  px-16 py-3 rounded', `${light ? 'border border-primary' : 'border-gray-100'}`)} action={() => {
+                        <DefaultButton text='Light' textStyle={setClass('text-black text-lg')} styles={setClass('bg-white font-medium  px-16 py-3 rounded screen-sm:w-full', `${light ? 'border border-primary' : 'border-gray-100'}`)} action={() => {
                             handleTheme('light')
                         }} />
                     </div>
-                    <div className="flex space-x-2 items-center relative">
+                    <div className="flex space-x-2 items-center relative screen-sm:mt-4">
                         <div className="absolute left-10">
                             <CheckCircleIcon className={setClass("w-4 h-4", `${dark ? 'text-primary' : 'text-white'}`)} />
                         </div>

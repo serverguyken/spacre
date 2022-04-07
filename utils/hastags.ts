@@ -1,5 +1,5 @@
 const hastags = (defaultText: string) => {
-    return [
+    const tags =  [
         {
             type: 'hastags',
             name: 'developer',
@@ -32,15 +32,19 @@ const hastags = (defaultText: string) => {
                 text: '#jobs',
                 link: '/hashtag/jobs',
             },
-        }, {
+        },
+    ]
+    if (defaultText !== '') { 
+        tags.push({
             type: 'hastags',
             name: defaultText,
             data: {
                 text: `#${defaultText}`,
                 link: `/hashtag/${defaultText}`,
             },
-        }
-    ]
+        })
+    }
+    return tags
 };
 
 export default hastags;

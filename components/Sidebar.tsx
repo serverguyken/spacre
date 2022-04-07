@@ -22,21 +22,25 @@ import {
 import { PrimaryButton } from './Buttons'
 import { isBrowser } from '../utils'
 import { useRouter } from 'next/router'
-
+import { useEffect, useState } from 'react'
+import store from '../store'
 
 
 const Sidebar = ({ path }: {
     path: string
 }) => {
     const router = useRouter()
+    const [postTextBoxShown, setPostTextBoxShown] = useState(false)
     const goto = (path: string) => {
         if (isBrowser()) {
             router.push(path)
         }
         return null
     }
-    const showPostTextArea = () => {
+    const showPostTextBox = () => {
+        store.content.data.postTextareaShown = true
     }
+
     const setActive = (path: string) => {
         if (isBrowser() && router.pathname && router.pathname.split('/')[1] === path) {
             return true
@@ -44,8 +48,8 @@ const Sidebar = ({ path }: {
         return false
     }
     return (
-        <div className='bg-white dark:bg-darkMode'>
-            <div className="sidebar_links_contents main_container pt-3 pb-4">
+        <div className='bg-white dark:bg-darkMode  screen-sm:border-b screen-sm:border-opacity-10 screen-sm:dark:border-b-gray-50 screen-sm:dark:border-opacity-5'>
+            <div className="sidebar_links_contents main_container pt-3 pb-3">
                 <div className='sidebar_links_main'>
                     <div className="sidebar_links_logo mb-2">
                         <Link href="/home">
@@ -98,7 +102,9 @@ const Sidebar = ({ path }: {
                                 <PlusIcon className='ml-auto mr-auto text-white' width={24} />
                             </span>
                         </PrimaryButton>
-                        <PrimaryButton styles={'sidebar_post_button_mb animationScaleup w-12 h-12 fixed bottom-4 right-4 z-50 shadow-lg hidden screen-sm:block'}>
+                        <PrimaryButton styles={'sidebar_post_button_mb animationScaleup w-12 h-12 fixed bottom-4 right-4 z-50 shadow-lg hidden screen-sm:block'}
+                            action={showPostTextBox}
+                        >
                             <span className='s_p_b_icon'>
                                 <PlusIcon className='ml-auto mr-auto text-white' width={20} />
                             </span>

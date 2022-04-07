@@ -1,5 +1,6 @@
+import TextCard from './TextCard'
 import { User } from '../interface/User'
-import { setClass, isBrowser, print, TimeOut, addClass, removeClass } from '../utils/'
+import { setClass, isBrowser, print, TimeOut, addClass, removeClass, generateLoadingTime } from '../utils/'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import useUserContext from '../provider/userProvider'
@@ -13,7 +14,7 @@ import Poll from './Poll'
 import PullToRefresh from 'react-simple-pull-to-refresh';
 import { ArrowUpIcon, ArrowDownIcon } from '@heroicons/react/outline';
 import { Spinner } from '../utils/loader'
-
+import ProfileCardHover from './ProfileCardHover'
 function countSet(num: number) {
     let value = `${num}`
     let unit = ''
@@ -55,6 +56,7 @@ const createPostHtml = (text: string) => {
 }
 
 const FeedProfile = () => {
+    const [rendered, setRendered] = useState(false)
     const { user, signOutUser } = useUserContext()
     const [refreshed, setRefreshed] = useState(true)
     const [dummyUsers, setDummyUsers] = useState([{
@@ -172,6 +174,9 @@ const FeedProfile = () => {
     const router = useRouter()
     if (isBrowser()) {
         const _post_content: any = document.getElementById("_post_content")
+        TimeOut(() => {
+            setRendered(true)
+        }, generateLoadingTime(1000, 3000))
     }
     const handleRefresh = async () => {
         setRefreshed(false)
@@ -181,175 +186,188 @@ const FeedProfile = () => {
     }
     const likePost = (id: number) => {
     }
-    
+
     return (
-        <PullToRefresh
-            isPullable={true}
-            onRefresh={handleRefresh}
-            pullingContent={
-                <div className="pullDownContentHeader pt-8 screen-sm:pt-14 flex justify-center">
-                    <div className="pullDownContentHeaderText">
-                        <ArrowDownIcon width={20} className="text-gray-500" />
+        <div className='relative'>
+            <div>
+                <TextCard />
+            </div>
+            {
+                !rendered ?
+                    <div className='screen-sm:pt-24 flex absolute top-60 left-1/2  justify-center'>
+                        <Spinner width={24} color='var(--color-primary)' />
+                        
                     </div>
-                </div>
-            }
-            refreshingContent={
-                <div className="refreshingConentHeader pt-8 screen-sm:pt-14 flex justify-center">
-                    <div className="refreshingConentHeaderText">
-                        <Spinner width={24} color="var(--color-primary)" />
-                    </div>
-                </div>
-            }
-        >
-            <div className='feed_post_contents_main screen-sm:pt-10 mb-10'>
-
-
-                {
-                    refreshed ?
-                        dummyUsers.map((user: any) => {
-                            return (
-                                <div key={user.userName} className="bg-white dark:bg-darkMode hover:bg-gray-50 dark:hover:bg-gray-50 dark:hover:bg-opacity-5 cursor-pointer whitespace-pre-wrap feed_post_contents_card pt-3 pb-2 p-2  border-b border-gray-100  dark:border-borderDarkMode">
-                                    <div className="flex justify-between ">
-                                        <div className='flex space-x-2 w-full'>
-                                            <div className="profile_image mt-1">
-                                                <Link href="/[username]" as={`/${user.userName}`}>
-                                                    <a>
-                                                        <ProfileImage user={user} />
-                                                    </a>
-                                                </Link>
-                                            </div>
-                                            <div className="profile_name_post_feed w-full -mt-1 pl-[10px] pr-[10px]">
-                                                <div className="profile_name w-full">
-                                                    <div className="flex justify-between">
-                                                        <div className="profile_names_content">
-                                                            <div className='flex items-center'>
-                                                                <Link href={`/${user.userName}`}>
-                                                                    <a className="font-semibold max-w-[16rem] text-ellipsis overflow-hidden">{user.userName}</a>
-                                                                </Link>
-                                                                {
-                                                                    user.isVerified && <div className='mt-1'>
-                                                                        <Icon type="verified" />
-                                                                    </div>
-                                                                }
-                                                            </div>
-                                                            <div className="profile_username_post_timestamp flex items-center">
-                                                                <div className="profile_username">
-                                                                    <h2 className='text-sm text-dimGray max-w-[16rem] text-ellipsis overflow-hidden'>
-                                                                        <Link href={`/${user.userName}`}>
-                                                                            <a className="text-sm text-dimGray dark:text-gray-200 dark:text-opacity-75 max-w-[16rem] text-ellipsis overflow-hidden">@{user.fullName}</a>
-                                                                        </Link>
-                                                                    </h2>
-                                                                </div>
-                                                                <p className="before:content-['•'] before:text-[12px] before:ml-[4px] before:mr-[4px] -mt-1 before:dark:text-gray-50 before:dark:text-opacity-30"></p>
-                                                                <p className='text-sm text-dimGray'>{user.postTimeStamp}</p>
-                                                            </div>
-                                                        </div>
-                                                        <div className="post_more_action text-gray-500 hover:bg-primary hover:bg-opacity-10 hover:text-primary rounded-full w-8 h-8 flex justify-center items-center">
-                                                            <DotsHorizontalIcon width={20} />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="post_feed_contents mt-2 leading-[19px]">
-                                                    <div className="post_contents w-full">
-                                                        {
-                                                            user.postContentHeader && <h2 className="text-black dark:text-white font-semibold">{user.postContentHeader}</h2>
-                                                        }
-                                                        {
-                                                            user.postContent && <div className='break-words whitespace-pre-wrap'>
-                                                                <span className="text-sm text-black dark:text-white">{user.postContent}</span>
-                                                            </div>
-                                                        }
-                                                        {
-                                                            user.postContentTagText && <p className="mt-2 text-sm text-black dark:text-white">{user.postContentTagText}</p>
-                                                        }
-                                                        {
-                                                            user.postVideo && <div className="mt-4 w-full">
-                                                                <Video id={`${user.userName}_${user.id}`} src={user.postVideo} isAd={false} videoViews={user.postVideoViews} />
-                                                            </div>
-                                                        }
-                                                        {
-                                                            user.postImage && <div className="mt-4 w-4/5 max-w-[80%] h-4/5">
-                                                                <img className="w-full h-full rounded-xl" src={user.postImage} alt="post" />
-                                                            </div>
-                                                        }
-                                                        {
-                                                            user.postLink && <div className="mt-4 w-full">
-                                                                <a href={user.postLink} target="_blank" rel="noopener noreferrer" className='text-link'>
-                                                                    {user.postLink}
+                    :
+                    <PullToRefresh
+                        isPullable={true}
+                        onRefresh={handleRefresh}
+                        resistance={4}
+                        pullingContent={
+                            <div className="pullDownContentHeader pt-8 screen-sm:pt-24 flex justify-center">
+                                <div className="pullDownContentHeaderText">
+                                    <ArrowDownIcon width={20} className="text-gray-500" />
+                                </div>
+                            </div>
+                        }
+                        refreshingContent={
+                            <div className="refreshingConentHeader pt-8 screen-sm:pt-24 flex justify-center">
+                                <div className="refreshingConentHeaderText">
+                                    <Spinner width={24} color="var(--color-primary)" />
+                                </div>
+                            </div>
+                        }
+                    >
+                        <div className=' screen-sm:pt-20 mb-10'>
+                            {
+                                refreshed ?
+                                    dummyUsers.map((user: any) => {
+                                        return (
+                                            <div key={user.userName} className="bg-white dark:bg-darkMode hover:bg-gray-50 dark:hover:bg-gray-300 dark:hover:bg-opacity-[0.02] cursor-pointer whitespace-pre-wrap feed_post_contents_card pt-3 pb-2 p-2  border-b border-gray-100  dark:border-borderDarkMode">
+                                                <div className="flex justify-between ">
+                                                    <div className='flex space-x-2 w-full'>
+                                                        <div className="profile_image mt-1">
+                                                            <Link href="/[username]" as={`/${user.userName}`}>
+                                                                <a>
+                                                                    <ProfileImage user={user} />
                                                                 </a>
-                                                            </div>
-                                                        }
-                                                        {
-                                                            user.hasPoll && <div className="mt-4 w-full bg-white shadow-sm rounded-lg  border max-w-xs dark:bg-darkModeBg dark:border-darkModeBg">
-                                                                {
-                                                                    user.poll.options.map((poll: any) => {
-                                                                        return (
-                                                                            <div key={poll.id} className="flex items-center border p-2 pl-3 cursor-pointer dark:hover:bg-blue-100 dark:hover:bg-opacity-10  dark:bg-blue-300 dark:bg-opacity-10 dark:border dark:border-darkModeBg rounded-md">
-                                                                                <div className="poll_option_image">
+                                                            </Link>
+                                                        </div>
+                                                        <div className="profile_name_post_feed w-full -mt-1 pl-[10px] pr-[10px]">
+                                                            <div className="profile_name w-full">
+                                                                <div className="flex justify-between">
+                                                                    <div className="profile_names_content">
+                                                                        <div className='flex items-center'>
+                                                                            <Link href={`/${user.userName}`}>
+                                                                                <a className="font-semibold max-w-[16rem] text-ellipsis overflow-hidden hover:underline feed_user_profile_name">{user.userName}</a>
+                                                                            </Link>
+                                                                            {
+                                                                                user.isVerified && <div className='mt-1'>
+                                                                                    <Icon type="verified" />
                                                                                 </div>
-                                                                                <div className="poll_option_name">
-                                                                                    <h2 className="text-sm text-gray-600 dark:text-white">{poll.option}</h2>
+                                                                            }
+                                                                        </div>
+                                                                        <div className="profile_username_post_timestamp flex items-center">
+                                                                            <div className="profile_username">
+                                                                                <h2 className='text-sm text-dimGray max-w-[16rem] text-ellipsis overflow-hidden'>
+                                                                                    <Link href={`/${user.userName}`}>
+                                                                                        <a className="text-sm text-dimGray dark:text-gray-200 dark:text-opacity-75 max-w-[16rem] text-ellipsis overflow-hidden">@{user.fullName}</a>
+                                                                                    </Link>
+                                                                                </h2>
+                                                                            </div>
+                                                                            <p className="before:content-['•'] before:text-[12px] before:ml-[4px] before:mr-[4px] -mt-1 before:dark:text-gray-50 before:dark:text-opacity-30"></p>
+                                                                            <p className='text-sm text-dimGray'>{user.postTimeStamp}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="post_more_action text-gray-500 hover:bg-primary hover:bg-opacity-10 hover:text-primary rounded-full w-8 h-8 flex justify-center items-center">
+                                                                        <DotsHorizontalIcon width={20} />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div className="post_feed_contents mt-2 leading-[19px]">
+                                                                <div className="post_contents w-full">
+                                                                    {
+                                                                        user.postContentHeader && <h2 className="text-black dark:text-white font-semibold">{user.postContentHeader}</h2>
+                                                                    }
+                                                                    {
+                                                                        user.postContent && <div className='break-words whitespace-pre-wrap'>
+                                                                            <span className="text-sm text-black dark:text-white">{user.postContent}</span>
+                                                                        </div>
+                                                                    }
+                                                                    {
+                                                                        user.postContentTagText && <p className="mt-2 text-sm text-black dark:text-white">{user.postContentTagText}</p>
+                                                                    }
+                                                                    {
+                                                                        user.postVideo && <div className="mt-4 w-full">
+                                                                            <Video id={`${user.userName}_${user.id}`} src={user.postVideo} isAd={false} videoViews={user.postVideoViews} />
+                                                                        </div>
+                                                                    }
+                                                                    {
+                                                                        user.postImage && <div className="mt-4 w-4/5 max-w-[80%] h-4/5">
+                                                                            <img className="w-full h-full rounded-xl" src={user.postImage} alt="post" />
+                                                                        </div>
+                                                                    }
+                                                                    {
+                                                                        user.postLink && <div className="mt-4 w-full">
+                                                                            <a href={user.postLink} target="_blank" rel="noopener noreferrer" className='text-link'>
+                                                                                {user.postLink}
+                                                                            </a>
+                                                                        </div>
+                                                                    }
+                                                                    {
+                                                                        user.hasPoll && <div className="mt-4 w-full bg-white shadow-sm rounded-lg  border max-w-xs dark:bg-darkModeBg dark:border-darkModeBg">
+                                                                            {
+                                                                                user.poll.options.map((poll: any) => {
+                                                                                    return (
+                                                                                        <div key={poll.id} className="flex items-center border p-2 pl-3 cursor-pointer dark:hover:bg-blue-100 dark:hover:bg-opacity-10  dark:bg-blue-300 dark:bg-opacity-10 dark:border dark:border-darkModeBg rounded-md">
+                                                                                            <div className="poll_option_image">
+                                                                                            </div>
+                                                                                            <div className="poll_option_name">
+                                                                                                <h2 className="text-sm text-gray-600 dark:text-white">{poll.option}</h2>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    )
+                                                                                })
+                                                                            }
+                                                                        </div>
+                                                                    }
+                                                                </div>
+                                                                <div className="post_user_actions mt-3 pb-1 max-w-[80%]">
+                                                                    <div className="flex justify-between items-center">
+                                                                        <div className={setClass("post_action post_user_like_action relative select-none flex like_animation items-center space-x-2 cursor-pointer p-1 rounded-sm hover:bg-salmon hover:bg-opacity-10 hover:text-salmon dark:hover:text-salmon", user.postLiked ? "text-salmon dark:text-salmon" : 'text-gray-500  dark:text-gray-500')}>
+                                                                            {
+                                                                                user.postLiked ?
+                                                                                    <HeartIconSolid className={'text-salmon'} width={16} />
+                                                                                    :
+                                                                                    <HeartIcon width={16} />
+                                                                            }
+                                                                            <p className="text-xs">{user.likesCount}</p>
+
+                                                                            <div className="post_action_tooltip post_like_tooltip invisible opacity-0 absolute top-7 right-0 z-20 bg-gray-500 dark:bg-black dark:text-white w-12 p-1 text-center text-xs text-white rounded shadow-sm">
+                                                                                <div className="like_tooltip_content">
+                                                                                    {
+                                                                                        user.postLiked ? <span>Unlike</span> : <span>Like</span>
+                                                                                    }
                                                                                 </div>
                                                                             </div>
-                                                                        )
-                                                                    })
-                                                                }
-                                                            </div>
-                                                        }
-                                                    </div>
-                                                    <div className="post_user_actions mt-3 pb-1 max-w-[80%]">
-                                                        <div className="flex justify-between items-center">
-                                                            <div className={setClass("post_action post_user_like_action relative select-none flex like_animation items-center space-x-2 cursor-pointer p-1 rounded-sm hover:bg-salmon hover:bg-opacity-10 hover:text-salmon dark:hover:text-salmon", user.postLiked ? "text-salmon dark:text-salmon" : 'text-gray-500  dark:text-gray-500')}>
-                                                                {
-                                                                    user.postLiked ?
-                                                                        <HeartIconSolid className={'text-salmon'} width={16} />
-                                                                        :
-                                                                        <HeartIcon width={16} />
-                                                                }
-                                                                <p className="text-xs">{user.likesCount}</p>
-
-                                                                <div className="post_action_tooltip post_like_tooltip opacity-0 absolute top-7 right-0 z-20 bg-gray-500 dark:bg-black dark:text-white w-12 p-1 text-center text-xs text-white rounded shadow-sm">
-                                                                    <div className="like_tooltip_content">
-                                                                        {
-                                                                            user.postLiked ? <span>Unlike</span> : <span>Like</span>
-                                                                        }
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div className="post_action post_user_comment_action relative select-none flex text-gray-500 dark:text-gray-500 items-center space-x-2 cursor-pointer p-1 rounded-sm hover:bg-green-600 hover:bg-opacity-10 hover:text-green-600 dark:hover:text-green-600">
-                                                                <AnnotationIcon width={16} />
-                                                                <p className="text-xs">{user.commentsCount}</p>
-                                                                <div className="post_action_tooltip post_comment_tooltip opacity-0 absolute top-7 right-0 z-20 bg-gray-500 dark:bg-black dark:text-white w-12 p-1 text-center text-xs text-white rounded shadow-sm">
-                                                                    <div className="comment_tooltip_content">
-                                                                        <span>Reply</span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div className="post_action post_user_share_action relative select-none flex text-gray-500 dark:text-gray-500 items-center space-x-2 cursor-pointer p-1 rounded-sm hover:bg-primary hover:bg-opacity-10 hover:text-primary dark:hover:text-primary">
-                                                                <UploadIcon width={16} />
-                                                                <p className="text-xs">{user.sharesCount}</p>
-                                                                <div className="post_action_tooltip post_share_tooltip opacity-0 absolute top-7 right-0 z-20 bg-gray-500 dark:bg-black dark:text-white w-12 p-1 text-center text-xs text-white rounded shadow-sm">
-                                                                    <div className="share_tooltip_content">
-                                                                        <span>Share</span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div className="post_action post_user_save_action relative select-none flex text-gray-500 dark:text-gray-500 items-center space-x-2 cursor-pointer p-1 rounded-sm hover:bg-primary hover:bg-opacity-10 hover:text-primary dark:hover:text-primary" onClick={() => {
-                                                                if (isBrowser()) {
-                                                                    alert("saved post2")
-                                                                }
-                                                            }}  >
-                                                                {
-                                                                    user.postSaved ?
-                                                                        <BookmarkIconSolid className={'text-primary'} width={16} />
-                                                                        :
-                                                                        <BookmarkIcon width={16} />
-                                                                }
-                                                                <div className="post_action_tooltip post_save_tooltip opacity-0 absolute top-7 -right-3 z-20 bg-gray-500 dark:bg-black dark:text-white w-12  p-1 text-center text-xs text-white rounded shadow-sm">
-                                                                    <div className="save_tooltip_content">
-                                                                        {
-                                                                            user.postSaved ? <span>Saved</span> : <span>Save</span>
-                                                                        }
+                                                                        </div>
+                                                                        <div className="post_action post_user_comment_action relative select-none flex text-gray-500 dark:text-gray-500 items-center space-x-2 cursor-pointer p-1 rounded-sm hover:bg-green-600 hover:bg-opacity-10 hover:text-green-600 dark:hover:text-green-600">
+                                                                            <AnnotationIcon width={16} />
+                                                                            <p className="text-xs">{user.commentsCount}</p>
+                                                                            <div className="post_action_tooltip post_comment_tooltip invisible opacity-0 absolute top-7 right-0 z-20 bg-gray-500 dark:bg-black dark:text-white w-12 p-1 text-center text-xs text-white rounded shadow-sm">
+                                                                                <div className="comment_tooltip_content">
+                                                                                    <span>Reply</span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="post_action post_user_share_action relative select-none flex text-gray-500 dark:text-gray-500 items-center space-x-2 cursor-pointer p-1 rounded-sm hover:bg-primary hover:bg-opacity-10 hover:text-primary dark:hover:text-primary">
+                                                                            <UploadIcon width={16} />
+                                                                            <p className="text-xs">{user.sharesCount}</p>
+                                                                            <div className="post_action_tooltip post_share_tooltip invisible opacity-0 absolute top-7 right-0 z-20 bg-gray-500 dark:bg-black dark:text-white w-12 p-1 text-center text-xs text-white rounded shadow-sm">
+                                                                                <div className="share_tooltip_content">
+                                                                                    <span>Share</span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="post_action post_user_save_action relative select-none flex text-gray-500 dark:text-gray-500 items-center space-x-2 cursor-pointer p-1 rounded-sm hover:bg-primary hover:bg-opacity-10 hover:text-primary dark:hover:text-primary" onClick={() => {
+                                                                            if (isBrowser()) {
+                                                                                alert("saved post2")
+                                                                            }
+                                                                        }}  >
+                                                                            {
+                                                                                user.postSaved ?
+                                                                                    <BookmarkIconSolid className={'text-primary'} width={16} />
+                                                                                    :
+                                                                                    <BookmarkIcon width={16} />
+                                                                            }
+                                                                            <div className="post_action_tooltip post_save_tooltip invisible opacity-0 absolute top-7 -right-3 z-20 bg-gray-500 dark:bg-black dark:text-white w-12  p-1 text-center text-xs text-white rounded shadow-sm">
+                                                                                <div className="save_tooltip_content">
+                                                                                    {
+                                                                                        user.postSaved ? <span>Saved</span> : <span>Save</span>
+                                                                                    }
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -357,141 +375,140 @@ const FeedProfile = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            )
-                        })
-                        :
-                        <div className="skeleton_feed mt-5 p-2 w-full max-w-4xl">
-                            <div className="skeleton_feed_contents flex space-x-2">
-                                <div className="skeleton_feed_contents_header">
-                                    <div className="skeleton_feed_header_image bg-gray-300 w-8 h-8 rounded-full animate-pulse">
-                                    </div>
-                                </div>
-                                <div className="skeleton_feed_post_contents mt-1">
-                                    <div className="skeleton_contents_username">
-                                        <div className="skeleton_feed_fullname bg-gray-300 w-40 h-3 rounded-sm animate-pulse"></div>
-                                        <div className="skeleton_feed_username bg-gray-300 mt-1 w-24 h-3 rounded-sm animate-pulse"></div>
-                                        <div className="skeleton_feed_post_contents bg-gray-300 mt-3 w-full h-24 rounded-sm animate-pulse"><p className='opacity-0'>Content will be shown immidiately after freshing. Please wait...</p></div>
-                                        <div className="flex justify-between mt-5">
-                                            <div className="flex space-x-2 items-center">
-                                                <div className="skeleton_feed_fullname bg-gray-300 w-5 h-5 rounded-full animate-pulse"></div>
-                                                <div className="skeleton_feed_username bg-gray-300 mt-1 w-6 h-3 rounded-sm animate-pulse"></div>
+                                        )
+                                    })
+                                    :
+                                    <div className="skeleton_feed mt-5 p-2 w-full max-w-4xl">
+                                        <div className="skeleton_feed_contents flex space-x-2">
+                                            <div className="skeleton_feed_contents_header">
+                                                <div className="skeleton_feed_header_image bg-gray-300 w-8 h-8 rounded-full animate-pulse">
+                                                </div>
                                             </div>
-                                            <div className="flex space-x-2 items-center">
-                                                <div className="skeleton_feed_fullname bg-gray-300 w-5 h-5 rounded-full animate-pulse"></div>
-                                                <div className="skeleton_feed_username bg-gray-300 mt-1 w-6 h-3 rounded-sm animate-pulse"></div>
-                                            </div>
-                                            <div className="flex space-x-2 items-center">
-                                                <div className="skeleton_feed_fullname bg-gray-300 w-5 h-5 rounded-full animate-pulse"></div>
-                                                <div className="skeleton_feed_username bg-gray-300 mt-1 w-6 h-3 rounded-sm animate-pulse"></div>
-                                            </div>
-                                            <div className="flex space-x-2 items-center">
-                                                <div className="skeleton_feed_fullname bg-gray-300 w-5 h-5 rounded-full animate-pulse"></div>
-                                                <div className="skeleton_feed_username bg-gray-300 mt-1 w-6 h-3 rounded-sm animate-pulse"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="skeleton_feed_contents mt-10 flex space-x-2">
-                                <div className="skeleton_feed_contents_header">
-                                    <div className="skeleton_feed_header_image bg-gray-300 w-8 h-8 rounded-full animate-pulse">
-                                    </div>
-                                </div>
-                                <div className="skeleton_feed_post_contents mt-1">
-                                    <div className="skeleton_contents_username">
-                                        <div className="skeleton_feed_fullname bg-gray-300 w-40 h-3 rounded-sm animate-pulse"></div>
-                                        <div className="skeleton_feed_username bg-gray-300 mt-1 w-24 h-3 rounded-sm animate-pulse"></div>
-                                        <div className="skeleton_feed_post_contents bg-gray-300 mt-3 w-full h-24 rounded-sm animate-pulse"><p className='opacity-0'>Content will be shown immidiately after freshing. Please wait...</p></div>
-                                        <div className="flex justify-between mt-5">
-                                            <div className="flex space-x-2 items-center">
-                                                <div className="skeleton_feed_fullname bg-gray-300 w-5 h-5 rounded-full animate-pulse"></div>
-                                                <div className="skeleton_feed_username bg-gray-300 mt-1 w-6 h-3 rounded-sm animate-pulse"></div>
-                                            </div>
-                                            <div className="flex space-x-2 items-center">
-                                                <div className="skeleton_feed_fullname bg-gray-300 w-5 h-5 rounded-full animate-pulse"></div>
-                                                <div className="skeleton_feed_username bg-gray-300 mt-1 w-6 h-3 rounded-sm animate-pulse"></div>
-                                            </div>
-                                            <div className="flex space-x-2 items-center">
-                                                <div className="skeleton_feed_fullname bg-gray-300 w-5 h-5 rounded-full animate-pulse"></div>
-                                                <div className="skeleton_feed_username bg-gray-300 mt-1 w-6 h-3 rounded-sm animate-pulse"></div>
-                                            </div>
-                                            <div className="flex space-x-2 items-center">
-                                                <div className="skeleton_feed_fullname bg-gray-300 w-5 h-5 rounded-full animate-pulse"></div>
-                                                <div className="skeleton_feed_username bg-gray-300 mt-1 w-6 h-3 rounded-sm animate-pulse"></div>
+                                            <div className="skeleton_feed_post_contents mt-1">
+                                                <div className="skeleton_contents_username">
+                                                    <div className="skeleton_feed_fullname bg-gray-300 w-40 h-3 rounded-sm animate-pulse"></div>
+                                                    <div className="skeleton_feed_username bg-gray-300 mt-1 w-24 h-3 rounded-sm animate-pulse"></div>
+                                                    <div className="skeleton_feed_post_contents bg-gray-300 mt-3 w-full h-24 rounded-sm animate-pulse"><p className='opacity-0'>Content will be shown immidiately after freshing. Please wait...</p></div>
+                                                    <div className="flex justify-between mt-5">
+                                                        <div className="flex space-x-2 items-center">
+                                                            <div className="skeleton_feed_fullname bg-gray-300 w-5 h-5 rounded-full animate-pulse"></div>
+                                                            <div className="skeleton_feed_username bg-gray-300 mt-1 w-6 h-3 rounded-sm animate-pulse"></div>
+                                                        </div>
+                                                        <div className="flex space-x-2 items-center">
+                                                            <div className="skeleton_feed_fullname bg-gray-300 w-5 h-5 rounded-full animate-pulse"></div>
+                                                            <div className="skeleton_feed_username bg-gray-300 mt-1 w-6 h-3 rounded-sm animate-pulse"></div>
+                                                        </div>
+                                                        <div className="flex space-x-2 items-center">
+                                                            <div className="skeleton_feed_fullname bg-gray-300 w-5 h-5 rounded-full animate-pulse"></div>
+                                                            <div className="skeleton_feed_username bg-gray-300 mt-1 w-6 h-3 rounded-sm animate-pulse"></div>
+                                                        </div>
+                                                        <div className="flex space-x-2 items-center">
+                                                            <div className="skeleton_feed_fullname bg-gray-300 w-5 h-5 rounded-full animate-pulse"></div>
+                                                            <div className="skeleton_feed_username bg-gray-300 mt-1 w-6 h-3 rounded-sm animate-pulse"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="skeleton_feed_contents mt-10 flex space-x-2">
-                                <div className="skeleton_feed_contents_header">
-                                    <div className="skeleton_feed_header_image bg-gray-300 w-8 h-8 rounded-full animate-pulse">
-                                    </div>
-                                </div>
-                                <div className="skeleton_feed_post_contents mt-1">
-                                    <div className="skeleton_contents_username">
-                                        <div className="skeleton_feed_fullname bg-gray-300 w-40 h-3 rounded-sm animate-pulse"></div>
-                                        <div className="skeleton_feed_username bg-gray-300 mt-1 w-24 h-3 rounded-sm animate-pulse"></div>
-                                        <div className="skeleton_feed_post_contents bg-gray-300 mt-3 w-full h-24 rounded-sm animate-pulse"><p className='opacity-0'>Content will be shown immidiately after freshing. Please wait...</p></div>
-                                        <div className="flex justify-between mt-5">
-                                            <div className="flex space-x-2 items-center">
-                                                <div className="skeleton_feed_fullname bg-gray-300 w-5 h-5 rounded-full animate-pulse"></div>
-                                                <div className="skeleton_feed_username bg-gray-300 mt-1 w-6 h-3 rounded-sm animate-pulse"></div>
+                                        <div className="skeleton_feed_contents mt-10 flex space-x-2">
+                                            <div className="skeleton_feed_contents_header">
+                                                <div className="skeleton_feed_header_image bg-gray-300 w-8 h-8 rounded-full animate-pulse">
+                                                </div>
                                             </div>
-                                            <div className="flex space-x-2 items-center">
-                                                <div className="skeleton_feed_fullname bg-gray-300 w-5 h-5 rounded-full animate-pulse"></div>
-                                                <div className="skeleton_feed_username bg-gray-300 mt-1 w-6 h-3 rounded-sm animate-pulse"></div>
+                                            <div className="skeleton_feed_post_contents mt-1">
+                                                <div className="skeleton_contents_username">
+                                                    <div className="skeleton_feed_fullname bg-gray-300 w-40 h-3 rounded-sm animate-pulse"></div>
+                                                    <div className="skeleton_feed_username bg-gray-300 mt-1 w-24 h-3 rounded-sm animate-pulse"></div>
+                                                    <div className="skeleton_feed_post_contents bg-gray-300 mt-3 w-full h-24 rounded-sm animate-pulse"><p className='opacity-0'>Content will be shown immidiately after freshing. Please wait...</p></div>
+                                                    <div className="flex justify-between mt-5">
+                                                        <div className="flex space-x-2 items-center">
+                                                            <div className="skeleton_feed_fullname bg-gray-300 w-5 h-5 rounded-full animate-pulse"></div>
+                                                            <div className="skeleton_feed_username bg-gray-300 mt-1 w-6 h-3 rounded-sm animate-pulse"></div>
+                                                        </div>
+                                                        <div className="flex space-x-2 items-center">
+                                                            <div className="skeleton_feed_fullname bg-gray-300 w-5 h-5 rounded-full animate-pulse"></div>
+                                                            <div className="skeleton_feed_username bg-gray-300 mt-1 w-6 h-3 rounded-sm animate-pulse"></div>
+                                                        </div>
+                                                        <div className="flex space-x-2 items-center">
+                                                            <div className="skeleton_feed_fullname bg-gray-300 w-5 h-5 rounded-full animate-pulse"></div>
+                                                            <div className="skeleton_feed_username bg-gray-300 mt-1 w-6 h-3 rounded-sm animate-pulse"></div>
+                                                        </div>
+                                                        <div className="flex space-x-2 items-center">
+                                                            <div className="skeleton_feed_fullname bg-gray-300 w-5 h-5 rounded-full animate-pulse"></div>
+                                                            <div className="skeleton_feed_username bg-gray-300 mt-1 w-6 h-3 rounded-sm animate-pulse"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div className="flex space-x-2 items-center">
-                                                <div className="skeleton_feed_fullname bg-gray-300 w-5 h-5 rounded-full animate-pulse"></div>
-                                                <div className="skeleton_feed_username bg-gray-300 mt-1 w-6 h-3 rounded-sm animate-pulse"></div>
+                                        </div>
+                                        <div className="skeleton_feed_contents mt-10 flex space-x-2">
+                                            <div className="skeleton_feed_contents_header">
+                                                <div className="skeleton_feed_header_image bg-gray-300 w-8 h-8 rounded-full animate-pulse">
+                                                </div>
                                             </div>
-                                            <div className="flex space-x-2 items-center">
-                                                <div className="skeleton_feed_fullname bg-gray-300 w-5 h-5 rounded-full animate-pulse"></div>
-                                                <div className="skeleton_feed_username bg-gray-300 mt-1 w-6 h-3 rounded-sm animate-pulse"></div>
+                                            <div className="skeleton_feed_post_contents mt-1">
+                                                <div className="skeleton_contents_username">
+                                                    <div className="skeleton_feed_fullname bg-gray-300 w-40 h-3 rounded-sm animate-pulse"></div>
+                                                    <div className="skeleton_feed_username bg-gray-300 mt-1 w-24 h-3 rounded-sm animate-pulse"></div>
+                                                    <div className="skeleton_feed_post_contents bg-gray-300 mt-3 w-full h-24 rounded-sm animate-pulse"><p className='opacity-0'>Content will be shown immidiately after freshing. Please wait...</p></div>
+                                                    <div className="flex justify-between mt-5">
+                                                        <div className="flex space-x-2 items-center">
+                                                            <div className="skeleton_feed_fullname bg-gray-300 w-5 h-5 rounded-full animate-pulse"></div>
+                                                            <div className="skeleton_feed_username bg-gray-300 mt-1 w-6 h-3 rounded-sm animate-pulse"></div>
+                                                        </div>
+                                                        <div className="flex space-x-2 items-center">
+                                                            <div className="skeleton_feed_fullname bg-gray-300 w-5 h-5 rounded-full animate-pulse"></div>
+                                                            <div className="skeleton_feed_username bg-gray-300 mt-1 w-6 h-3 rounded-sm animate-pulse"></div>
+                                                        </div>
+                                                        <div className="flex space-x-2 items-center">
+                                                            <div className="skeleton_feed_fullname bg-gray-300 w-5 h-5 rounded-full animate-pulse"></div>
+                                                            <div className="skeleton_feed_username bg-gray-300 mt-1 w-6 h-3 rounded-sm animate-pulse"></div>
+                                                        </div>
+                                                        <div className="flex space-x-2 items-center">
+                                                            <div className="skeleton_feed_fullname bg-gray-300 w-5 h-5 rounded-full animate-pulse"></div>
+                                                            <div className="skeleton_feed_username bg-gray-300 mt-1 w-6 h-3 rounded-sm animate-pulse"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="skeleton_feed_contents mt-10 flex space-x-2">
+                                            <div className="skeleton_feed_contents_header">
+                                                <div className="skeleton_feed_header_image bg-gray-300 w-8 h-8 rounded-full animate-pulse">
+                                                </div>
+                                            </div>
+                                            <div className="skeleton_feed_post_contents mt-1">
+                                                <div className="skeleton_contents_username">
+                                                    <div className="skeleton_feed_fullname bg-gray-300 w-40 h-3 rounded-sm animate-pulse"></div>
+                                                    <div className="skeleton_feed_username bg-gray-300 mt-1 w-24 h-3 rounded-sm animate-pulse"></div>
+                                                    <div className="skeleton_feed_post_contents bg-gray-300 mt-3 w-full h-24 rounded-sm animate-pulse"><p className='opacity-0'>Content will be shown immidiately after freshing. Please wait...</p></div>
+                                                    <div className="flex justify-between mt-5">
+                                                        <div className="flex space-x-2 items-center">
+                                                            <div className="skeleton_feed_fullname bg-gray-300 w-5 h-5 rounded-full animate-pulse"></div>
+                                                            <div className="skeleton_feed_username bg-gray-300 mt-1 w-6 h-3 rounded-sm animate-pulse"></div>
+                                                        </div>
+                                                        <div className="flex space-x-2 items-center">
+                                                            <div className="skeleton_feed_fullname bg-gray-300 w-5 h-5 rounded-full animate-pulse"></div>
+                                                            <div className="skeleton_feed_username bg-gray-300 mt-1 w-6 h-3 rounded-sm animate-pulse"></div>
+                                                        </div>
+                                                        <div className="flex space-x-2 items-center">
+                                                            <div className="skeleton_feed_fullname bg-gray-300 w-5 h-5 rounded-full animate-pulse"></div>
+                                                            <div className="skeleton_feed_username bg-gray-300 mt-1 w-6 h-3 rounded-sm animate-pulse"></div>
+                                                        </div>
+                                                        <div className="flex space-x-2 items-center">
+                                                            <div className="skeleton_feed_fullname bg-gray-300 w-5 h-5 rounded-full animate-pulse"></div>
+                                                            <div className="skeleton_feed_username bg-gray-300 mt-1 w-6 h-3 rounded-sm animate-pulse"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div className="skeleton_feed_contents mt-10 flex space-x-2">
-                                <div className="skeleton_feed_contents_header">
-                                    <div className="skeleton_feed_header_image bg-gray-300 w-8 h-8 rounded-full animate-pulse">
-                                    </div>
-                                </div>
-                                <div className="skeleton_feed_post_contents mt-1">
-                                    <div className="skeleton_contents_username">
-                                        <div className="skeleton_feed_fullname bg-gray-300 w-40 h-3 rounded-sm animate-pulse"></div>
-                                        <div className="skeleton_feed_username bg-gray-300 mt-1 w-24 h-3 rounded-sm animate-pulse"></div>
-                                        <div className="skeleton_feed_post_contents bg-gray-300 mt-3 w-full h-24 rounded-sm animate-pulse"><p className='opacity-0'>Content will be shown immidiately after freshing. Please wait...</p></div>
-                                        <div className="flex justify-between mt-5">
-                                            <div className="flex space-x-2 items-center">
-                                                <div className="skeleton_feed_fullname bg-gray-300 w-5 h-5 rounded-full animate-pulse"></div>
-                                                <div className="skeleton_feed_username bg-gray-300 mt-1 w-6 h-3 rounded-sm animate-pulse"></div>
-                                            </div>
-                                            <div className="flex space-x-2 items-center">
-                                                <div className="skeleton_feed_fullname bg-gray-300 w-5 h-5 rounded-full animate-pulse"></div>
-                                                <div className="skeleton_feed_username bg-gray-300 mt-1 w-6 h-3 rounded-sm animate-pulse"></div>
-                                            </div>
-                                            <div className="flex space-x-2 items-center">
-                                                <div className="skeleton_feed_fullname bg-gray-300 w-5 h-5 rounded-full animate-pulse"></div>
-                                                <div className="skeleton_feed_username bg-gray-300 mt-1 w-6 h-3 rounded-sm animate-pulse"></div>
-                                            </div>
-                                            <div className="flex space-x-2 items-center">
-                                                <div className="skeleton_feed_fullname bg-gray-300 w-5 h-5 rounded-full animate-pulse"></div>
-                                                <div className="skeleton_feed_username bg-gray-300 mt-1 w-6 h-3 rounded-sm animate-pulse"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            }
                         </div>
-                }
-            </div>
-        </PullToRefresh>
+                    </PullToRefresh>
+            }
+        </div>
     );
 }
 

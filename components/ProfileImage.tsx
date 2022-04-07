@@ -1,18 +1,19 @@
 import { User } from '../interface/User'
 import { generateFirstWord } from '../utils'
+import { UserIcon, UserCircleIcon } from '@heroicons/react/solid'
 const ProfileImage = ({ user }: {
     user: User | any
 }) => { 
     if (user.profileImage) {
         return (
-            <div className='w-8 h-8 rounded-full select-none'>
-                <img className='w-8 h-8 rounded-full' src={user.profileImage} alt={user.userName} />
+            <div className='w-10 h-10 rounded-full select-none'>
+                <img className='w-10 h-10 rounded-full' src={user.profileImage} alt={user.userName} />
             </div>
         )
     } else {
         return (
-            <div className='bg-blue-700 w-8 h-8 flex justify-center items-center rounded-full select-none'>
-                <span className='text-white text-lg -mt-1'>{generateFirstWord(user.userName)}</span>
+            <div className='bg-gray-200 relative w-10 h-10 flex justify-center items-center rounded-full select-none'>
+                <UserIcon width={'29'} height={'29'} className='text-gray-400' />
             </div>
         )
     }

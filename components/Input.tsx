@@ -121,7 +121,7 @@ const Input = ({ id, styleToRender, type, hasLabel, label, placeholder, value, s
                 return (
                     <div className="w-full home_search_input">
                         <div className="relative">
-                            <div className="home_search_icon absolute  top-0 left-3 h-full flex items-center justify-center">
+                            <div className="home_search_icon absolute top-0 screen-sm:top-3 left-3 h-full flex items-center justify-center">
                                 <Search size={'18'} color={'#536471'}/>
                             </div>
                             <input
@@ -140,8 +140,8 @@ const Input = ({ id, styleToRender, type, hasLabel, label, placeholder, value, s
                                 autoFocus={autoFocus}
                             />
                             {
-                                cancelShown && <div className="absolute top-0 right-4 h-full flex items-center justify-center">
-                                    <button onClick={handleCancel}><span className="text-[#536471]">Cancel</span></button>
+                                cancelShown && <div className="absolute top-2 right-4  flex items-center justify-center screen-sm:top-8 cursor-pointer select-none" role="button" onClick={handleCancel}>
+                                    Cancel
                                 </div>
                             }
                         </div>

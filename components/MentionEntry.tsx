@@ -43,7 +43,7 @@ const MentionEntry = (props: MentionEntryProps) => {
         )
     } else {
         return (
-            <div className="p-3 cursor-pointer hover:bg-gray-50 text-black mt-1 mb-1 dark:text-white dark:hover:bg-darkModeBg dark:hover:bg-opacity-50"
+            <div className="w-full p-3 cursor-pointer hover:bg-gray-50 text-black mt-1 mb-1 dark:text-white dark:hover:bg-darkModeBg dark:hover:bg-opacity-50"
                 onMouseEnter={parentProps.onMouseEnter}
                 onMouseUp={parentProps.onMouseUp}
                 onMouseDown={parentProps.onMouseDown}
@@ -51,7 +51,7 @@ const MentionEntry = (props: MentionEntryProps) => {
                 <div>
                     <div>
                         <div className={setClass('flex items-center space-x-3')}>
-                            <div className={theme?.mentionSuggestionsEntryContainerLeft}>
+                            <div>
                                 {
                                     mention.avatar ? <div>
                                         <img
@@ -66,13 +66,13 @@ const MentionEntry = (props: MentionEntryProps) => {
                             </div>
                             <div>
                                 <div className={theme?.mentionSuggestionsEntryContainerRight}>
-                                    <div className={setClass('font-bold')}>
+                                    <div className={setClass('w-[160px] text-ellipsis overflow-hidden whitespace-nowrap text-[1.002rem] font-bold')}>
                                         {mention.fullName}
                                     </div>
                                 </div>
 
                                 <div className={setClass('')}>
-                                    <div className={setClass('text-sm text-dimGray dark:text-gray-200 dark:text-opacity-75')}>
+                                    <div className={setClass('w-[160px] text-ellipsis overflow-hidden whitespace-nowrap text-sm text-dimGray dark:text-gray-200 dark:text-opacity-75')}>
                                         @{mention.username}
                                     </div>
                                 </div>

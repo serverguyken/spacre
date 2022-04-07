@@ -1,5 +1,5 @@
 import type { GetServerSideProps, NextPage } from 'next'
-import { isBrowser, print } from '../utils/'
+import { isBrowser, print, OnLoad } from '../utils/'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import useUserContext from '../provider/userProvider'
@@ -7,7 +7,6 @@ import { WithAuth } from '../config/auth/route'
 import { User } from '../interface/User'
 import Layout from '../components/Layout'
 import Search from '../components/Search'
-import TextCard from '../components/TextCard'
 import FeedProfile from '../components/FeedProfile'
 import Widget from '../components/Widget'
 import { useTheme } from 'next-themes'
@@ -29,12 +28,13 @@ const Home: NextPage = () => {
             }
         })
     }
+    
     return WithAuth(user, false, true, {
         onAuthSuccess: (user: User) => {
             return (
                 <div>
                     <Head>
-                        <title>Home/ Spacre</title>
+                        <title>Home / Spacre</title>
                         <link rel='icon' href='/favicon.ico' />
                     </Head>
                     <Layout
@@ -45,7 +45,6 @@ const Home: NextPage = () => {
                                     <Search />
                                 </div>
                                 <div className="feed_contents_2">
-                                    <TextCard />
                                     <FeedProfile />
                                 </div>
                             </div>

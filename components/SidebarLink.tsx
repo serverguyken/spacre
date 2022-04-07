@@ -19,18 +19,23 @@ const SidebarLink = ({ text, Icon, fullpath, ActiveIcon, action, active }: {
     }
     return (
         <Link href={fullpath}>
-            <a className="flex justify-start space-x-3">
-                <div className={`home_sidebar_link select-none text-[#d9d9d9] flex justify-start items-center text-lg space-x-3 animationHover py-3 px-3 -ml-3 cursor-pointer hover:bg-light dark:hover:bg-darkModeBg`} onClick={action}>
-                    <div>
+            <a className={setClass(`${text}_sidebar_link_item`,"main_sidebar_links flex justify-start space-x-3")}>
+                <div className="relative">
+                    <div className={setClass("main_sidebar_links_contents select-none text-[#d9d9d9] flex justify-start items-center text-lg space-x-3 animationHover py-3 px-3 -ml-3 cursor-pointer hover:bg-light dark:hover:bg-darkModeBg")} onClick={action}>
+                        <div>
+                            {
+                                setActive(text) ? <ActiveIcon className='text-primary w-7 h-7' /> :<Icon className='text-black dark:text-white  w-7 h-7 ' />
+                            }
+                        </div>
                         {
-                            setActive(text) ? <Link href={fullpath}><a><ActiveIcon className='text-primary w-7 h-7' /></a></Link> : <Link href={fullpath}>
-                                <a><Icon className='text-black dark:text-white  w-7 h-7 ' /></a>
-                            </Link>
+                            setActive(text) ? <span className={'sidebar_link_text text-black dark:text-white font-semibold text-lg screen-md:text-sm'}>{text}</span> : <span className={'sidebar_link_text text-black dark:text-white font-normal text-lg screen-md:text-sm'}>{text}</span>
                         }
                     </div>
-                    {
-                        setActive(text) ? <span className={'sidebar_link_text text-black dark:text-white font-semibold text-lg screen-md:text-sm'}>{text}</span> : <span className={'sidebar_link_text text-black dark:text-white font-normal text-lg screen-md:text-sm'}>{text}</span>
-                    }
+                    <div className={setClass(`${text}_sidebar_tooltip`,"main_sidebar_tooltip invisible opacity-0 absolute top-14 z-[50] bg-gray-500 dark:bg-black dark:text-white p-1 text-center text-xs text-white rounded shadow-sm", text === "Messages" ? 'w-[4.5rem]' : 'w-[3.5rem]', text === "Messages" ? '-left-4' : '-left-2')}>
+                        <div className="sidebar_tooltip_content">
+                            {text}
+                        </div>
+                    </div>
                 </div>
             </a>
         </Link>

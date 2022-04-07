@@ -184,20 +184,8 @@ body {
   }
 
 
-  .search_spacre_main input {
-    padding-top: 0.200rem;
-    padding-bottom: 0.200rem;
-  }
-
-  .search_box_main {
-    position: fixed;
-    top: 54px;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 9999 !important;
-    box-shadow: none !important;
-  }
+  
+  
 
 
   .header_lg {
@@ -218,7 +206,10 @@ body {
     display: none;
   }
 
-  
+  .search_box_main {
+    width: 100%;
+    height: 100%;
+  }
 }
 
 
@@ -315,7 +306,7 @@ body {
     display: none;
   }
   
-  .home_sidebar_link {
+  .main_sidebar_links_contents {
     justify-content: center;
   }
   .sidebar_desktop {
@@ -332,9 +323,15 @@ body {
   }
 
 
-  .home_sidebar_link span {
+  .main_sidebar_links_contents span {
     display: none;
   }
+
+  .main_sidebar_links:hover .main_sidebar_tooltip {
+  visibility: visible;
+  opacity: 1;
+  transition: all 0.2s ease-in-out;
+}
 
   .sidebar_post_button_lg {
     width: 48px;
@@ -380,9 +377,6 @@ body {
   }
 }
 
-@media (max-width: 800px) {
- 
-}
 
 @media (max-width: 800px) {
   .layout_sidebar {
@@ -456,7 +450,7 @@ body {
     top: 4rem;
     left: 0;
     width: 100%;
-    z-index: 9999;
+    z-index: 50;
   }
   .widget_main {
     display: none !important;
@@ -596,22 +590,28 @@ body {
 }
 
 .post_user_like_action:hover .post_like_tooltip {
+  visibility: visible;
   opacity: 1;
   transition: all 0.2s ease-in-out;
 }
 
 .post_user_comment_action:hover .post_comment_tooltip {
+  visibility: visible;
   opacity: 1;
   transition: all 0.2s ease-in-out;
 }
 .post_user_share_action:hover .post_share_tooltip {
+  visibility: visible;
   opacity: 1;
   transition: all 0.2s ease-in-out;
 }
 .post_user_save_action:hover .post_save_tooltip {
+  visibility: visible;
   opacity: 1;
   transition: all 0.2s ease-in-out;
 }
+
+
 
 
 
@@ -634,7 +634,7 @@ body {
     transform: rotate(180deg);
   }
 }
-
+  
 
 /* Device Media Queries */
 
@@ -652,5 +652,11 @@ body {
   }
   .post_user_save_action:hover .post_save_tooltip {
     opacity: 0;
+  }
+  .main_sidebar_links:hover .main_sidebar_tooltip {
+    opacity: 0;
+  }
+  .feed_user_profile_name:hover {
+    text-decoration-line: none !important;
   }
 }

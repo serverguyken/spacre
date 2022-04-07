@@ -1,5 +1,6 @@
 import { CodeIcon, PhotographIcon, EmojiHappyIcon } from "@heroicons/react/outline"
 import { PrimaryButton } from "./Buttons"
+import { XIcon } from "@heroicons/react/outline"
 import { useState, useEffect } from "react"
 import { setClass, isBrowser, generateLoadingTime, TimeOut, print, StorageEvent, toHTML, getTypeByTrigger, Strategy } from "../utils"
 import { CompositeDecorator, ContentBlock, ContentState, DefaultDraftInlineStyle, EditorState, Modifier, SelectionState } from "draft-js"
@@ -16,8 +17,8 @@ import hastags from "../utils/hastags"
 import mentions from "../utils/mentions"
 import MentionEntry from "./MentionEntry"
 import HashtagEntry from "./HashtagEntry"
-
-
+import VALTIO, { SUBSCRIBE } from "../store/valtio"
+import store from "../store"
 const mentionPlugin = createMentionPlugin({
     mentionPrefix: '@',
     mentionTrigger: '@',
@@ -47,7 +48,7 @@ const linkifyPlugin = createLinkifyPlugin()
 const TextCard = () => {
     const [text, setText] = useState("")
     const [disabled, setDisabled] = useState(true)
-    const [preview, setPreview] = useState(false)
+    const [postTextBoxShown, setPostTextBoxShown] = useState(false)
     const [editorState, setEditorState] = useState(EditorState.createEmpty())
     const [mentionSuggestions, setMentionSuggestions] = useState([] as any)
     const [hashtagSuggestions, setHashtagSuggestions] = useState([] as any)
@@ -58,10 +59,19 @@ const TextCard = () => {
     const [maxInitialValue, setMaxInitialValue] = useState(0)
     const [textLength, setTextLength] = useState(0)
     const maxInPercent = maxValue / 64000 * 100
-    print("TextCard", "maxInPercent", maxInPercent)
+    
+
+
     const testContent = "Hello @serverguyken, this is a test post. I hope you like it :) #test. Visit https://www.web.com for more info."
-
-
+    
+    useEffect(() => {
+        VALTIO.watch((get) => {
+           setPostTextBoxShown(get(store.content.data).postTextareaShown)
+        })
+    }, [])
+    
+   
+    
 
     function getAllTextFromEditor() {
         const content = editorState.getCurrentContent()
@@ -78,7 +88,6 @@ const TextCard = () => {
             setDisabled(false)
         } else {
             setDisabled(true)
-            setPreview(false)
         }
         if (textExceeded) {
             setDisabled(true)
@@ -128,9 +137,12 @@ const TextCard = () => {
     const { MentionSuggestions } = mentionPlugin
     const HashtagSuggestions = hashtagPlugin.MentionSuggestions
     return (
-        <div className="relative post_textarea screen-sm:hidden">
-            <div className="border-b border-gray-100 dark:border-borderDarkMode p-2">
-                <div className="w-auto">
+        <div className={setClass("post_textarea", postTextBoxShown ? 'screen-sm:fixed screen-sm:top-[5.2rem] screen-sm:w-full screen-sm:h-full screen-sm:z-50 screen-sm:bg-white screen-sm:dark:bg-darkMode' : 'bg-white dark:bg-darkMode relative screen-sm:hidden')}>
+            <div className={setClass(postTextBoxShown ? 'block ' : 'hidden', "absolute top-3 left-2 z-20 p-2 rounded-full  cursor-pointer hover:bg-gray-100 hover:bg-opacity-70 hover:transition hover:ease-in-out dark:hover:bg-darkModeBg")} onClick={() => store.content.data.postTextareaShown = false} >
+                <XIcon width={24} height={24} className=""/>
+            </div>
+            <div className="border-b border-gray-100 dark:border-borderDarkMode p-2 screen-sm:dark:border-b-gray-50 screen-sm:dark:border-opacity-5">
+                <div className="w-auto screen-sm:mt-6">
                     <Editor
                         editorState={editorState}
                         onChange={handleChange}
@@ -158,7 +170,7 @@ const TextCard = () => {
                     />
                 </div>
                 <div className="text_actions_main mt-4">
-                    <div className="text-actions_group flex items-center justify-between ">
+                    <div className="text-actions_group flex items-center justify-between">
                         <div className="text_actions_icons flex items-center space-x-3">
                             <div className="text_action">
                                 <div className="text_action_icon cursor-pointer">
