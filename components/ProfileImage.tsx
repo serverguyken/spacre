@@ -12,7 +12,7 @@ const ProfileImage = ({ user }: {
         )
     } else {
         return (
-            <div className='bg-gray-200 relative w-10 h-10 flex justify-center items-center rounded-full select-none'>
+            <div className='profile_image_avatar bg-gray-200 relative w-10 h-10 flex justify-center items-center rounded-full select-none'>
                 <UserIcon width={'29'} height={'29'} className='text-gray-400' />
             </div>
         )

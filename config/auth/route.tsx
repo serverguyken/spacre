@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import useUserContext from "../../provider/userProvider"
-import { isBrowser } from "../../utils";
+import { isBrowser, OnLoad } from "../../utils";
 import { User } from "../../interface/User";
 import { Spinner, LineLoader } from "../../utils/loader";
 import { generateLoadingTime } from "../../utils";
@@ -16,15 +16,15 @@ export const WithAuth = (user: User, reload: boolean, onLoad: boolean, action: {
     const router = useRouter();
 
     if (isBrowser()) {
-        if (onLoad) {
-            window.onload = () => {
+        OnLoad(() => {
+            if (onLoad) {
                 setLoading(true);
                 setTimeout(() => {
                     setLoading(false);
                 }, generateLoadingTime(1000, 3000));
-            };
-        }
-
+            }
+        });
+        
 
         const renderOnAuthSuccess = () => {
             return action.onAuthSuccess(user);

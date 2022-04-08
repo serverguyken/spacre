@@ -25,6 +25,8 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
             const volume_on_btn = document.getElementById(`${id}_volume_on_button`) as HTMLButtonElement;
             const volume_off_btn = document.getElementById(`${id}_volume_off_button`) as HTMLButtonElement;
             const fullscreen_btn = document.getElementById(`${id}_fullscreen_button`) as HTMLButtonElement;
+            const video_views = document.getElementById(`${id}_video_views`) as HTMLDivElement;
+            const play_button_overlay = document.getElementById(`${id}_play_button_overlay`) as HTMLDivElement;
             let timeout: any;
 
             const hideControls = () => {
@@ -34,6 +36,7 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
                 addClass(video_progress_container, 'hidden');
                 addClass(video_getseek_time, 'hidden');
             }
+            
             const showControls = () => {
                 removeClass(video_bottom, 'opacity-0');
                 video_bottom.style.transition = 'opacity 0.5s ease-in-out';
@@ -56,6 +59,10 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
             }
             if (v) {
                 v.src = vSrc;
+                v.addEventListener('play', () => { 
+                    addClass(video_views, 'hidden');
+                    addClass(play_button_overlay, 'hidden');
+                });
                 addClass(v, 'pointer-events-none');
 
                 // Handle play button
@@ -317,15 +324,15 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
                             removeClass(play_button, 'hidden');
                         }
                         // When the video is visible, play it
-                        if (entry.intersectionRatio > 0.9) {
-                            // mute the video
-                            v.muted = true;
-                            v.play();
-                            addClass(play_button, 'hidden');
-                            removeClass(pause_button, 'hidden');
-                            addClass(volume_on_btn, 'hidden');
-                            removeClass(volume_off_btn, 'hidden');
-                        }
+                        // if (entry.intersectionRatio > 0.9) {
+                        //     // mute the video
+                        //     v.muted = true;
+                        //     v.play();
+                        //     addClass(play_button, 'hidden');
+                        //     removeClass(pause_button, 'hidden');
+                        //     addClass(volume_on_btn, 'hidden');
+                        //     removeClass(volume_off_btn, 'hidden');
+                        // }
                     });
                 }
                 let observer = new IntersectionObserver(callback, options);
@@ -369,19 +376,27 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
             setVideo(id, src);
         }, 0);
         return (
-            <div className="video_post cursor-pointer relative z-0 bg-black dark:bg-darkMode dark:border-blue-50 dark:border-opacity-10 dark:ring-1 dark:ring-gray-100 dark:ring-opacity-5 dark:shadow-xl max-w-lg h-full rounded-lg" id={`video_${id}`}>
+            <div className="video_post cursor-pointer w-[32rem] max-w-[90%]  relative z-0 bg-black dark:bg-darkMode dark:border-gray-50 dark:border-opacity-10 shadow-sm dark:shadow-lg rounded-lg" id={`video_${id}`}>
                 <div className='w-full'>
                     <div className="video_getseektime hidden absolute bottom-16 z-30 bg-black bg-opacity-60  pl-[0.2rem] pr-[0.2rem] rounded-sm" id={`${id}_video_getseektime`}>
                         <span className="video_get_seek_time-current text-white text-xs" id={`${id}_video_getseektime_current`}>00:00</span>
                     </div>
                 </div>
-                <div className="video_top w-full h-3/5  absolute z-10"
+                <div className="button_overlay absolute top-1/2 left-1/2 mt-[-30px] ml-[-30px]" id={`${id}_play_button_overlay`}>
+                    <button className={setClass("video_button__play bg-white rounded-full")} >
+                        <PlayIcon  width={50} height={50} className={'text-primary'} />
+                    </button>
+                </div>
+                <div className="video_top w-full h-3/5   absolute z-10"
                     id={`${id}_video_top`}>
                 </div>
-                <div className="video_bottom h-[20%] flex items-center screen-sm:h-[25%]  bg-gradient-to-t from-black opacity-100 w-full absolute bottom-0 z-20 pb-2 pl-2 pr-2 cursor-auto" id={
+                <div className="bg-gray-600  p-1 rounded-sm absolute bottom-4 left-4 z-20 video_controls_views__views select-none" id={`${id}_video_views`}>
+                    <span className="text-white text-xs">{videoViews} views</span>
+                </div> 
+                <div className="video_bottom h-[24%] flex items-center screen-sm:h-[28%]  bg-gradient-to-t from-black opacity-100 w-full absolute bottom-0 z-20 pb-2 pl-2 pr-2 cursor-auto rounded-lg" id={
                     `${id}_video_bottom`
                 }>
-                    <div className='w-full'>
+                    <div className='w-full '>
                         <div className={setClass("video_progress_container  relative hidden h-[0.2rem] bg-primary w-full rounded-lg cursor-pointer")} id={`${id}_video_progress_container`}>
                             <div className=''>
                                 <div className={setClass("video_progress  w-0 h-[0.2rem] bg-white rounded-r-sm")} id={`${id}_video_progress`}>
@@ -408,12 +423,10 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
                                         </button>
                                     </div>
 
-                                    <div className="video_controls_views__views select-none">
-                                        <span className="text-white text-sm">{videoViews} views</span>
-                                    </div>
+                                    
                                 </div>
                             </div>
-                            <div className="video_controls_views  video_volume_button_views h-8 flex items-center justify-between  select-none space-x-2">
+                            <div className="video_controls_views  video_volume_button_views h-8 flex items-center justify-between  select-none space-x-3">
                                 <div className="video_duration_main">
                                     <div className="video_duration_contents text-white">
                                         <div className="video_duration_main__time text-sm">
@@ -453,6 +466,7 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
                     disablePictureInPicture
                     playsInline
                     aria-label='Embedded video'
+                    className='bg-black dark:bg-darkMode dark:border-gray-50 dark:border-opacity-10 dark:shadow-lg rounded-lg'
                 >Video load failed</video>
             </div>
         );

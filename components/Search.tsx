@@ -26,16 +26,15 @@ const Search: NextPage = () => {
         if (isBrowser()) {
             getSerachList()
         }
-        if (searchTerm === '') {
-            setIsSearch(false)
-        } else {
-            setIsSearch(true)
-        }
-    }, [searchTerm])
+    }, [])
 
 
     const setSearch = (isSearch: boolean, val: string | any) => {
+        setIsSearch(isSearch)
         setSearchTerm(val)
+        if (val === '') {
+            setIsSearch(false)
+        }
     }
 
     const getSearchTerm = (val: string) => {

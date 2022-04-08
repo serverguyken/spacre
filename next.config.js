@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['images.generated.photos', 'blog.hubspot.com', 'upload.wikimedia.org', 'www.doorwaysva.org', 'www.channelfutures.com'],
+    domains: ['spacre.com', 'res.cloudinary.com', 'images.generated.photos', 'blog.hubspot.com', 'upload.wikimedia.org', 'www.doorwaysva.org', 'www.channelfutures.com'],
   },
   rules: {
     '@next/next/no-img-element': 'off',

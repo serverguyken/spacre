@@ -96,7 +96,7 @@ export function generateLoadingTime(from: number, to: number) {
 
 export function OnLoad(callback: () => void) {
   if (isBrowser()) {
-    window.addEventListener('load', callback);
+    window.onload = callback;
   }
 }
 

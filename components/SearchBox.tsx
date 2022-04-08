@@ -21,7 +21,7 @@ const SearchBox = ({ isSearch, searchTerm, searchList, renderNoSearch }: {
     const emptySearch = store.get('renderNoSearch')
     const renderSearchBox = () => {
         setTimeout(() => {
-            setLoading(true)
+            setLoading(false)
         }, generateLoadingTime(1000, 2000))
     }
     function handleSearchChange(term: any) {

@@ -1,6 +1,6 @@
 import TextCard from './TextCard'
 import { User } from '../interface/User'
-import { setClass, isBrowser, print, TimeOut, addClass, removeClass, generateLoadingTime } from '../utils/'
+import { setClass, isBrowser, print, TimeOut, addClass, removeClass, generateLoadingTime, OnLoad } from '../utils/'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import useUserContext from '../provider/userProvider'
@@ -145,12 +145,12 @@ const FeedProfile = () => {
         id: 6,
         userName: 'Fireshipio',
         fullName: 'Fireship IO',
-        profileImage: 'https://res.cloudinary.com/serveryguken/image/upload/v1648158907/Spacre/images/fireship_logo_r5tikr.png',
+        profileImage: 'https://res.cloudinary.com/serverguyken/image/upload/v1648158907/Spacre/images/fireship_logo_r5tikr.png',
         isVerified: true,
         isFollowing: true,
         postTimeStamp: '20h',
         postContent: 'Uploaded a new video. Check it out!',
-        postVideo: 'https://res.cloudinary.com/serveryguken/video/upload/v1648157586/Spacre/Videos/yt5s.com-DevOps_CI_CD_Explained_in_100_Seconds_gtyzed.mp4',
+        postVideo: 'https://res.cloudinary.com/serverguyken/video/upload/v1648157586/Spacre/Videos/yt5s.com-DevOps_CI_CD_Explained_in_100_Seconds_gtyzed.mp4',
         postVideoViews: '200.16k',
         postLiked: true,
         postSaved: true,
@@ -189,6 +189,7 @@ const FeedProfile = () => {
     }
     const likePost = (id: number) => {
     }
+        
 
     return (
         <div className='relative'>
@@ -210,7 +211,6 @@ const FeedProfile = () => {
                     <PullToRefresh
                         isPullable={true}
                         onRefresh={handleRefresh}
-                        resistance={4}
                         pullingContent={
                             <div className="pullDownContentHeader pt-8 screen-sm:pt-24 flex justify-center">
                                 <div className="pullDownContentHeaderText">

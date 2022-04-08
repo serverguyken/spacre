@@ -122,7 +122,7 @@ const Widget = () => {
                 <div className="">
                     <h1 className="text-gray-400 dark:text-white text-sm flex-1 mb-2">Sponsored</h1>
                     <div className="video_ad_container_inner rounded-full">
-                        <Video id="video_ad_1" src="https://res.cloudinary.com/serveryguken/video/upload/v1648157645/Spacre/Videos/yt5s.com-Develop._Preview._Ship._ciep4v.mp4" autoPlay muted loop hasControls={false} isAd />
+                        <Video id="video_ad_1" src="https://res.cloudinary.com/serverguyken/video/upload/v1648157645/Spacre/Videos/yt5s.com-Develop._Preview._Ship._ciep4v.mp4" autoPlay muted loop hasControls={false} isAd />
                     </div>
                 </div>
                 <div className="jobs_list_container mb-5">
