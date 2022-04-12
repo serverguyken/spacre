@@ -16,7 +16,7 @@ const Layout = ({ path, content_one, content_two }: any) => {
             setRender()
         }
     }, [])
-    
+
     OnLoad(() => {
         let display_mode = localStorage.getItem('theme')
         if (display_mode === null) {
@@ -36,26 +36,30 @@ const Layout = ({ path, content_one, content_two }: any) => {
         }
     })
     return (
-        <div className='sidebar_container_main max-w-[1200px] ml-auto mr-auto flex justify-between dark:bg-darkMode'>
-            <div className='layout_sidebar fixed top-0 z-50 h-full bg-white dark:bg-darkMode'>
-                <Sidebar path={path} />
-            </div>
-            <main className='layout_contents_main main_container flex justify-between space-x-8 pl-44'>
-                <div className=''>
-                    <div className=''>
-                        <div className='layout_contents max-w-[600px] ml-auto mr-auto'>
+        <div className='layout_main dark:bg-darkMode'>
+            <div className='layout_main_contents main_container max-w-[1200px] ml-auto mr-auto flex justify-between'>
+                <div className='layout_sidebar fixed w-[210px] top-0 z-50 h-full bg-white dark:bg-darkMode'>
+                    <Sidebar path={path} />
+                </div>
+                <main className='layout_contents_main relative left-[210px]'
+                    style={{
+                        width: 'calc(100% - 210px)'
+                    }}>
+                    <div className='layout_flex flex justify-between space-x-4 screen-sm:block screen-sm:space-x-0'>
+                        <div className='layout_contents_one w-[75%] screen-sm:w-full'>
                             <div className='border border-gray-100 dark:border-gray-50 dark:border-opacity-10 screen-sm:border-none'>
                                 {content_one}
                             </div>
                         </div>
+                        <div className='layout_contents_two w-[35%]'>
+                            {
+                                content_two && content_two
+                            }
+                        </div>
                     </div>
-                </div>
-                <div className='w-[350px]'>
-                    {
-                        content_two && content_two
-                    }
-                </div>
-            </main>
+                </main>
+            </div>
+
         </div>
     )
 }

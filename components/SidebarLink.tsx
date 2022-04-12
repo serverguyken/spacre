@@ -24,7 +24,7 @@ const SidebarLink = ({ text, Icon, fullpath, ActiveIcon, action, active }: {
                     <div className={setClass("main_sidebar_links_contents select-none text-[#d9d9d9] flex justify-start items-center text-lg space-x-3 animationHover py-3 px-3 -ml-3 cursor-pointer hover:bg-light dark:hover:bg-darkModeBg")} onClick={action}>
                         <div>
                             {
-                                setActive(text) ? <ActiveIcon className='text-primary w-7 h-7' /> :<Icon className='text-black dark:text-white  w-7 h-7 ' />
+                                setActive(text) ? <ActiveIcon className='text-primary w-7 h-7' /> :<Icon className='text-black dark:text-white  w-7 h-7' />
                             }
                         </div>
                         {

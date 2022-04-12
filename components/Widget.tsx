@@ -26,7 +26,7 @@ const people_to_follow = [
     {
         id: 3,
         name: "Vercel",
-        image: "https://res.cloudinary.com/serveryguken/image/upload/v1648158673/Spacre/images/logo-vercel_x7ukkf.png",
+        image: "https://sfsfiles.spacre.com/images/72e55085-af9c-48c8-8c97-996df7f52101_logo-vercel.png",
         username: "cjanderson",
         job: "Software",
     },
@@ -117,12 +117,12 @@ const Widget = () => {
         }
     }, [])
     return (
-        <div className='widget_main self-start w-full pt-4  sticky top-0 pb-6'>
+        <div className='widget_main self-start w-full pt-4 sticky top-0 pb-6'>
             <div className="video_ad_container mb-2">
                 <div className="">
                     <h1 className="text-gray-400 dark:text-white text-sm flex-1 mb-2">Sponsored</h1>
                     <div className="video_ad_container_inner rounded-full">
-                        <Video id="video_ad_1" src="https://res.cloudinary.com/serverguyken/video/upload/v1648157645/Spacre/Videos/yt5s.com-Develop._Preview._Ship._ciep4v.mp4" autoPlay muted loop hasControls={false} isAd />
+                        <Video id="video_ad_1" src="https://sfsfiles.spacre.com/videos/bc27b369-e66c-4b4b-a73d-66f0efaea6ac_yt5s.com-develop._preview._ship..mp4" autoPlay muted loop hasControls={false} isAd />
                     </div>
                 </div>
                 <div className="jobs_list_container mb-5">

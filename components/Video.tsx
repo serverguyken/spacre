@@ -25,7 +25,7 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
             const volume_on_btn = document.getElementById(`${id}_volume_on_button`) as HTMLButtonElement;
             const volume_off_btn = document.getElementById(`${id}_volume_off_button`) as HTMLButtonElement;
             const fullscreen_btn = document.getElementById(`${id}_fullscreen_button`) as HTMLButtonElement;
-            const video_views = document.getElementById(`${id}_video_views`) as HTMLDivElement;
+            //const video_views = document.getElementById(`${id}_video_views`) as HTMLDivElement;
             const play_button_overlay = document.getElementById(`${id}_play_button_overlay`) as HTMLDivElement;
             let timeout: any;
 
@@ -60,7 +60,7 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
             if (v) {
                 v.src = vSrc;
                 v.addEventListener('play', () => { 
-                    addClass(video_views, 'hidden');
+                    //addClass(video_views, 'hidden');
                     addClass(play_button_overlay, 'hidden');
                 });
                 addClass(v, 'pointer-events-none');
@@ -390,9 +390,9 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
                 <div className="video_top w-full h-3/5   absolute z-10"
                     id={`${id}_video_top`}>
                 </div>
-                <div className="bg-gray-600  p-1 rounded-sm absolute bottom-4 left-4 z-20 video_controls_views__views select-none" id={`${id}_video_views`}>
+                {/* <div className="bg-gray-600  p-1 rounded-sm absolute bottom-4 left-4 z-20 video_controls_views__views select-none" id={`${id}_video_views`}>
                     <span className="text-white text-xs">{videoViews} views</span>
-                </div> 
+                </div>  */}
                 <div className="video_bottom h-[24%] flex items-center screen-sm:h-[28%]  bg-gradient-to-t from-black opacity-100 w-full absolute bottom-0 z-20 pb-2 pl-2 pr-2 cursor-auto rounded-lg" id={
                     `${id}_video_bottom`
                 }>

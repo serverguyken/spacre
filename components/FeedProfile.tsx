@@ -145,12 +145,12 @@ const FeedProfile = () => {
         id: 6,
         userName: 'Fireshipio',
         fullName: 'Fireship IO',
-        profileImage: 'https://res.cloudinary.com/serverguyken/image/upload/v1648158907/Spacre/images/fireship_logo_r5tikr.png',
+        profileImage: 'https://sfsfiles.spacre.com/profile/39345492-459d-4b68-8732-53912e06ebbe_fireship_logo.png',
         isVerified: true,
         isFollowing: true,
         postTimeStamp: '20h',
         postContent: 'Uploaded a new video. Check it out!',
-        postVideo: 'https://res.cloudinary.com/serverguyken/video/upload/v1648157586/Spacre/Videos/yt5s.com-DevOps_CI_CD_Explained_in_100_Seconds_gtyzed.mp4',
+        postVideo: 'https://sfsfiles.spacre.com/videos/666b8d38-2029-499a-9c0d-6e7db12da6f6_yt5s.com-devops_ci_cd_explained_in_100_seconds.mp4',
         postVideoViews: '200.16k',
         postLiked: true,
         postSaved: true,
@@ -212,21 +212,21 @@ const FeedProfile = () => {
                         isPullable={true}
                         onRefresh={handleRefresh}
                         pullingContent={
-                            <div className="pullDownContentHeader pt-8 screen-sm:pt-24 flex justify-center">
+                            <div className="pullDownContentHeader pt-8 screen-sm:pt-16 flex justify-center">
                                 <div className="pullDownContentHeaderText">
                                     <ArrowDownIcon width={20} className="text-gray-500" />
                                 </div>
                             </div>
                         }
                         refreshingContent={
-                            <div className="refreshingConentHeader pt-8 screen-sm:pt-24 flex justify-center">
+                            <div className="refreshingConentHeader pt-8 screen-sm:pt-16 flex justify-center">
                                 <div className="refreshingConentHeaderText">
                                     <Spinner width={24} color="var(--color-primary)" />
                                 </div>
                             </div>
                         }
                     >
-                        <div className=' screen-sm:pt-20 mb-10'>
+                        <div className=' screen-sm:pt-16 mb-10'>
                             {
                                 refreshed ?
                                     dummyUsers.map((user: any) => {

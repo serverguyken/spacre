@@ -41,7 +41,7 @@ const Home: NextPage = () => {
                         path="home"
                         content_one={
                             <div>
-                                <div className='feed_contents_1 feed_content_search sticky top-0 z-30 w-full bg-[rgba(255,255,255,0.85)] dark:bg-[rgba(26,26,26,0.7)] backdrop-blur-[12px] p-2'>
+                                <div className='feed_contents_1 feed_content_search sticky top-0 mt-1 z-30 w-full bg-[rgba(255,255,255,0.85)] dark:bg-[rgba(26,26,26,0.7)] backdrop-blur-[12px] p-2'>
                                     <Search />
                                 </div>
                                 <div className="feed_contents_2">

@@ -48,7 +48,7 @@ const Sidebar = ({ path }: {
         return false
     }
     return (
-        <div className='bg-white dark:bg-darkMode  screen-sm:border-b screen-sm:border-opacity-10 screen-sm:dark:border-b-gray-50 screen-sm:dark:border-opacity-5'>
+        <div className='sidebar_main bg-white dark:bg-darkMode  screen-sm:border-b screen-sm:border-opacity-10 screen-sm:dark:border-b-gray-50 screen-sm:dark:border-opacity-5'>
             <div className="sidebar_links_contents main_container pt-3 pb-3">
                 <div className='sidebar_links_main'>
                     <div className="sidebar_links_logo mb-2">

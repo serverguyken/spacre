@@ -121,12 +121,12 @@ const Input = ({ id, styleToRender, type, hasLabel, label, placeholder, value, s
                 return (
                     <div className="w-full home_search_input">
                         <div className="relative">
-                            <div className="home_search_icon absolute top-0 screen-sm:top-3 left-3 h-full flex items-center justify-center">
+                            <div className="home_search_icon absolute top-0 left-3 h-full flex items-center justify-center">
                                 <Search size={'18'} color={'#536471'}/>
                             </div>
                             <input
                                 type={type}
-                                className={setClass("search_input bg-[#eff3f4] border border-gray-100 w-full pl-10 py-2 rounded-full focus:bg-white outline-none focus:border-gray-200 placeholder-gray-500 dark:bg-darkModeBg dark:border-none", styles, cancelShown ? 'pr-[4.2rem]' : '')}
+                                className={setClass("search_input bg-[#eff3f4] border border-gray-100 w-full pl-10 py-2 -pt-1 rounded-full focus:bg-white outline-none focus:border-gray-200 placeholder-gray-500 dark:bg-darkModeBg dark:border-none", styles, cancelShown ? 'pr-[4.2rem]' : '')}
                                 id={id}
                                 placeholder={placeholder}
                                 value={inputValue}
@@ -140,7 +140,7 @@ const Input = ({ id, styleToRender, type, hasLabel, label, placeholder, value, s
                                 autoFocus={autoFocus}
                             />
                             {
-                                cancelShown && <div className="absolute top-2 right-4  flex items-center justify-center screen-sm:top-8 cursor-pointer select-none" role="button" onClick={handleCancel}>
+                                cancelShown && <div className="absolute top-2 right-4  flex items-center justify-center screen-sm:top-2 cursor-pointer select-none" role="button" onClick={handleCancel}>
                                     Cancel
                                 </div>
                             }
