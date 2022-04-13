@@ -95,7 +95,7 @@ const Sidebar = ({ path }: {
                             />
                         </div>
                     </div>
-                    <div className="sidebar_links_flex2 mt-2 sidebar_post_button w-[98%] m-auto">
+                    <div className="sidebar_links_flex2 mt-2 sidebar_post_button w-[98%] m-auto relative">
                         <PrimaryButton styles={'sidebar_post_button_lg animationScaleup bg-primary w-full -ml-3 py-3 rounded-full text-white text-lg font-semibold screen-sm:hidden'}>
                             <span className='s_p_b_text'>Post</span>
                             <span className='s_p_b_icon_lg hidden'>
@@ -109,6 +109,9 @@ const Sidebar = ({ path }: {
                                 <PlusIcon className='ml-auto mr-auto text-white' width={20} />
                             </span>
                         </PrimaryButton>
+                        <div className="sidebar_post_tooltip invisible opacity-0 absolute top-14 -left-2 z-[50] w-[2.5rem] bg-gray-500 dark:bg-black dark:text-white p-1 text-center text-xs text-white rounded shadow-sm">
+                            <span>Post</span>
+                        </div>
                     </div>
                 </div>
             </div>

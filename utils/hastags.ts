@@ -5,7 +5,7 @@ const hastags = (defaultText: string) => {
             name: 'developer',
             data: {
                 text: '#developer',
-                link: '/hashtag/developer',
+                link: '/search?q=developer&click=hashtag',
             },
 
         },
@@ -14,7 +14,7 @@ const hastags = (defaultText: string) => {
             name: 'nextjs',
             data: {
                 text: '#nextjs',
-                link: '/hashtag/nextjs',
+                link: '/search?q=nextjs&click=hashtag',
             },
         },
         {
@@ -22,7 +22,7 @@ const hastags = (defaultText: string) => {
             name: 'tech',
             data: {
                 text: '#tech',
-                link: '/hashtag/tech',
+                link: '/search?q=tech&click=hashtag',
             },
         },
         {
@@ -30,7 +30,7 @@ const hastags = (defaultText: string) => {
             name: 'jobs',
             data: {
                 text: '#jobs',
-                link: '/hashtag/jobs',
+                link: '/search?q=jobs&click=hashtag',
             },
         },
     ]
@@ -40,7 +40,7 @@ const hastags = (defaultText: string) => {
             name: defaultText,
             data: {
                 text: `#${defaultText}`,
-                link: `/hashtag/${defaultText}`,
+                link: `/search?q=${defaultText}&click=hashtag`,
             },
         })
     }

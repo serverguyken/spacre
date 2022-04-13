@@ -60,7 +60,7 @@ function SecondaryButton({ textColor, width, height, styles, text, textStyle, ac
     return (
         <div>
             <button className={setClass("secondary_btn_comp select-none", `${disabled ? "bg-gray-400 text-white cursor-not-allowed" : "bg-black black_bg_transition"}`, "border-radius-main", width, height, styles)} onClick={action} disabled={disabled}>
-                <p className={"font-medium text-sm text-center " + textStyle} >{text}</p>
+                <p className={"font-medium text-sm text-center " + textStyle + textColor} >{text}</p>
                 {children}
             </button>
         </div>

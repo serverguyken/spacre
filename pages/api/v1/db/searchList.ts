@@ -16,22 +16,22 @@ const searchList: [] | any = [{
     link: `/jessica_ruwn`,
 }, {
     id: 3,
-    content: '#Developers',
+    content: '#developers',
     type: 'hashtag',
     icon: null,
-    link: `/search?q=#Developers`,
+    link: `/search?q=developers&click=hashtag`,
 }, {
     id: 4,
-    content: '#Tech',
+    content: '#tech',
     type: 'hashtag',
     icon: null,
-    link: `/search?q=#tech`,
+    link: `/search?q=tech&click=hashtag`,
 }, {
     id: 5,
     content: '#repository',
     type: 'hashtag',
     icon: null,
-    link: `/search?q=#repository`,
+    link: `/search?q=repository&click=hashtag`,
 }]
 
 type Data = {

@@ -7,6 +7,7 @@ export function setClass(...classesArr: string[]) {
   return classesArr.join(' ');
 }
 
+
 export function addClass(element: HTMLElement, ...classesArr: string[]) {
   if (isBrowser()) {
     const class_element = element.classList;
@@ -34,18 +35,37 @@ export function isClient(): boolean {
 }
 
 export function isSearchQuery(route: string): { isSearchQuery: boolean; query: string | null } {
-    let isSearchQuery = false;
-    let searchQueryValue = null
-    if (route.indexOf('q=') > -1) {
-        isSearchQuery = true;
-        searchQueryValue = decodeURIComponent(route.split('q=')[1]);
+  let isSearchQuery = false;
+  let searchQueryValue = null
+  if (route.indexOf('q=') > -1) {
+    searchQueryValue = route.split('q=')[1].split('&')[0];
+    if (searchQueryValue.length > 0) {
+      isSearchQuery = true;
     }
-    return {
-        isSearchQuery: isSearchQuery,
-        query: searchQueryValue
-    };
+  }
+  return {
+    isSearchQuery: isSearchQuery,
+    query: searchQueryValue
+  };
 }
 
+export function serachQueryKeyValues(route: string): { [key: string]: string } {
+  const queryObj: {
+    [key: string]: string;
+  } | any = {};
+  if (route.indexOf('q=') > -1) {
+    // get queries from route e.g q=tech&click=hashtag
+    const query = route.split('q=')[1].split('&');
+    query.forEach(q => {
+      const keyValue = q.split('=')
+      queryObj['q'] = isSearchQuery(route).query;
+      if (keyValue.length > 1) {
+        queryObj[keyValue[0]] = keyValue[1];
+      }
+    });
+  }
+  return queryObj;
+}
 
 export function generateUsername() {
   const randomNumber = Math.floor(Math.random() * 10000);
@@ -132,6 +152,53 @@ export function toHHMMSS(time: number) {
   return minutes + ':' + seconds;
 }
 
+import linkify, { LinkifyIt } from 'linkify-it';
+import tlds from 'tlds';
+export const isLink = (str: string) => {
+  const linkifyit: LinkifyIt = linkify().tlds(tlds);
+  return linkifyit.match(str);
+}
+
+export const Linky = {
+  get: (str: string) => { 
+    const linkifyit: LinkifyIt = linkify().tlds(tlds);
+    const matches = linkifyit.match(str);
+    if (matches) { 
+      return matches[0];
+    }
+    return null;
+  },
+  getAll: (str: string) => {
+    const linkifyit: LinkifyIt = linkify().tlds(tlds);
+    const matches = linkifyit.match(str);
+    if (matches) {
+      return matches;
+    }
+    return [];
+  },
+  getUrl: (str: string) => {
+    const linkifyit: LinkifyIt = linkify().tlds(tlds);
+    const matches = linkifyit.match(str);
+    if (matches) {
+      return matches[0].url;
+    }
+    return null;
+  },
+  isLink: (str: string) => {
+    const linkifyit: LinkifyIt = linkify().tlds(tlds);
+    const matches = linkifyit.match(str);
+    if (matches && matches.length > 0) {
+      return true;
+    }
+    return false;
+  }
+}
+
+export const getLink = (str: string) => {
+  const linkifyit: LinkifyIt = linkify().tlds(tlds);
+  return linkifyit.match(str);
+}
+
 export const toHTML = (text: string) => {
   const original_text = text
   let changed_text = text
@@ -141,7 +208,7 @@ export const toHTML = (text: string) => {
   // link regex domain is optional e.g http(s):web and http(s):web.com are valid
   const valid_domain_prefix = "(http(s)?:\\/\\/|www\\.)"
   const valid_domain_suffix = "(\\.\\w+|\\w+\\.\\w+|\\w+)"
-  const LINK_REGEX = new RegExp(`(^|\\s)(${valid_domain_prefix}[a-zA-Z0-9_]+${valid_domain_suffix}(\\/\\S*)?)`, "g")
+  const LINK_REGEX = /(^|\s)((http(s)?:\/\/)?(www\.)?[a-zA-Z0-9_]+\.[a-zA-Z0-9_]+[a-zA-Z0-9_]*)/g
   // if text contains a mention, replace it with a link
   if (text.match(MENTION_REGEX)) {
     // relpace all mentions with a link to the user's profile e.g @rr = <a href="/rr">@rr</a>
@@ -159,9 +226,11 @@ export const toHTML = (text: string) => {
   // if text contains a link, replace it with a link
   if (text.match(LINK_REGEX)) {
     // replace all links with a link to the link e.g https://www.web.com = <a href="https://www.web.com">https://www.web.com</a>
-    changed_text = changed_text.replace(LINK_REGEX, (match, p1, p2) => {
-      return `${p1}<a href="${p2}" class="text-link">${p2}</a>`
-    })
+    if (isLink(text)) {
+      changed_text = changed_text.replace(LINK_REGEX, (match, p1, p2) => {
+        return `${p1}<a href="${p2}" class="text-link">${p2}</a>`
+      })
+    }
   }
   // if text contains a new line, replace it with a br
   if (text.match(/\n/g)) {

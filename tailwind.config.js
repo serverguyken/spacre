@@ -31,6 +31,7 @@ module.exports = {
         'light': '#eff3f4',
         'dimGray': '#6e6e6e',
         'lightGray': '#c0c0c0',
+        'darkText': "rgb(156 163 175)",
         'darkMode': '#18191a',
         'darkModeBg': '#273340',
         'darkModeBgHover': '#d9d9d9',

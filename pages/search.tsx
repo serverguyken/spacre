@@ -1,18 +1,18 @@
 import type { GetServerSideProps, NextPage } from 'next'
-import { isBrowser, isSearchQuery, print } from '../utils/'
+import { isBrowser, isSearchQuery, serachQueryKeyValues, print } from '../utils/'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import useUserContext from '../provider/userProvider'
 import { WithAuth } from '../config/auth/route'
 import { auth } from '../config/auth/firebase'
 import { User } from '../interface/User'
-import useGetUser from '../config/auth/user'
 const Search: NextPage = () => {
     const { user, signOutUser } = useUserContext()
     const router = useRouter()
-    let searchQuery: any = isSearchQuery(router.asPath).isSearchQuery
-    let query = isSearchQuery(router.asPath).query
-
+    const searchQuery: any = isSearchQuery(router.asPath).isSearchQuery
+    const query = isSearchQuery(router.asPath).query
+    const queries = serachQueryKeyValues(router.asPath)
+    const clickQuery = queries['click'] ? queries['click'] : null
     return WithAuth(user, false, true, {
         onAuthSuccess: (user: User) => {
             if (isBrowser()) {
@@ -24,6 +24,9 @@ const Search: NextPage = () => {
             return (
                 <div>
                     <h1>Search: {query}</h1>
+                    {
+                        clickQuery && <p>Click: #{query}</p>
+                    }
                 </div>
             )
 

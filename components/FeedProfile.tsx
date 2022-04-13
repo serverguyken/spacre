@@ -18,18 +18,28 @@ import ProfileCardHover from './ProfileCardHover'
 import Skeleton from './Skeleton'
 
 
-function countSet(num: number) {
+function countSet(num: number, upper?: boolean) {
     let value = `${num}`
     let unit = ''
-    if (num > 1000) {
-        unit = 'k'
+    if (value.length === 0 || value.length === 1 || value.length === 2 || value.length === 3) {
+        value = `${value}`
+    } else if (value.length === 4 || value.length === 5 || value.length === 6) {
+        unit = upper ? 'K' : 'k' 
         value = `${(num / 1000).toFixed(1)}${unit}`
-    } else if (num > 1000000) {
-        unit = 'm'
-        value = `${(num / 1000000).toFixed(1)}${unit}`
-    } else if (num > 1000000000) {
-        unit = 'b'
+    } else if (value.length === 7 || value.length === 8 || value.length === 9) {
+        unit = upper ? 'M' : 'm'
+        value = `${(num / 1000000).toFixed(1)}${unit}` 
+    } else if (value.length === 10 || value.length === 11 || value.length === 12) {
+        unit = upper ? 'B' : 'b'
         value = `${(num / 1000000000).toFixed(1)}${unit}`
+    } else if (value.length === 13 || value.length === 14 || value.length === 15) {
+        unit = upper ? 'T' : 't'
+        value = `${(num / 1000000000000).toFixed(1)}${unit}`
+    } else if (value.length === 16 || value.length === 17 || value.length === 18) {
+        unit = upper ? 'Q' : 'q'
+        value = `${(num / 1000000000000000).toFixed(1)}${unit}`
+    } else if (value.length === 19 || value.length === 20 || value.length === 21) {
+        value
     }
     const return_value = {
         value: value,
@@ -38,6 +48,7 @@ function countSet(num: number) {
     }
     return return_value
 }
+
 
 
 const createPostHtml = (text: string) => {
@@ -67,17 +78,20 @@ const FeedProfile = () => {
         userName: 'david224',
         fullName: 'David Brown',
         profileImage: 'https://images.generated.photos/DDf2TAj3WgXlcaRW_Rw_C49RS5ZRIqIcS0h8IC7iVSM/rs:fit:512:512/wm:0.95:sowe:18:18:0.33/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LnBob3Rvcy92M18w/NDA3MDYzLmpwZw.jpg',
-        isVerified: false,
+        isVerified: true,
         isFollowing: false,
+        bio: 'I create things for the web @tech | Business owner #developerlife',
+        followersCount: countSet(1234666669, true).value,
+        followingCount: countSet(50, true).value,
         postTimeStamp: 'Jan 28',
         postContent: 'How to create a react app with nextjs',
         posContentHeader: 'How to create a react app with nextjs',
         postContentTagText: 'Creating a react app is very simple. Tips will be provided soon.',
         postLiked: false,
         postSaved: false,
-        likesCount: countSet(12).value,
-        commentsCount: countSet(2).value,
-        sharesCount: countSet(1).value,
+        likesCount: countSet(12, false).value,
+        commentsCount: countSet(2, false).value,
+        sharesCount: countSet(1, false).value,
     },
     {
         id: 2,
@@ -86,14 +100,17 @@ const FeedProfile = () => {
         profileImage: 'https://images.generated.photos/lSQCOEwpOFJ_Ua0DFgJJhp4YPZROcxvcP_fjR6GvsVc/rs:fit:256:256/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LnBob3Rvcy92M18w/NjUyNTYyLmpwZw.jpg',
         isVerified: false,
         isFollowing: false,
+        bio: 'Content creator work for @daily - Develper Advocate',
+        followersCount: countSet(45693, true).value,
+        followingCount: countSet(2109, true).value,
         postTimeStamp: 'Feb 16',
         postContent: 'Hello everyone, the last livestream was great. If you missed it, comment below when you think we should have another.😄 bye:)',
         postContentTagText: 'Comment your answer below.',
         postLiked: false,
         postSaved: false,
-        likesCount: countSet(3658).value,
-        commentsCount: countSet(100).value,
-        sharesCount: countSet(22).value,
+        likesCount: countSet(3658, false).value,
+        commentsCount: countSet(100, false).value,
+        sharesCount: countSet(22, false).value,
     },
     {
         id: 3,
@@ -102,6 +119,9 @@ const FeedProfile = () => {
         profileImage: 'https://images.generated.photos/yZe4-qr0QKM1djPOhY9TfynsPSNdAWX7TzDpiXDFWas/rs:fit:256:256/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LnBob3Rvcy92M18w/MjU0ODE0LmpwZw.jpg',
         isVerified: false,
         isFollowing: true,
+        bio: 'Web 3.0 Developer - Building the future of the web #future',
+        followersCount: countSet(508, true).value,
+        followingCount: countSet(347, true).value,
         postTimeStamp: 'March 10',
         postContent: 'Web 3.0 is coming soon. Check out the link below.',
         postImage: 'https://mlxova6nqons.i.optimole.com/qgiRRAs.XcRg~5bd19/w:auto/h:auto/q:86/https://milyin.com/wp-content/uploads/2022/02/What-is-Web-3.0-Why-it-matter-Web-2.0-vs-Web-3.0.png',
@@ -116,8 +136,12 @@ const FeedProfile = () => {
         id: 4,
         userName: 'serverguyken99',
         fullName: 'serverguyken',
+        profileImage: null,
         isVerified: true,
         isFollowing: true,
+        bio: 'Computer Science Student - Founder @spacre | Helping fellow developers and designers build connect',
+        followersCount: countSet(2689654, true).value,
+        followingCount: countSet(1234, true).value,
         postTimeStamp: 'March 10',
         postContent: `'My first Web 3.0 is coming soon. Check out the link below. Hello everyone, the last livestream was great. If you missed it, comment below when you think we should have another.😄 bye:)  Hello everyone, the last livestream was great. If you missed it, comment below when you think we should have another.😄 bye:) Hello everyone, the last livestream was great. If you missed it, comment ggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggfffffffffffffffffffffffffffff '`,
         postLiked: true,
@@ -133,6 +157,9 @@ const FeedProfile = () => {
         profileImage: 'https://images.generated.photos/lby-AqX1D1WkyGljF4B0TFSjhu0dJx7Sh76V2LY785E/rs:fit:256:256/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LnBob3Rvcy92M18w/NjAxMTU1LmpwZw.jpg',
         isVerified: false,
         isFollowing: false,
+        bio: 'From baking cookies to coding, I am a full stack developer. I love to learn new things and share my knowledge with others.',
+        followersCount: countSet(162864, true).value,
+        followingCount: countSet(2453, true).value,
         postTimeStamp: 'March 15',
         postContent: 'Just got a new job @google. I am so excited!. Thanks @mike_bond for the job offer.',
         postLiked: false,
@@ -148,6 +175,9 @@ const FeedProfile = () => {
         profileImage: 'https://sfsfiles.spacre.com/profile/39345492-459d-4b68-8732-53912e06ebbe_fireship_logo.png',
         isVerified: true,
         isFollowing: true,
+        bio: 'Content creator | fireship.io',
+        followersCount: countSet(1786532, true).value,
+        followingCount: countSet(197, true).value,
         postTimeStamp: '20h',
         postContent: 'Uploaded a new video. Check it out!',
         postVideo: 'https://sfsfiles.spacre.com/videos/666b8d38-2029-499a-9c0d-6e7db12da6f6_yt5s.com-devops_ci_cd_explained_in_100_seconds.mp4',
@@ -165,6 +195,9 @@ const FeedProfile = () => {
         profileImage: 'https://pngpart.com/images/bt/gatsby-2.png',
         isVerified: true,
         isFollowing: true,
+        bio: 'Gatsby is a static site generator. It is a framework for building blazing fast websites and apps. visit https://gatsbyjs.com dd',
+        followersCount: countSet(3865027,true).value,
+        followingCount: countSet(52, true).value,
         postTimeStamp: '2h',
         postContent: 'New feature added to the site. Please feel free to leave a comment.',
         postLink: 'https://www.gatsbyjs.org/',
@@ -235,7 +268,7 @@ const FeedProfile = () => {
                                                 <div className="flex justify-between ">
                                                     <div className='flex space-x-2 w-full'>
                                                         <div className="profile_image mt-1">
-                                                            <Link href="/[username]" as={`/${user.userName}`}>
+                                                            <Link href={`/${user.userName}`}>
                                                                 <a>
                                                                     <ProfileImage user={user} />
                                                                 </a>
@@ -244,30 +277,36 @@ const FeedProfile = () => {
                                                         <div className="profile_name_post_feed w-full -mt-1 pl-[10px] pr-[10px]">
                                                             <div className="profile_name w-full">
                                                                 <div className="flex justify-between">
-                                                                    <div className="profile_names_content">
-                                                                        <div className='flex items-center'>
-                                                                            <Link href={`/${user.userName}`}>
-                                                                                <a className="font-semibold max-w-[16rem] text-ellipsis overflow-hidden hover:underline feed_user_profile_name">{user.userName}</a>
-                                                                            </Link>
-                                                                            {
-                                                                                user.isVerified && <div className='mt-1'>
-                                                                                    <Icon type="verified" />
+                                                                    <div className="profile_names_content w-full">
+                                                                        <div className="profile_name_link relative">
+                                                                            <div className='flex items-center'>
+                                                                                <div className="whitespace-nowrap max-w-[16rem] text-ellipsis overflow-hidden hover:underline">
+
+                                                                                    <Link href={`/${user.userName}`}>
+                                                                                        <a className="font-semibold feed_user_profile_name">{user.fullName}</a>
+                                                                                    </Link>
                                                                                 </div>
-                                                                            }
+                                                                                {
+                                                                                    user.isVerified && <div className='mt-1'>
+                                                                                        <Icon type="verified" />
+                                                                                    </div>
+                                                                                }
+                                                                            </div>
+                                                                            <div className="profile_car_hover_comp absolute pt-2 pb-20 z-20 w-full hidden invisible opacity-0">
+                                                                                <ProfileCardHover user={user} />
+                                                                            </div>
                                                                         </div>
                                                                         <div className="profile_username_post_timestamp flex items-center">
-                                                                            <div className="profile_username">
-                                                                                <h2 className='text-sm text-dimGray max-w-[16rem] text-ellipsis overflow-hidden'>
-                                                                                    <Link href={`/${user.userName}`}>
-                                                                                        <a className="text-sm text-dimGray dark:text-gray-200 dark:text-opacity-75 max-w-[16rem] text-ellipsis overflow-hidden">@{user.fullName}</a>
-                                                                                    </Link>
-                                                                                </h2>
+                                                                            <div className="profile_username whitespace-nowrap max-w-[16rem] text-ellipsis overflow-hidden hover:underline">
+                                                                                <Link href={`/${user.userName}`}>
+                                                                                    <a className="text-sm text-dimGray dark:text-darkText">@{user.userName}</a>
+                                                                                </Link>
                                                                             </div>
                                                                             <p className="before:content-['•'] before:text-[12px] before:ml-[4px] before:mr-[4px] -mt-1 before:dark:text-gray-50 before:dark:text-opacity-30"></p>
                                                                             <p className='text-sm text-dimGray'>{user.postTimeStamp}</p>
                                                                         </div>
                                                                     </div>
-                                                                    <div className="post_more_action text-gray-500 hover:bg-primary hover:bg-opacity-10 hover:text-primary rounded-full w-8 h-8 flex justify-center items-center">
+                                                                    <div className="post_more_action text-gray-500 dark:text-darkText hover:bg-primary hover:bg-opacity-10 hover:text-primary rounded-full w-8 h-8 flex justify-center items-center">
                                                                         <DotsHorizontalIcon width={20} />
                                                                     </div>
                                                                 </div>
@@ -322,7 +361,7 @@ const FeedProfile = () => {
                                                                 </div>
                                                                 <div className="post_user_actions mt-3 pb-1 max-w-[80%]">
                                                                     <div className="flex justify-between items-center">
-                                                                        <div className={setClass("post_action post_user_like_action relative select-none flex like_animation items-center space-x-2 cursor-pointer p-1 rounded-sm hover:bg-salmon hover:bg-opacity-10 hover:text-salmon dark:hover:text-salmon", user.postLiked ? "text-salmon dark:text-salmon" : 'text-gray-500  dark:text-gray-500')}>
+                                                                        <div className={setClass("post_action post_user_like_action relative select-none flex like_animation items-center space-x-2 cursor-pointer p-1 rounded-sm hover:bg-salmon hover:bg-opacity-10 hover:text-salmon dark:hover:text-salmon", user.postLiked ? "text-salmon dark:text-salmon" : 'text-gray-500  dark:text-darkText')}>
                                                                             {
                                                                                 user.postLiked ?
                                                                                     <HeartIconSolid className={'text-salmon'} width={16} />
@@ -339,7 +378,7 @@ const FeedProfile = () => {
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                        <div className="post_action post_user_comment_action relative select-none flex text-gray-500 dark:text-gray-500 items-center space-x-2 cursor-pointer p-1 rounded-sm hover:bg-green-600 hover:bg-opacity-10 hover:text-green-600 dark:hover:text-green-600">
+                                                                        <div className="post_action post_user_comment_action relative select-none flex text-gray-500 dark:text-darkText items-center space-x-2 cursor-pointer p-1 rounded-sm hover:bg-green-600 hover:bg-opacity-10 hover:text-green-600 dark:hover:text-green-600">
                                                                             <AnnotationIcon width={16} />
                                                                             <p className="text-xs">{user.commentsCount}</p>
                                                                             <div className="post_action_tooltip post_comment_tooltip invisible opacity-0 absolute top-7 right-0 z-20 bg-gray-500 dark:bg-black dark:text-white w-12 p-1 text-center text-xs text-white rounded shadow-sm">
@@ -348,7 +387,7 @@ const FeedProfile = () => {
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                        <div className="post_action post_user_share_action relative select-none flex text-gray-500 dark:text-gray-500 items-center space-x-2 cursor-pointer p-1 rounded-sm hover:bg-primary hover:bg-opacity-10 hover:text-primary dark:hover:text-primary">
+                                                                        <div className="post_action post_user_share_action relative select-none flex text-gray-500 dark:text-darkText items-center space-x-2 cursor-pointer p-1 rounded-sm hover:bg-primary hover:bg-opacity-10 hover:text-primary dark:hover:text-primary">
                                                                             <UploadIcon width={16} />
                                                                             <p className="text-xs">{user.sharesCount}</p>
                                                                             <div className="post_action_tooltip post_share_tooltip invisible opacity-0 absolute top-7 right-0 z-20 bg-gray-500 dark:bg-black dark:text-white w-12 p-1 text-center text-xs text-white rounded shadow-sm">
@@ -357,7 +396,7 @@ const FeedProfile = () => {
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                        <div className="post_action post_user_save_action relative select-none flex text-gray-500 dark:text-gray-500 items-center space-x-2 cursor-pointer p-1 rounded-sm hover:bg-primary hover:bg-opacity-10 hover:text-primary dark:hover:text-primary" onClick={() => {
+                                                                        <div className="post_action post_user_save_action relative select-none flex text-gray-500 dark:text-darkText items-center space-x-2 cursor-pointer p-1 rounded-sm hover:bg-primary hover:bg-opacity-10 hover:text-primary dark:hover:text-primary" onClick={() => {
                                                                             if (isBrowser()) {
                                                                                 alert("saved post2")
                                                                             }

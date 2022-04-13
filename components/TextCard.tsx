@@ -2,7 +2,7 @@ import { CodeIcon, PhotographIcon, EmojiHappyIcon } from "@heroicons/react/outli
 import { PrimaryButton } from "./Buttons"
 import { XIcon } from "@heroicons/react/outline"
 import { useState, useEffect } from "react"
-import { setClass, isBrowser, generateLoadingTime, TimeOut, print, StorageEvent, toHTML, getTypeByTrigger, Strategy } from "../utils"
+import { setClass, isBrowser, generateLoadingTime, TimeOut, print, StorageEvent, toHTML, getTypeByTrigger, Strategy, isLink, Linky} from "../utils"
 import { CompositeDecorator, ContentBlock, ContentState, DefaultDraftInlineStyle, EditorState, Modifier, SelectionState } from "draft-js"
 import Editor, { EditorPlugin } from '@draft-js-plugins/editor'
 import createMentionPlugin, { defaultSuggestionsFilter } from '@draft-js-plugins/mention'
@@ -19,6 +19,8 @@ import MentionEntry from "./MentionEntry"
 import HashtagEntry from "./HashtagEntry"
 import VALTIO, { SUBSCRIBE } from "../store/valtio"
 import store from "../store"
+import { RenderLinkCard } from "../utils/render"
+
 const mentionPlugin = createMentionPlugin({
     mentionPrefix: '@',
     mentionTrigger: '@',
@@ -40,7 +42,15 @@ const hashtagPlugin = createMentionPlugin({
 })
 
 
-const linkifyPlugin = createLinkifyPlugin()
+const linkifyPlugin = createLinkifyPlugin({
+    component: ({ href, children, ...props }) => {
+        return (
+            <a href={href} onClick={() => {}} className="cursor-auto text-link">
+                {children}
+            </a>
+        )
+    },
+})
 
 
 
@@ -59,7 +69,8 @@ const TextCard = () => {
     const [maxInitialValue, setMaxInitialValue] = useState(0)
     const [textLength, setTextLength] = useState(0)
     const maxInPercent = maxValue / 64000 * 100
-    
+    const [isLinkCard, setIsLinkCard] = useState(false)
+    const [linkText, setLinkText] = useState("")
 
 
     const testContent = "Hello @serverguyken, this is a test post. I hope you like it :) #test. Visit https://www.web.com for more info."
@@ -79,8 +90,6 @@ const TextCard = () => {
         return text
     }
 
-    //print("TextCard", "getAllTextFromEditor", toHTML(getAllTextFromEditor()))
-
     //print(toHTML(testContent)._html)
 
     useEffect(() => {
@@ -98,6 +107,7 @@ const TextCard = () => {
 
     const plugins = [mentionPlugin, hashtagPlugin, linkifyPlugin]
 
+    
 
 
     const handleChange = (state: any) => {
@@ -107,6 +117,15 @@ const TextCard = () => {
         setTextExceeded(value.length > maxValue)
         setMaxInitialValue(value.length)
         setTextLength(value.length)
+        const hasLink = Linky.isLink(value)
+        print(hasLink)
+        const link = Linky.getUrl(value) as string
+        if (hasLink) {
+            setIsLinkCard(true)
+            setLinkText(link)
+        } else {
+            setIsLinkCard(false)
+        }
     }
 
     const onMentionSearchChange = ({ value }: any) => {
@@ -137,12 +156,12 @@ const TextCard = () => {
     const { MentionSuggestions } = mentionPlugin
     const HashtagSuggestions = hashtagPlugin.MentionSuggestions
     return (
-        <div className={setClass("post_textarea", postTextBoxShown ? 'screen-sm:fixed screen-sm:top-[5.2rem] screen-sm:w-full screen-sm:h-full screen-sm:z-50 screen-sm:bg-white screen-sm:dark:bg-darkMode' : 'bg-white dark:bg-darkMode relative screen-sm:hidden')}>
+        <div className={setClass("post_textarea", postTextBoxShown ? 'screen-sm:fixed screen-sm:top-0 screen-sm:w-full screen-sm:h-full screen-sm:z-50 screen-sm:bg-white screen-sm:dark:bg-darkMode' : 'bg-white dark:bg-darkMode relative screen-sm:hidden')}>
             <div className={setClass(postTextBoxShown ? 'block ' : 'hidden', "absolute top-3 left-2 z-20 p-2 rounded-full  cursor-pointer hover:bg-gray-100 hover:bg-opacity-70 hover:transition hover:ease-in-out dark:hover:bg-darkModeBg")} onClick={() => store.content.data.postTextareaShown = false} >
                 <XIcon width={24} height={24} className=""/>
             </div>
-            <div className="border-b border-gray-100 dark:border-borderDarkMode p-2 screen-sm:dark:border-b-gray-50 screen-sm:dark:border-opacity-5">
-                <div className="w-auto screen-sm:mt-6">
+            <div className={setClass("border-b border-gray-100 dark:border-borderDarkMode p-2 screen-sm:dark:border-b-gray-50 screen-sm:dark:border-opacity-5", postTextBoxShown ? 'screen-sm:p-4 screen-sm:pb-1' : '')}>
+                <div className={setClass("w-auto screen-sm:mt-3")}>
                     <Editor
                         editorState={editorState}
                         onChange={handleChange}
@@ -169,6 +188,14 @@ const TextCard = () => {
                         popoverContainer={({ children }) => <div className="bg-white dark:bg-darkMode dark:border-darkModeBg dark:shadow-3xl absolute z-20 w-3/5  max-h-60 overflow-auto border border-gray-100  mt-3 max-w-md rounded-md shadow-lg">{children}</div>}
                     />
                 </div>
+                {
+                    isLinkCard && <div className="link_card_preview_comp">
+                        <div className="border bg-white shdow-lg">
+                            <h1>Hello {linkText}</h1>
+                        </div>
+                    </div>
+                }
+                {/* <RenderLinkCard url="https://www.instagram.com/p/B_Q-jxgBXZ/" /> */}
                 <div className="text_actions_main mt-4">
                     <div className="text-actions_group flex items-center justify-between">
                         <div className="text_actions_icons flex items-center space-x-3">

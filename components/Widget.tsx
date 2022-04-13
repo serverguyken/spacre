@@ -195,7 +195,7 @@ const Widget = () => {
                                                         <p className="text-xs dark:text-gray-50 dark:text-opacity-50">{person.job}</p>
                                                     </div>
                                                     <div className="follow_btn">
-                                                        <SecondaryButton text="Follow" textColor="white" textStyle="py-1 px-5" styles={' bg-black text-white dark:bg-white dark:text-black  rounded-full'} />
+                                                        <SecondaryButton text="Follow" textColor="white" styles={'py-1 px-5 bg-black text-white dark:bg-white dark:text-black  rounded-full'} />
                                                     </div>
                                                 </div>
                                             </div>

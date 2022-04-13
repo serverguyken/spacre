@@ -1,7 +1,7 @@
 import axios from 'axios';
 const API = {
-    get: (url: string) => {
-        return axios.get(url);
+    get: (url: string, config?: {}) => {
+        return axios.get(url, config);
     },
     getReturnData: (url: string) => {
         return axios.get(url).then(res => res.data);
