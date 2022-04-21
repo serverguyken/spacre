@@ -195,7 +195,7 @@ const TextCard = () => {
                         </div>
                     </div>
                 }
-                {/* <RenderLinkCard url="https://www.instagram.com/p/B_Q-jxgBXZ/" /> */}
+                <RenderLinkCard url={linkText} />
                 <div className="text_actions_main mt-4">
                     <div className="text-actions_group flex items-center justify-between">
                         <div className="text_actions_icons flex items-center space-x-3">
@@ -229,7 +229,7 @@ const TextCard = () => {
                             }
                         </div>
                         <div className="text_action_btn">
-                            <PrimaryButton text="Post" textColor="white" styles={'py-3 px-10 screen-md:py-2 screen-md:px-6'}
+                            <PrimaryButton text="Post" textColor="white" styles={'py-2 px-10 screen-md:py-2 screen-md:px-6'}
                                 textStyle={'screen-md:text-xs'}
                                 disabled={disabled} disabledColor="bg-primary bg-opacity-60"
                             />

@@ -128,7 +128,7 @@ const Widget = () => {
                 <div className="jobs_list_container mb-5">
                     {
                         rendered ?
-                            <div className="jobs_list_header bg-light dark:bg-darkModeBg rounded-lg p-2 mt-5 mb-5">
+                            <div className="jobs_list_header bg-light dark:bg-primary dark:bg-opacity-5 rounded-lg p-2 mt-5 mb-5">
                                 <h1 className="text-lg font-bold p-2">Jobs</h1>
                                 <div className="jobs_list_header_list ">
                                     {

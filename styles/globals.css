@@ -152,6 +152,7 @@ body {
 
 
 
+
 /* Post Box */
 .DraftEditor-root {
   height: 2.5rem;
@@ -460,7 +461,7 @@ body {
   }
 }
 
-.profile_name_link:hover .profile_car_hover_comp {
+.profile_name_link:hover .profile_hover_card {
   display: block;
   visibility: visible;
   opacity: 1;
@@ -678,7 +679,7 @@ body {
     text-decoration-line: none !important;
   }
 
-  .profile_name_link:hover .profile_car_hover_comp {
+  .profile_name_link:hover .profile_hover_card {
     opacity: 0;
     display: none;
   }

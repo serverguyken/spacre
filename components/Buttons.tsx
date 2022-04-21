@@ -38,7 +38,7 @@ function PrimaryButton({ textColor, width, height, text, textStyle, styles, acti
     return (
         <div>
             <button className={setClass("primary_btn_comp select-none", `${disabled ? `${disabledColor ? disabledColor : 'bg-gray-200'}  cursor-not-allowed` : "bg-primary dark:bg-primary primary_bg_transition"}`, "border-radius-main", width, height, styles)} onClick={action} disabled={disabled}>
-                <p className={"font-medium text-sm text-center " + textStyle} style={{ color: textColor }}>{text}</p>
+                <span className={"font-medium text-sm text-center " + textStyle} style={{ color: textColor }}>{text}</span>
                 {children}
             </button>
         </div>

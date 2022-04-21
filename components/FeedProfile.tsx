@@ -24,11 +24,11 @@ function countSet(num: number, upper?: boolean) {
     if (value.length === 0 || value.length === 1 || value.length === 2 || value.length === 3) {
         value = `${value}`
     } else if (value.length === 4 || value.length === 5 || value.length === 6) {
-        unit = upper ? 'K' : 'k' 
+        unit = upper ? 'K' : 'k'
         value = `${(num / 1000).toFixed(1)}${unit}`
     } else if (value.length === 7 || value.length === 8 || value.length === 9) {
         unit = upper ? 'M' : 'm'
-        value = `${(num / 1000000).toFixed(1)}${unit}` 
+        value = `${(num / 1000000).toFixed(1)}${unit}`
     } else if (value.length === 10 || value.length === 11 || value.length === 12) {
         unit = upper ? 'B' : 'b'
         value = `${(num / 1000000000).toFixed(1)}${unit}`
@@ -83,6 +83,7 @@ const FeedProfile = () => {
         bio: 'I create things for the web @tech | Business owner #developerlife',
         followersCount: countSet(1234666669, true).value,
         followingCount: countSet(50, true).value,
+        spacesCount: countSet(8, true).value,
         postTimeStamp: 'Jan 28',
         postContent: 'How to create a react app with nextjs',
         posContentHeader: 'How to create a react app with nextjs',
@@ -103,6 +104,7 @@ const FeedProfile = () => {
         bio: 'Content creator work for @daily - Develper Advocate',
         followersCount: countSet(45693, true).value,
         followingCount: countSet(2109, true).value,
+        spacesCount: countSet(4, true).value,
         postTimeStamp: 'Feb 16',
         postContent: 'Hello everyone, the last livestream was great. If you missed it, comment below when you think we should have another.😄 bye:)',
         postContentTagText: 'Comment your answer below.',
@@ -122,6 +124,7 @@ const FeedProfile = () => {
         bio: 'Web 3.0 Developer - Building the future of the web #future',
         followersCount: countSet(508, true).value,
         followingCount: countSet(347, true).value,
+        spacesCount: countSet(10, true).value,
         postTimeStamp: 'March 10',
         postContent: 'Web 3.0 is coming soon. Check out the link below.',
         postImage: 'https://mlxova6nqons.i.optimole.com/qgiRRAs.XcRg~5bd19/w:auto/h:auto/q:86/https://milyin.com/wp-content/uploads/2022/02/What-is-Web-3.0-Why-it-matter-Web-2.0-vs-Web-3.0.png',
@@ -142,6 +145,7 @@ const FeedProfile = () => {
         bio: 'Computer Science Student - Founder @spacre | Helping fellow developers and designers build connect',
         followersCount: countSet(2689654, true).value,
         followingCount: countSet(1234, true).value,
+        spacesCount: countSet(1, true).value,
         postTimeStamp: 'March 10',
         postContent: `'My first Web 3.0 is coming soon. Check out the link below. Hello everyone, the last livestream was great. If you missed it, comment below when you think we should have another.😄 bye:)  Hello everyone, the last livestream was great. If you missed it, comment below when you think we should have another.😄 bye:) Hello everyone, the last livestream was great. If you missed it, comment ggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggfffffffffffffffffffffffffffff '`,
         postLiked: true,
@@ -160,6 +164,7 @@ const FeedProfile = () => {
         bio: 'From baking cookies to coding, I am a full stack developer. I love to learn new things and share my knowledge with others.',
         followersCount: countSet(162864, true).value,
         followingCount: countSet(2453, true).value,
+        spacesCount: countSet(7, true).value,
         postTimeStamp: 'March 15',
         postContent: 'Just got a new job @google. I am so excited!. Thanks @mike_bond for the job offer.',
         postLiked: false,
@@ -178,6 +183,7 @@ const FeedProfile = () => {
         bio: 'Content creator | fireship.io',
         followersCount: countSet(1786532, true).value,
         followingCount: countSet(197, true).value,
+        spacesCount: countSet(9, true).value,
         postTimeStamp: '20h',
         postContent: 'Uploaded a new video. Check it out!',
         postVideo: 'https://sfsfiles.spacre.com/videos/666b8d38-2029-499a-9c0d-6e7db12da6f6_yt5s.com-devops_ci_cd_explained_in_100_seconds.mp4',
@@ -196,8 +202,9 @@ const FeedProfile = () => {
         isVerified: true,
         isFollowing: true,
         bio: 'Gatsby is a static site generator. It is a framework for building blazing fast websites and apps. visit https://gatsbyjs.com dd',
-        followersCount: countSet(3865027,true).value,
+        followersCount: countSet(3865027, true).value,
         followingCount: countSet(52, true).value,
+        spacesCount: countSet(2, true).value,
         postTimeStamp: '2h',
         postContent: 'New feature added to the site. Please feel free to leave a comment.',
         postLink: 'https://www.gatsbyjs.org/',
@@ -207,12 +214,15 @@ const FeedProfile = () => {
         commentsCount: countSet(27).value,
         sharesCount: countSet(2).value,
     }])
+    const [profileHoverCard, setProfileHoverCard] = useState(false)
+    const [profileHoverCardPosition, setProfileHoverCardPosition] = useState(null)
     const router = useRouter()
     if (isBrowser()) {
         const _post_content: any = document.getElementById("_post_content")
         TimeOut(() => {
             setRendered(true)
         }, generateLoadingTime(1000, 3000))
+
     }
     const handleRefresh = async () => {
         setRefreshed(false)
@@ -222,7 +232,7 @@ const FeedProfile = () => {
     }
     const likePost = (id: number) => {
     }
-        
+
 
     return (
         <div className='relative'>
@@ -259,13 +269,14 @@ const FeedProfile = () => {
                             </div>
                         }
                     >
-                        <div className=' screen-sm:pt-16 mb-10'>
+                        <div className='screen-sm:pt-16 mb-5 overflow-y-hidden'>
                             {
                                 refreshed ?
                                     dummyUsers.map((user: any) => {
+                                       
                                         return (
-                                            <div key={user.userName} className="bg-white dark:bg-darkMode hover:bg-gray-50 dark:hover:bg-gray-300 dark:hover:bg-opacity-[0.02] cursor-pointer whitespace-pre-wrap feed_post_contents_card pt-3 pb-2 p-2  border-b border-gray-100  dark:border-borderDarkMode">
-                                                <div className="flex justify-between ">
+                                            <div key={user.userName} id={`${user.userName}_profile_feed_view`} className="bg-white dark:bg-darkMode hover:bg-gray-50 dark:hover:bg-gray-300 dark:hover:bg-opacity-[0.02] cursor-pointer whitespace-pre-wrap feed_post_contents_card pt-3 pb-2 p-2  border-b border-gray-100  dark:border-borderDarkMode">
+                                                <div className="flex justify-between">
                                                     <div className='flex space-x-2 w-full'>
                                                         <div className="profile_image mt-1">
                                                             <Link href={`/${user.userName}`}>
@@ -278,9 +289,31 @@ const FeedProfile = () => {
                                                             <div className="profile_name w-full">
                                                                 <div className="flex justify-between">
                                                                     <div className="profile_names_content w-full">
-                                                                        <div className="profile_name_link relative">
+                                                                        <div className="profile_name_link relative max-w-[16rem] inline-block">
                                                                             <div className='flex items-center'>
-                                                                                <div className="whitespace-nowrap max-w-[16rem] text-ellipsis overflow-hidden hover:underline">
+                                                                                <div className="whitespace-nowrap max-w-[16rem] text-ellipsis overflow-hidden hover:underline"
+                                                                                    onMouseOver={() => {
+                                                                                        const profile_feed_view = document.getElementById(`${user.userName}_profile_feed_view`) as HTMLDivElement
+                                                                                        const profile_hover_card = document.getElementById(`${user.userName}_profile_hover_card`) as HTMLDivElement
+                                                                                        if (profile_feed_view && profile_hover_card) {
+                                                                                            const window_height = window.innerHeight
+                                                                                            const profile_feed_view_rect = profile_feed_view.getBoundingClientRect()
+                                                                                            const profile_feed_view_height = window_height - profile_feed_view_rect.top
+                                                                                            if (profile_feed_view_height <= 240) {
+                                                                                                profile_hover_card.classList.remove('top-6');
+                                                                                                profile_hover_card.classList.add('bottom-6');
+                                                                                            } else {
+                                                                                                profile_hover_card.classList.remove('bottom-6');
+                                                                                                profile_hover_card.classList.add('top-6');
+                                                                                            }
+                                                                                            const screen_width = window.innerWidth
+                                                                                            if (screen_width < 800) {
+                                                                                                profile_hover_card.classList.remove('bottom-6');
+                                                                                                profile_hover_card.classList.add('top-6');
+                                                                                            }
+                                                                                        }   
+                                                                                    }}
+                                                                                >
 
                                                                                     <Link href={`/${user.userName}`}>
                                                                                         <a className="font-semibold feed_user_profile_name">{user.fullName}</a>
@@ -292,7 +325,7 @@ const FeedProfile = () => {
                                                                                     </div>
                                                                                 }
                                                                             </div>
-                                                                            <div className="profile_car_hover_comp absolute pt-2 pb-20 z-20 w-full hidden invisible opacity-0">
+                                                                            <div id={`${user.userName}_profile_hover_card`} className="profile_hover_card absolute pt-2 z-20 top-6 -left-14 w-auto hidden invisible opacity-0">
                                                                                 <ProfileCardHover user={user} />
                                                                             </div>
                                                                         </div>

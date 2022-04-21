@@ -1,11 +1,20 @@
 import { useState, useEffect } from 'react'
 import { useTheme } from 'next-themes'
-import { isBrowser, generateLoadingTime, TimeOut, OnLoad } from '../utils'
+import { isBrowser, generateLoadingTime, TimeOut, OnLoad, StorageEvent } from '../utils'
 import { Spinner } from '../utils/loader'
 import Sidebar from './Sidebar'
 const Layout = ({ path, content_one, content_two }: any) => {
     const [rendered, setRendered] = useState(false)
     const { theme, setTheme } = useTheme()
+    if (theme) {
+        if (isBrowser()) {
+            if (theme === 'dark') {
+                document.body.classList.add('bg-darkMode')
+            } else {
+                document.body.classList.remove('bg-darkMode')
+            }
+        }
+    }
     const setRender = () => {
         TimeOut(() => {
             setRendered(true)
@@ -16,7 +25,24 @@ const Layout = ({ path, content_one, content_two }: any) => {
             setRender()
         }
     }, [])
-
+ 
+    StorageEvent((event: any) => {
+        let dsiplay_mode = localStorage.getItem('theme')
+        console.log(dsiplay_mode)
+        if (dsiplay_mode === null) {
+            localStorage.setItem('theme', 'light')
+            dsiplay_mode = 'light'
+            setTheme('light')
+        }
+        else {
+            setTheme(dsiplay_mode)
+        }
+        if (dsiplay_mode === 'dark') {
+            document.body.classList.add('bg-darkMode')
+        } else {
+            document.body.classList.remove('bg-darkMode')
+        }
+    })
     OnLoad(() => {
         let display_mode = localStorage.getItem('theme')
         if (display_mode === null) {

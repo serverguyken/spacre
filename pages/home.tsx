@@ -16,6 +16,7 @@ const Home: NextPage = () => {
     const { theme, setTheme } = useTheme()
     const { user, signOutUser } = useUserContext()
     const router = useRouter()
+    
     const handleSignOut = () => {
         signOutUser({
             onSuccess: () => {

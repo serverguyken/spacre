@@ -40,6 +40,9 @@ module.exports = {
         'salmon': '#ed6969',
         'deeppink': '#f91880',
       },
+      boxShadow: {
+        'profileCardHover': '0 0 10px 1px rgb(255 255 255 / 0.1), 0 0 0 0 rgb(255 255 255 / 0.1)',
+      }
     },
   },
   plugins: [],

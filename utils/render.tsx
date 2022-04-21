@@ -40,7 +40,7 @@ export const ToJSX = ({ text }: {
     // link regex domain is optional e.g http(s):web and http(s):web.com and http(s):web.com/ and (name).(domain)
     const LINK_REGEX = /(^|\s)((http(s)?:\/\/)?(www\.)?[a-zA-Z0-9_]+\.[a-zA-Z0-9_]+[a-zA-Z0-9_]*)/g
     const REGEX = new RegExp(MENTION_REGEX.source + '|' + HASHTAG_REGEX.source + '|' + LINK_REGEX.source, 'g')
-    
+
     const setComp = () => {
         if (text.match(REGEX)) {
             const arr = text.split(REGEX)
@@ -56,7 +56,7 @@ export const ToJSX = ({ text }: {
                         } else {
                             return <span key={index}>{item}</span>
                         }
-                    } 
+                    }
                     return <span key={index}>{item}</span>
                 }
                 return null
@@ -72,12 +72,18 @@ export const ToJSX = ({ text }: {
     )
 }
 
-const meta_lookup_api = '/api/v1/meta/lookup'
+const meta_lookup_api = 'http://10.0.0.41:3002/api/v1/meta/lookup'
 export const RenderLinkCard = ({ url }: {
     url: string
 }) => {
+
+    if (url === undefined || url === null || url === '') {
+        return null
+    }
     API.get(`${meta_lookup_api}?url=${url}`).then(res => {
         print(res.data)
+    }).catch(err => {
+        print(err)
     })
     return (<></>)
 }

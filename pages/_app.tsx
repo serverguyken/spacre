@@ -10,7 +10,15 @@ import { useState } from 'react'
 import { OnLoad, StorageEvent } from '../utils'
 function MyApp({ Component, pageProps }: AppProps) {
   const [theme, setTheme]: [any, any] = useState('light')
-  
+  if (theme) {
+    if (isBrowser()) { 
+      if (theme === 'dark') {
+        document.body.classList.add('bg-darkMode')
+      } else {
+        document.body.classList.remove('bg-darkMode')
+      }
+    }
+  }
   StorageEvent((event: any) => {
     let dsiplay_mode = localStorage.getItem('theme')
     if (dsiplay_mode === null) {
