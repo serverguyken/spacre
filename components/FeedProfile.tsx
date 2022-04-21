@@ -269,7 +269,7 @@ const FeedProfile = () => {
                             </div>
                         }
                     >
-                        <div className='screen-sm:pt-16 mb-5 overflow-y-hidden'>
+                        <div className='screen-sm:pt-16 mb-5 overflow-hidden'>
                             {
                                 refreshed ?
                                     dummyUsers.map((user: any) => {
