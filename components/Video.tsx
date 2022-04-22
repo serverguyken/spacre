@@ -376,7 +376,7 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
             setVideo(id, src);
         }, 0);
         return (
-            <div className="video_post cursor-pointer max-w-[100%]  relative z-0 bg-black dark:bg-darkMode dark:border-gray-50 dark:border-opacity-10 shadow-sm dark:shadow-lg rounded-lg" id={`video_${id}`}>
+            <div className="video_post cursor-pointer max-w-[100%]  relative z-0 bg -black dark:bg-darkMode dark:border-gray-50 dark:border-opacity-10 shadow-sm dark:shadow-lg rounded-lg" id={`video_${id}`}>
                 <div className='w-full'>
                     <div className="video_getseektime hidden absolute bottom-16 z-30 bg-black bg-opacity-60  pl-[0.2rem] pr-[0.2rem] rounded-sm" id={`${id}_video_getseektime`}>
                         <span className="video_get_seek_time-current text-white text-xs" id={`${id}_video_getseektime_current`}>00:00</span>

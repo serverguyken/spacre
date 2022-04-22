@@ -83,6 +83,9 @@ export function generateUsername() {
     'Life', 'No', 'Creation', 'Freedom',
     'Creator', 'Nature', 'Happy', 'Short',
     'Tall', 'Big', 'Small', 'Long',
+    'System', 'Program', 'Software', 'Game',
+    'Compatibility', 'Compiler', 'Compiler', 'Compiler',
+    'Code', 'User', 'Template', 'Flow',
     'One', 'Two', 'Three', 'Four',
     'Five', 'Six', 'Seven', 'Eight',
     'Nine', 'Ten', 'Eleven', 'Twelve',
@@ -95,11 +98,11 @@ export function generateUsername() {
     'Boy', 'Girl', 'Kid', 'Grand'
   ]
   let twoDigits = Math.floor(Math.random() * 90 + 10)
-  let username = Math.random().toString(36).substring(2, 4) + twoDigits
+  let username = wordsList[Math.floor(Math.random() * wordsList.length)] + twoDigits
   username += wordsList[Math.floor(Math.random() * wordsList.length)] = '_'
   username += wordsList[Math.floor(Math.random() * wordsList.length)]
   username += randomNumber
-  return username
+  return username.substring(0, 20);
 }
 
 export function generateFirstWord(str: string) {

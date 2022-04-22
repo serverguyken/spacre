@@ -1,14 +1,14 @@
 import { useRouter } from "next/router";
 import useUserContext from "../../provider/userProvider"
 import { isBrowser, OnLoad } from "../../utils";
-import { User } from "../../interface/User";
+import { AuthUser, User } from "../../interface/User";
 import { Spinner, LineLoader } from "../../utils/loader";
 import { generateLoadingTime } from "../../utils";
 import { useState, useEffect } from "react";
 import Icon from "../../components/Icon";
 
-export const WithAuth = (user: User, reload: boolean, onLoad: boolean, action: {
-    onAuthSuccess: (user: User) => void,
+export const WithAuth = (user: AuthUser, reload: boolean, onLoad: boolean, action: {
+    onAuthSuccess: (user: AuthUser) => void,
     onAuthFail: (error: string) => void
 }, shouldRedirect?: boolean) => {
     const [loading, setLoading] = useState(false);

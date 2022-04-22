@@ -4,7 +4,7 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfi
 import { User } from '../../interface/User';
 
 
-export const u_createUserWithEmailAndPassword = (email: string, password: string, user_name: string) => {
+export const u_createUserWithEmailAndPassword = (email: string, password: string) => {
     return createUserWithEmailAndPassword(auth, email, password)
 };
 

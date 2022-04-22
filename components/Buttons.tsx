@@ -37,7 +37,7 @@ function DefaultButton({ color, textColor, width, height, text, textStyle, actio
 function PrimaryButton({ textColor, width, height, text, textStyle, styles, action, children, disabled, disabledColor }: BUTTON_PROPS) {
     return (
         <div>
-            <button className={setClass("primary_btn_comp select-none", `${disabled ? `${disabledColor ? disabledColor : 'bg-gray-200'}  cursor-not-allowed` : "bg-primary dark:bg-primary primary_bg_transition"}`, "border-radius-main", width, height, styles)} onClick={action} disabled={disabled}>
+            <button className={setClass("primary_btn_comp select-none", `${disabled ? `${disabledColor ? disabledColor : 'bg-gray-400'}  cursor-not-allowed` : "bg-primary dark:bg-primary primary_bg_transition"}`, "border-radius-main", width, height, styles)} onClick={action} disabled={disabled}>
                 <span className={"font-medium text-sm text-center " + textStyle} style={{ color: textColor }}>{text}</span>
                 {children}
             </button>

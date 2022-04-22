@@ -72,6 +72,7 @@ const createPostHtml = (text: string) => {
 const FeedProfile = () => {
     const [rendered, setRendered] = useState(false)
     const { user, signOutUser } = useUserContext()
+    
     const [refreshed, setRefreshed] = useState(true)
     const [dummyUsers, setDummyUsers] = useState([{
         id: 1,

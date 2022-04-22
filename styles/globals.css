@@ -587,25 +587,48 @@ body {
   visibility: visible;
   opacity: 1;
   transition: all 0.2s ease-in-out;
+  transition-delay: 0.5s;
 }
 
 .post_user_comment_action:hover .post_comment_tooltip {
   visibility: visible;
   opacity: 1;
   transition: all 0.2s ease-in-out;
+  transition-delay: 0.5s;
 }
 
 .post_user_share_action:hover .post_share_tooltip {
   visibility: visible;
   opacity: 1;
   transition: all 0.2s ease-in-out;
+  transition-delay: 0.5s;
 }
 
 .post_user_save_action:hover .post_save_tooltip {
   visibility: visible;
   opacity: 1;
   transition: all 0.2s ease-in-out;
+  transition-delay: 0.5s;
 }
+
+.step_go_back:hover .go_back_setup_tooltip {
+  visibility: visible;
+  opacity: 1;
+  transition: all 0.2s ease-in-out;
+  transition-delay: 0.5s;
+}
+
+
+
+/* Modal */
+.modal_main_content_close:hover .modal_close_tooptip {
+  visibility: visible;
+  opacity: 1;
+  transition: all 0.2s ease-in-out;
+  transition-delay: 0.5s;
+}
+
+
 
 .feed_post_contents_card {
   animation: slow_fade_in 0.3s ease-in-out;
@@ -680,6 +703,14 @@ body {
   }
 
   .profile_name_link:hover .profile_hover_card {
+    opacity: 0;
+    display: none;
+  }
+  .modal_main_content_close:hover .modal_close_tooptip {
+    opacity: 0;
+    display: none;
+  }
+  .step_go_back:hover .go_back_setup_tooltip {
     opacity: 0;
     display: none;
   }

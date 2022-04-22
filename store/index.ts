@@ -1,6 +1,12 @@
 import VALTIO, { InitialObject } from "./valtio";
 
 export interface STORE {
+    signup_step: {
+        step: number;
+        step_name: string;
+        skipable: boolean;
+        completed: boolean;
+    }
     postTextareaShown: boolean;
     searchList: any[];
     renderNoSearch: boolean;
@@ -13,6 +19,12 @@ const store: {
 } = {
     content: VALTIO.proxy({
         data: {
+            signup_step: {
+                step: 1,
+                step_name: "CREATING_NAME_EMAIL",
+                skipable: false,
+                completed: false
+            },
             postTextareaShown: false,
             searchList: [],
             renderNoSearch: false,

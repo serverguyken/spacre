@@ -18,6 +18,7 @@ import { AlertCircle } from 'tabler-icons-react';
 import Link from 'next/link'
 import useUserContext from '../../provider/userProvider'
 import errors from '../../config/auth/errors'
+import Head from 'next/head'
 
 
 
@@ -176,6 +177,11 @@ const Login: NextPage = () => {
     }
     return (
         <div>
+            <Head>
+                <title>Log in / Spacre</title>
+                <meta content='Log in / Spacre' property='og:title' />
+                <link rel="icon" href="/favicon.ico" />
+            </Head>
             {
                 loading
                     ?
@@ -193,9 +199,15 @@ const Login: NextPage = () => {
                             onClose={() => redirectOnClose()}
                             styles={{
                                 icon: {
-                                    placement: "right"
-                                }
+                                    placement: "left",
+                                    padding: "0px",
+                                    className: "-ml-4",
+                                    tooltip: {
+                                        className: "-ml-4",
+                                    }
+                                },
                             }}
+                            showCloseIcon={true}
                         >
                             <div className='absolute top-6 right-3 px-2 py-1 hover:bg-gray-100 rounded-sm'>
                             </div>
@@ -212,11 +224,11 @@ const Login: NextPage = () => {
                                         </div>
                                         <div className={setClass(styles.signup_form, "mt-4")}>
                                             
-                                            <Input id="email_username_login" styleToRender='default' type="text" hasLabel={false} placeholder='Email' value={emailValue} invalid={emailInvalid && showEmailError} onChange={(v) => { handleEmailInputChange(v) }} />
+                                            <Input id="email_username_login" styleToRender='email' type="email" hasLabel={false} placeholder='Email' value={emailValue} invalid={emailInvalid && showEmailError} onChange={(v) => { handleEmailInputChange(v) }} />
                                             <div className={setClass(styles.signup_email_error)}>
                                                 <p className={setClass(styles.signup_email_error_text, "text-red-500 mt-2 text-xs")}>{emailErrorMessage}</p>
                                             </div>
-                                            <Input id="password_login" styleToRender='default' type="password" hasLabel={false} placeholder='Password' value={passwordValue} invalid={passwordInvalid && showPasswordError} showPassword={showPassword} togglePassword={togglePassword} onChange={(v) => { handlePasswordInputChange(v) }} />
+                                            <Input id="password_login" styleToRender='password' type="password" hasLabel={false} placeholder='Password' value={passwordValue} invalid={passwordInvalid && showPasswordError} showPassword={showPassword} togglePassword={togglePassword} onChange={(v) => { handlePasswordInputChange(v) }} />
                                             <div className={setClass(styles.signup_email_error)}>
                                                 <p className={setClass(styles.signup_email_error_text, "text-red-500 mt-2 text-xs")}>{passwordErrorMessage}</p>
                                             </div>
