@@ -301,7 +301,7 @@ const FeedProfile = () => {
                                                                                 transition='fade'
                                                                                 transitionDuration={200}
                                                                                 classNames={{
-                                                                                    body: setClass('-mt-1 bg-gray-500 dark:bg-black dark:text-white text-[0.65rem] ml-1', `${formatDate('2022-04-23T09:29:00.001Z').format('MMMM Do YYYY, h:mm:ss a') == "" ? 'hidden' : ''}`),
+                                                                                    body: setClass('tooltip_comp -mt-1 bg-gray-500 dark:bg-black dark:text-white text-[0.65rem] ml-1', `${formatDate('2022-04-23T09:29:00.001Z').format('MMMM Do YYYY, h:mm:ss a') == "" ? 'hidden' : ''}`),
                                                                                 }}
                                                                                 color='gray'
                                                                             >
@@ -316,7 +316,7 @@ const FeedProfile = () => {
                                                                         transition='fade'
                                                                         transitionDuration={200}
                                                                         classNames={{
-                                                                            body: '-mt-4 bg-gray-500 dark:bg-black dark:text-white text-[0.65rem] ml-1',
+                                                                            body: 'tooltip_comp -mt-4 bg-gray-500 dark:bg-black dark:text-white text-[0.65rem] ml-1',
                                                                         }}
                                                                         color='gray'
                                                                         

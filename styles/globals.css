@@ -715,4 +715,8 @@ body {
     opacity: 0;
     display: none;
   }
+  .tooltip_comp {
+    opacity: 0;
+    display: none !important;
+  }
 }
