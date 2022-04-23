@@ -1,6 +1,6 @@
 import TextCard from './TextCard'
 import { User } from '../interface/User'
-import { setClass, isBrowser, print, TimeOut, addClass, removeClass, generateLoadingTime, OnLoad, countSet } from '../utils/'
+import { setClass, isBrowser, print, TimeOut, addClass, removeClass, generateLoadingTime, OnLoad, countSet, formatDate } from '../utils/'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import useUserContext from '../provider/userProvider'
@@ -288,13 +288,25 @@ const FeedProfile = () => {
                                                                             </div>
                                                                         </div>
                                                                         <div className="profile_username_post_timestamp flex items-center">
-                                                                            <div className="profile_username whitespace-nowrap max-w-[16rem] text-ellipsis overflow-hidden hover:underline">
+                                                                            <div className="profile_username whitespace-nowrap max-w-[16rem] text-ellipsis overflow-hidden">
                                                                                 <Link href={`/${user.userName}`}>
                                                                                     <a className="text-sm text-dimGray dark:text-darkText">@{user.userName}</a>
                                                                                 </Link>
                                                                             </div>
                                                                             <p className="before:content-['•'] before:text-[12px] before:ml-[4px] before:mr-[4px] -mt-1 before:dark:text-gray-50 before:dark:text-opacity-30"></p>
-                                                                            <p className='text-sm text-dimGray'>{user.postTimeStamp}</p>
+                                                                            <Tooltip
+                                                                                title={formatDate(user.postTimeStamp).format('MMMM Do YYYY, h:mm:ss a')}
+                                                                                placement="center"
+                                                                                position='bottom'
+                                                                                transition='fade'
+                                                                                transitionDuration={200}
+                                                                                classNames={{
+                                                                                    body: '-mt-1 bg-gray-500 dark:bg-black dark:text-white text-[0.65rem] ml-1',
+                                                                                }}
+                                                                                color='gray'
+                                                                            >
+                                                                                <p className='text-sm text-dimGray hover:underline'>{formatDate('2022-04-23T09:29:00.001Z').startOf('h')}</p>
+                                                                            </Tooltip>
                                                                         </div>
                                                                     </div>
                                                                     <Tooltip

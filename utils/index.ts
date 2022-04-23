@@ -1,3 +1,4 @@
+import moment from 'moment';
 export function print(...args: any) {
   console.log(...args);
   return null;
@@ -163,10 +164,10 @@ export const isLink = (str: string) => {
 }
 
 export const Linky = {
-  get: (str: string) => { 
+  get: (str: string) => {
     const linkifyit: LinkifyIt = linkify().tlds(tlds);
     const matches = linkifyit.match(str);
-    if (matches) { 
+    if (matches) {
       return matches[0];
     }
     return null;
@@ -301,4 +302,48 @@ export function findWithRegex(regex: any, contentBlock: any, callback: any) {
 
 export function Strategy(regex: string, contentBlock: any, callback: any, contentState: any) {
   findWithRegex(regex, contentBlock, callback);
+}
+
+export function formatDate(date: string) {
+  const setup = {
+    format: (format: string) => {
+      return moment(date).format(format);
+    },
+    startOf: (unit: string) => {
+      const ago: any = moment(date).fromNow();
+      const current_date = moment(new Date().toISOString());
+      const date_diff = current_date.diff(moment(date), 'hours') + 1;
+      const future_date = moment(date).isAfter(current_date);
+      const days_ago = moment(date).isBefore(moment().subtract(1, 'days'));
+      if (date_diff >= 24 || future_date) {
+        return ''
+      } else if (date_diff === 23) {
+        return `23 hours ago`
+      } else if (date_diff === 22) {
+        return `22 hours ago`
+      } else if (date_diff === 21) {
+        return `21 hours ago`
+      }
+      else {
+        if (ago !== 'Invalid date') {
+          if (ago === 'a few seconds ago') {
+            return date_diff === 0 ? 'now' : `${date_diff}s`
+          } else if (ago === 'a minute ago') {
+            return date_diff === 0 ? '' : `${date_diff}m`
+          } else if (ago === 'an hour ago') {
+            return date_diff === 0 ? '' : `${date_diff}h`
+          } else if (parseInt(ago.split(' ')[0]) === NaN) {
+            return ''
+          } else {
+            const ago_time = parseInt(ago.split(' ')[0]);
+            const ago_unit = ago.split(' ')[1] === 'hours' ? 'h' : 'm';
+            return `${ago_time}${ago_unit}`
+          }
+        } else {
+          return ''
+        }
+      }
+    },
+  }
+  return setup;
 }
