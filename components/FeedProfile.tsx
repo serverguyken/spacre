@@ -295,13 +295,13 @@ const FeedProfile = () => {
                                                                             </div>
                                                                             <p className="before:content-['•'] before:text-[12px] before:ml-[4px] before:mr-[4px] -mt-1 before:dark:text-gray-50 before:dark:text-opacity-30"></p>
                                                                             <Tooltip
-                                                                                title={formatDate(user.postTimeStamp).format('MMMM Do YYYY, h:mm:ss a')}
+                                                                                title={formatDate('2022-04-23T09:29:00.001Z').format('MMMM Do YYYY, h:mm:ss a')}
                                                                                 placement="center"
                                                                                 position='bottom'
                                                                                 transition='fade'
                                                                                 transitionDuration={200}
                                                                                 classNames={{
-                                                                                    body: '-mt-1 bg-gray-500 dark:bg-black dark:text-white text-[0.65rem] ml-1',
+                                                                                    body: setClass('-mt-1 bg-gray-500 dark:bg-black dark:text-white text-[0.65rem] ml-1', `${formatDate('2022-04-23T09:29:00.001Z').format('MMMM Do YYYY, h:mm:ss a') == "" ? 'hidden' : ''}`),
                                                                                 }}
                                                                                 color='gray'
                                                                             >

@@ -307,7 +307,7 @@ export function Strategy(regex: string, contentBlock: any, callback: any, conten
 export function formatDate(date: string) {
   const setup = {
     format: (format: string) => {
-      return moment(date).format(format);
+      return moment(date).format(format) === 'Invalid date' ? '' : moment(date).format(format)
     },
     startOf: (unit: string) => {
       const ago: any = moment(date).fromNow();
