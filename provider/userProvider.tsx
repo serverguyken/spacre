@@ -24,19 +24,24 @@ import { AuthUser, User, UserContext } from "../interface/User";
 
 import {isBrowser, print} from "../utils";
 
-const userContext = createContext({} as UserContext<any>);
+const userContext = createContext({} as UserContext<User>);
 
 export default function useUserContext() {
     return useContext(userContext);
 }
 
+const setCreatedAt = () => {
+    const now = new Date();
+    const createdAt = now.toISOString();
+    return createdAt;
+};
 
 export const UserProvider = ({ children }: any) => {
     const [authUser, setAuthUser] = useState({
         isAuthenticated: null, // set to null to indicate loading of user becuase at initial load, user is null
         uid: "",
         email: "",
-        fullName: "",
+        displayName: "",
         userName: "",
         profileImage: null,
         authenticatedFrom: {
@@ -47,7 +52,7 @@ export const UserProvider = ({ children }: any) => {
     const [user, setUser] = useState({
         uid: "",
         email: "",
-        fullName: "",
+        displayName: "",
         userName: "",
         profileImage: null,
         isBlocked: false,
@@ -60,12 +65,8 @@ export const UserProvider = ({ children }: any) => {
         followersCount: 0,
         followingsCount: 0,
         spacesCount: 0,
-        posts: [],
-        savedPosts: [],
-        notifications: [],
-        blockedUsers: [],
-        boostedPosts: [],
-        recentSearches: [],
+        createdAt: "",
+        updatedAt: "",
     } as User);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
@@ -77,7 +78,7 @@ export const UserProvider = ({ children }: any) => {
                     isAuthenticated: !!uuser, 
                     uid: uuser.uid,
                     email: uuser.email,
-                    fullName: uuser.displayName,
+                    displayName: uuser.displayName,
                     userName: uuser.displayName,
                     profileImage: uuser.photoURL,
                     authenticatedFrom: {
@@ -93,7 +94,7 @@ export const UserProvider = ({ children }: any) => {
                         const user: User = {
                             uid: uuser.uid,
                             email: data.email,
-                            fullName: data.fullName,
+                            displayName: data.displayName,
                             userName: data.userName,
                             profileImage: data.profileImage,
                             isBlocked: data.isBlocked,
@@ -106,19 +107,15 @@ export const UserProvider = ({ children }: any) => {
                             followersCount: data.followersCount,
                             followingsCount: data.followingsCount,
                             spacesCount: data.spacesCount,
-                            posts: data.posts,
-                            savedPosts: data.savedPosts,
-                            notifications: data.notifications,
-                            blockedUsers: data.blockedUsers,
-                            boostedPosts: data.boostedPosts,
-                            recentSearches: data.recentSearches,
+                            createdAt: data.createdAt,
+                            updatedAt: data.updatedAt,
                         }
                         setUser(user);
                     } else {
                         const user: User = {
                             uid: uuser.uid,
                             email: uuser.email,
-                            fullName: uuser.displayName,
+                            displayName: uuser.displayName,
                             userName: uuser.displayName,
                             profileImage: uuser.photoURL,
                             isBlocked: false,
@@ -131,12 +128,8 @@ export const UserProvider = ({ children }: any) => {
                             followersCount: 0,
                             followingsCount: 0,
                             spacesCount: 0,
-                            posts: [],
-                            savedPosts: [],
-                            notifications: [],
-                            blockedUsers: [],
-                            boostedPosts: [],
-                            recentSearches: [],
+                            createdAt: '',
+                            updatedAt: '',
                         }
                         setUser(user);
                     }
@@ -146,7 +139,7 @@ export const UserProvider = ({ children }: any) => {
                     isAuthenticated: false, 
                     uid: "",
                     email: "",
-                    fullName: "",
+                    displayName: "",
                     userName: "",
                     profileImage: null,
                     authenticatedFrom: {
@@ -168,11 +161,11 @@ export const UserProvider = ({ children }: any) => {
         return u_createUserWithEmailAndPassword(email, password)
             .then((userResult) => {
                 try {
-                    u_updateProfile(userResult.user, { displayName: data.fullName });
+                    u_updateProfile(userResult.user, { displayName: data.displayName });
                     u_addUser(userResult.user.uid, {
                         uid: userResult.user.uid,
                         email: userResult.user.email,
-                        fullName: data.fullName,
+                        displayName: data.displayName,
                         userName: data.userName,
                         profileImage: data.profileImage,
                         isBlocked: data.isBlocked,
@@ -185,12 +178,8 @@ export const UserProvider = ({ children }: any) => {
                         followersCount: data.followersCount,
                         followingsCount: data.followingsCount,
                         spacesCount: data.spacesCount,
-                        posts: data.posts,
-                        savedPosts: data.savedPosts,
-                        notifications: data.notifications,
-                        blockedUsers: data.blockedUsers,
-                        boostedPosts: data.boostedPosts,
-                        recentSearches: data.recentSearches,
+                        createdAt: setCreatedAt(),
+                        updatedAt: setCreatedAt(),
                     });
                     u_addUserName(data.userName);
                     setLoading(false);
@@ -264,7 +253,7 @@ export const UserProvider = ({ children }: any) => {
                                 isAuthenticated: !!user,
                                 uid: user.uid,
                                 email: user.email,
-                                fullName: user.displayName,
+                                displayName: user.displayName,
                                 userName: user.displayName,
                                 profileImage: user.photoURL,
                                 authenticatedFrom: {
@@ -370,9 +359,9 @@ export const UserProvider = ({ children }: any) => {
         }
     };
 
-    const getUsers = () => {
+    const getUsers = (id: any) => {
         try {
-            return u_getUsers();
+            return u_getUsers(id);
         } catch (error: any) {
             setError("unable to get users");
             setHasError(true);

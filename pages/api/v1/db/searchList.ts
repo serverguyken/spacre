@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-
+// authenticate user
 const searchList: [] | any = [{
     id: 1,
     content: 'David Testo',

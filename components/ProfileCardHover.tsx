@@ -29,7 +29,7 @@ const ProfileCardHover = ({
                             <div className={pocStyle("profile_fullname font-semibold whitespace-nowrap max-w-[10rem] text-ellipsis overflow-hidden hover:underline")}>
                                 <Link href={`/${user.userName}`}>
 
-                                    <a>{user.fullName}</a>
+                                    <a>{user.displayName}</a>
                                 </Link>
 
                             </div>

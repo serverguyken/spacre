@@ -443,7 +443,7 @@ body {
     top: 4rem;
     left: 0;
     width: 100%;
-    z-index: 50;
+    z-index: 30;
   }
 
   .widget_main {
@@ -627,6 +627,7 @@ body {
   transition: all 0.2s ease-in-out;
   transition-delay: 0.5s;
 }
+
 
 
 

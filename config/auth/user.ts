@@ -2,7 +2,8 @@ import { auth, OnAuthStateChanged, collectionRef, docRef, AddDoc, SetDoc, Update
 import { useEffect, useState } from 'react';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, signInWithPopup, GithubAuthProvider, getRedirectResult } from 'firebase/auth';
 import { User } from '../../interface/User';
-
+import API from '../api';
+import store from '../../store';
 
 export const u_createUserWithEmailAndPassword = (email: string, password: string) => {
     return createUserWithEmailAndPassword(auth, email, password)
@@ -75,10 +76,10 @@ export const u_getUser = (id: any) => {
     return GetDoc(usersCollectionRef);
 };
 
-export const u_getUsers = () => {
-    const usersCollectionRef: any = collectionRef('users');
-    return GetDocs(usersCollectionRef);
+export const u_getUsers = (id: any) => {
+    return store.content.data.getUsers(id)
 };
+
 
 export const u_updateUser = (id: any, data: {}) => {
     const usersCollectionRef: any = docRef('users', id);

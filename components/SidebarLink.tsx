@@ -31,7 +31,7 @@ const SidebarLink = ({ text, Icon, fullpath, ActiveIcon, action, active }: {
                             setActive(text) ? <span className={'sidebar_link_text text-black dark:text-white font-semibold text-lg screen-md:text-sm'}>{text}</span> : <span className={'sidebar_link_text text-black dark:text-white font-normal text-lg screen-md:text-sm'}>{text}</span>
                         }
                     </div>
-                    <div className={setClass(`${text}_sidebar_tooltip`,"main_sidebar_tooltip invisible opacity-0 absolute top-8 z-[50] bg-gray-500 dark:bg-black dark:text-white p-1 text-center text-xs text-white rounded shadow-sm", text === "Messages" ? 'w-[4.5rem]' : 'w-[3.5rem]', text === "Messages" ? '-left-5' : '-left-3')}>
+                    <div className={setClass(`${text}_sidebar_tooltip`,"main_sidebar_tooltip invisible opacity-0 absolute top-14 z-[50] bg-gray-500 dark:bg-black dark:text-white p-1 text-center text-xs text-white rounded shadow-sm", text === "Messages" ? 'w-[4.5rem]' : 'w-[3.5rem]', text === "Messages" ? '-left-5' : '-left-3')}>
                         <div className="sidebar_tooltip_content">
                             {text}
                         </div>

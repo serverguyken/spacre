@@ -21,12 +21,15 @@ export interface Post {
     postIsReported: boolean;
     postIsSaved: boolean;
 }
+export interface Reply extends Post {
+    replyId: string;
+}
 
 export interface AuthUser {
     isAuthenticated: boolean | null;
     uid: string;
     email: string | null;
-    fullName: string | null;
+    displayName: string | null;
     userName: string | null;
     profileImage: string | null;
     authenticatedFrom: {
@@ -38,7 +41,26 @@ export interface AuthUser {
 export interface User {
     uid: string;
     email: string;
-    fullName: string;
+    displayName: string;
+    userName: string;
+    profileImage: string | null;
+    isBlocked: boolean;
+    isPremium: boolean;
+    isVerified: boolean;
+    bio: string | null;
+    followers: Array<any>;
+    following: Array<any>;
+    spaces: Array<any>;
+    followersCount: number;
+    followingsCount: number;
+    spacesCount: number;
+    createdAt: string | null;
+    updatedAt: string | null;
+}
+export interface UserData {
+    uid: string;
+    email: string;
+    displayName: string;
     userName: string;
     profileImage: string | null;
     isBlocked: boolean;
@@ -59,7 +81,7 @@ export interface User {
     recentSearches: Array<any>;
 }
 
-export interface DBUser {
+export interface DBUsers {
     users: {
         [uid: string]: User;
     };
@@ -71,9 +93,13 @@ export interface DBUser {
     };
 }
 
+export interface GetUsers<T> {
+    users: User[];
+    status: T
+}
 
 
-export interface UserContext<T> {
+export interface UserContext<User> {
     authUser: AuthUser;
     user: User;
     loading: boolean;
@@ -103,5 +129,5 @@ export interface UserContext<T> {
     getUser: () => Promise<void>;
     updateUser: (user: User) => Promise<void>;
     deleteUser: () => Promise<void>;
-    getUsers: () => Promise<T>;
+    getUsers: (id: any) => Promise<GetUsers<Object>>;
 }

@@ -5,7 +5,7 @@ import { useEffect } from 'react'
 import useUserContext from '../../provider/userProvider'
 import { WithAuth } from '../../config/auth/route'
 import { auth } from '../../config/auth/firebase'
-import { User } from '../../interface/User'
+import { AuthUser } from '../../interface/User'
 import Sidebar from '../../components/Sidebar'
 import styles from '../../styles/Main.module.css'
 import Header from '../../components/Header'
@@ -15,7 +15,7 @@ import Layout from '../../components/Layout'
 
 
 const Cnts: NextPage = () => {
-    const { user, signOutUser } = useUserContext()
+    const { authUser, signOutUser } = useUserContext()
 
     const router = useRouter()
     const handleSignOut = () => {
@@ -31,8 +31,8 @@ const Cnts: NextPage = () => {
         })
     }
 
-    return WithAuth(user, false, true, {
-        onAuthSuccess: (user: User) => {
+    return WithAuth(authUser, false, true, {
+        onAuthSuccess: (user: AuthUser) => {
             return (
                 <Layout
                     path="cnts"

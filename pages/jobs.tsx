@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import useUserContext from '../provider/userProvider'
 import { WithAuth } from '../config/auth/route'
-import { User } from '../interface/User'
+import { AuthUser } from '../interface/User'
 import Layout from '../components/Layout'
 import Search from '../components/Search'
 import { useTheme } from 'next-themes'
@@ -12,7 +12,7 @@ import { useTheme } from 'next-themes'
 
 const Jobs: NextPage = () => {
     const { theme, setTheme } = useTheme()
-    const { user, signOutUser } = useUserContext()
+    const { authUser, signOutUser } = useUserContext()
     const router = useRouter()
     const handleSignOut = () => {
         signOutUser({
@@ -26,8 +26,8 @@ const Jobs: NextPage = () => {
             }
         })
     }
-    return WithAuth(user, false, true, {
-        onAuthSuccess: (user: User) => {
+    return WithAuth(authUser, false, true, {
+        onAuthSuccess: (user: AuthUser) => {
             return (
                 <div>
                     <Layout

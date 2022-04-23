@@ -1,3 +1,6 @@
+import API from "../config/api";
+import { User, GetUsers } from "../interface/User";
+import useUserContext from "../provider/userProvider";
 import VALTIO, { InitialObject } from "./valtio";
 
 export interface STORE {
@@ -10,6 +13,11 @@ export interface STORE {
     postTextareaShown: boolean;
     searchList: any[];
     renderNoSearch: boolean;
+    fetchUsers: {
+        users: User[];
+        status: Object;
+    }
+    getUsers: (id: any) => Promise<void>;
 }
 
 const store: {
@@ -28,6 +36,39 @@ const store: {
             postTextareaShown: false,
             searchList: [],
             renderNoSearch: false,
+            fetchUsers: {
+                users: [],
+                status: {}
+            },
+            getUsers: (id: any) => {
+                return API.get('http://10.0.0.41:3004/api/v1/users/get', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${id}`
+                    },
+                }).then(res => {
+                    store.set('fetchUsers', {
+                        users: res.data.users ? res.data.users : [],
+                        status: res.data.status
+                    });
+                }).catch(err => {
+                    if (err.response) {
+                        store.set('fetchUsers', {
+                            users: [],
+                            status: err.response.data
+                        });
+                    } else {
+                        store.set('fetchUsers', {
+                            users: [],
+                            status: {
+                                code: 500,
+                                success: false,
+                                message: 'Something went wrong'
+                            }
+                        });
+                    }
+                });
+            }
         } as STORE,
     }),
     set: (name: keyof STORE, value: any) => {
@@ -47,3 +88,4 @@ const store: {
 }
 
 export default store;
+

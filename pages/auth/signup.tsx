@@ -30,7 +30,7 @@ const Signup: NextPage = () => {
     const [opened, setOpened] = useState(true);
     const [showPassword, setShowPassword] = useState(false);
     const [usernameValue, setUsernameValue] = useState(generateUsername())
-    const [nameValue, setNameValue] = useState('')
+    const [displayNameValue, setDisplayNameValue] = useState('')
     const [image, setImage] = useState('')
     const [emailValue, setEmailValue] = useState('')
     const [passwordValue, setPasswordValue] = useState('')
@@ -140,7 +140,7 @@ const Signup: NextPage = () => {
             setShowNameError(false)
             setNameInvalid(false)
             setNameErrorMessage('')
-            setNameValue(value)
+            setDisplayNameValue(value)
         }
     }
     function handleEmailInputChange(value: any) {
@@ -223,7 +223,7 @@ const Signup: NextPage = () => {
         setSpinner(true)
         const data = {
                 email: emailValue,
-                fullName: nameValue,
+                displayName: displayNameValue,
                 userName: usernameValue,
                 profileImage: null,
                 isBlocked: false,
@@ -359,7 +359,7 @@ const Signup: NextPage = () => {
                                                     <div className={setClass(styles.signup_header, "mb-4")}>
                                                         <h1>Let&apos;s create your account</h1>
                                                     </div>
-                                                    <Input id="name_signup" styleToRender='default' type="text" hasLabel={false} placeholder='Name' value={nameValue} invalid={nameInvalid && showNameError} onChange={(v) => { handleNameInputChange(v) }} />
+                                                    <Input id="name_signup" styleToRender='default' type="text" hasLabel={false} placeholder='Name' value={displayNameValue} invalid={nameInvalid && showNameError} onChange={(v) => { handleNameInputChange(v) }} />
                                                     <div className={setClass(styles.signup_name_error)}>
                                                         <p className={setClass(styles.signup_name_error_text, "text-red-500 mt-2 text-xs")}>{nameErrorMessage}</p>
                                                     </div>

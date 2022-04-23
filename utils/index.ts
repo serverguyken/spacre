@@ -202,6 +202,38 @@ export const getLink = (str: string) => {
   return linkifyit.match(str);
 }
 
+export function countSet(num: number, upper?: boolean) {
+  let value = `${num}`
+  let unit = ''
+  if (value.length === 0 || value.length === 1 || value.length === 2 || value.length === 3) {
+    value = `${value}`
+  } else if (value.length === 4 || value.length === 5 || value.length === 6) {
+    unit = upper ? 'K' : 'k'
+    value = `${(num / 1000).toFixed(1)}${unit}`
+  } else if (value.length === 7 || value.length === 8 || value.length === 9) {
+    unit = upper ? 'M' : 'm'
+    value = `${(num / 1000000).toFixed(1)}${unit}`
+  } else if (value.length === 10 || value.length === 11 || value.length === 12) {
+    unit = upper ? 'B' : 'b'
+    value = `${(num / 1000000000).toFixed(1)}${unit}`
+  } else if (value.length === 13 || value.length === 14 || value.length === 15) {
+    unit = upper ? 'T' : 't'
+    value = `${(num / 1000000000000).toFixed(1)}${unit}`
+  } else if (value.length === 16 || value.length === 17 || value.length === 18) {
+    unit = upper ? 'Q' : 'q'
+    value = `${(num / 1000000000000000).toFixed(1)}${unit}`
+  } else if (value.length === 19 || value.length === 20 || value.length === 21) {
+    value
+  }
+  const return_value = {
+    value: value,
+    unit: unit,
+    inital_value: num
+  }
+  return return_value
+}
+
+
 export const toHTML = (text: string) => {
   const original_text = text
   let changed_text = text

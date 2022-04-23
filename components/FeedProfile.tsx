@@ -1,6 +1,6 @@
 import TextCard from './TextCard'
 import { User } from '../interface/User'
-import { setClass, isBrowser, print, TimeOut, addClass, removeClass, generateLoadingTime, OnLoad } from '../utils/'
+import { setClass, isBrowser, print, TimeOut, addClass, removeClass, generateLoadingTime, OnLoad, countSet } from '../utils/'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import useUserContext from '../provider/userProvider'
@@ -16,67 +16,29 @@ import { ArrowUpIcon, ArrowDownIcon } from '@heroicons/react/outline';
 import { Spinner } from '../utils/loader'
 import ProfileCardHover from './ProfileCardHover'
 import Skeleton from './Skeleton'
-
-
-function countSet(num: number, upper?: boolean) {
-    let value = `${num}`
-    let unit = ''
-    if (value.length === 0 || value.length === 1 || value.length === 2 || value.length === 3) {
-        value = `${value}`
-    } else if (value.length === 4 || value.length === 5 || value.length === 6) {
-        unit = upper ? 'K' : 'k'
-        value = `${(num / 1000).toFixed(1)}${unit}`
-    } else if (value.length === 7 || value.length === 8 || value.length === 9) {
-        unit = upper ? 'M' : 'm'
-        value = `${(num / 1000000).toFixed(1)}${unit}`
-    } else if (value.length === 10 || value.length === 11 || value.length === 12) {
-        unit = upper ? 'B' : 'b'
-        value = `${(num / 1000000000).toFixed(1)}${unit}`
-    } else if (value.length === 13 || value.length === 14 || value.length === 15) {
-        unit = upper ? 'T' : 't'
-        value = `${(num / 1000000000000).toFixed(1)}${unit}`
-    } else if (value.length === 16 || value.length === 17 || value.length === 18) {
-        unit = upper ? 'Q' : 'q'
-        value = `${(num / 1000000000000000).toFixed(1)}${unit}`
-    } else if (value.length === 19 || value.length === 20 || value.length === 21) {
-        value
-    }
-    const return_value = {
-        value: value,
-        unit: unit,
-        inital_value: num
-    }
-    return return_value
-}
+import API from '../config/api'
+import store from '../store'
+import Tooltip from './Tooltip'
 
 
 
-const createPostHtml = (text: string) => {
-    const post = document.createElement("p")
-    post.innerHTML = text
-    // regex to replace all mentions with a link and hashtags with a link and links with only http and https with a link
-    post.innerHTML = post.innerHTML.replace(
-        /(^|\s)(@[a-zA-Z0-9_]+)/g,
-        "$1<a href='https://localhost:3000/$2'>$2</a>"
-    )
-    post.innerHTML = post.innerHTML.replace(
-        /(^|\s)(#[a-zA-Z0-9_]+)/g,
-        "$1<a href='https://localhost:3000/$2'>$2</a>"
-    )
-    post.innerHTML = post.innerHTML.replace(
-        /(^|\s)((http(s)?:\/\/)?[a-zA-Z0-9_]+)/g,
-        "$1<a href='$2'>$2</a>"
-    )
-}
+
+
+
 
 const FeedProfile = () => {
+    const { user, signOutUser, getUsers } = useUserContext()
+    getUsers(user.uid)
     const [rendered, setRendered] = useState(false)
-    const { user, signOutUser } = useUserContext()
+    const users = store.get('fetchUsers').users
+    const _status = store.get('fetchUsers').status
+    const [isUsers, setIsUsers] = useState(false)
+    console.log(users, _status)
     const [refreshed, setRefreshed] = useState(true)
     const [dummyUsers, setDummyUsers] = useState([{
         id: 1,
         userName: 'david224',
-        fullName: 'David Brown',
+        displayName: 'David Brown',
         profileImage: 'https://images.generated.photos/DDf2TAj3WgXlcaRW_Rw_C49RS5ZRIqIcS0h8IC7iVSM/rs:fit:512:512/wm:0.95:sowe:18:18:0.33/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LnBob3Rvcy92M18w/NDA3MDYzLmpwZw.jpg',
         isVerified: true,
         isFollowing: false,
@@ -97,7 +59,7 @@ const FeedProfile = () => {
     {
         id: 2,
         userName: 'sanjayp',
-        fullName: 'Sanjay P',
+        displayName: 'Sanjay P',
         profileImage: 'https://images.generated.photos/lSQCOEwpOFJ_Ua0DFgJJhp4YPZROcxvcP_fjR6GvsVc/rs:fit:256:256/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LnBob3Rvcy92M18w/NjUyNTYyLmpwZw.jpg',
         isVerified: false,
         isFollowing: false,
@@ -117,7 +79,7 @@ const FeedProfile = () => {
     {
         id: 3,
         userName: 'sarah_le78',
-        fullName: 'Sarah Lee',
+        displayName: 'Sarah Lee',
         profileImage: 'https://images.generated.photos/yZe4-qr0QKM1djPOhY9TfynsPSNdAWX7TzDpiXDFWas/rs:fit:256:256/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LnBob3Rvcy92M18w/MjU0ODE0LmpwZw.jpg',
         isVerified: false,
         isFollowing: true,
@@ -138,7 +100,7 @@ const FeedProfile = () => {
     {
         id: 4,
         userName: 'serverguyken99',
-        fullName: 'serverguyken',
+        displayName: 'serverguyken',
         profileImage: null,
         isVerified: true,
         isFollowing: true,
@@ -157,7 +119,7 @@ const FeedProfile = () => {
     {
         id: 5,
         userName: 'james_bond',
-        fullName: 'James C. Bond',
+        displayName: 'James C. Bond',
         profileImage: 'https://images.generated.photos/lby-AqX1D1WkyGljF4B0TFSjhu0dJx7Sh76V2LY785E/rs:fit:256:256/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LnBob3Rvcy92M18w/NjAxMTU1LmpwZw.jpg',
         isVerified: false,
         isFollowing: false,
@@ -176,7 +138,7 @@ const FeedProfile = () => {
     {
         id: 6,
         userName: 'Fireshipio',
-        fullName: 'Fireship IO',
+        displayName: 'Fireship IO',
         profileImage: 'https://sfsfiles.spacre.com/profile/39345492-459d-4b68-8732-53912e06ebbe_fireship_logo.png',
         isVerified: true,
         isFollowing: true,
@@ -197,7 +159,7 @@ const FeedProfile = () => {
     {
         id: 7,
         userName: 'Gatsby',
-        fullName: 'Gatsby',
+        displayName: 'Gatsby',
         profileImage: 'https://pngpart.com/images/bt/gatsby-2.png',
         isVerified: true,
         isFollowing: true,
@@ -217,12 +179,11 @@ const FeedProfile = () => {
     const [profileHoverCard, setProfileHoverCard] = useState(false)
     const [profileHoverCardPosition, setProfileHoverCardPosition] = useState(null)
     const router = useRouter()
+
     if (isBrowser()) {
-        const _post_content: any = document.getElementById("_post_content")
         TimeOut(() => {
             setRendered(true)
         }, generateLoadingTime(1000, 3000))
-
     }
     const handleRefresh = async () => {
         setRefreshed(false)
@@ -230,9 +191,6 @@ const FeedProfile = () => {
             setRefreshed(true)
         }, 1000)
     }
-    const likePost = (id: number) => {
-    }
-
 
     return (
         <div className='relative'>
@@ -273,7 +231,7 @@ const FeedProfile = () => {
                             {
                                 refreshed ?
                                     dummyUsers.map((user: any) => {
-                                       
+
                                         return (
                                             <div key={user.userName} id={`${user.userName}_profile_feed_view`} className="bg-white dark:bg-darkMode hover:bg-gray-50 dark:hover:bg-gray-300 dark:hover:bg-opacity-[0.02] cursor-pointer whitespace-pre-wrap feed_post_contents_card pt-3 pb-2 p-2  border-b border-gray-100  dark:border-borderDarkMode">
                                                 <div className="flex justify-between">
@@ -311,12 +269,12 @@ const FeedProfile = () => {
                                                                                                 profile_hover_card.classList.remove('bottom-6');
                                                                                                 profile_hover_card.classList.add('top-6');
                                                                                             }
-                                                                                        }   
+                                                                                        }
                                                                                     }}
                                                                                 >
 
                                                                                     <Link href={`/${user.userName}`}>
-                                                                                        <a className="font-semibold feed_user_profile_name">{user.fullName}</a>
+                                                                                        <a className="font-semibold feed_user_profile_name">{user.displayName}</a>
                                                                                     </Link>
                                                                                 </div>
                                                                                 {
@@ -339,9 +297,22 @@ const FeedProfile = () => {
                                                                             <p className='text-sm text-dimGray'>{user.postTimeStamp}</p>
                                                                         </div>
                                                                     </div>
-                                                                    <div className="post_more_action text-gray-500 dark:text-darkText hover:bg-primary hover:bg-opacity-10 hover:text-primary rounded-full w-8 h-8 flex justify-center items-center">
-                                                                        <DotsHorizontalIcon width={20} />
-                                                                    </div>
+                                                                    <Tooltip
+                                                                        title="More"
+                                                                        placement="center"
+                                                                        position='bottom'
+                                                                        transition='fade'
+                                                                        transitionDuration={200}
+                                                                        classNames={{
+                                                                            body: '-mt-4 bg-gray-500 dark:bg-black dark:text-white text-[0.65rem] ml-1',
+                                                                        }}
+                                                                        color='gray'
+                                                                        
+                                                                    >
+                                                                        <div className="post_more_action text-gray-500 dark:text-darkText hover:bg-primary hover:bg-opacity-10 hover:text-primary rounded-full w-8 h-8 flex justify-center items-center">
+                                                                            <DotsHorizontalIcon width={20} />
+                                                                        </div>
+                                                                    </Tooltip>
                                                                 </div>
                                                             </div>
                                                             <div className="post_feed_contents mt-2 leading-[19px]">
