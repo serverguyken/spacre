@@ -4,6 +4,7 @@ import useUserContext from "../provider/userProvider";
 import VALTIO, { InitialObject } from "./valtio";
 
 export interface STORE {
+    widget_rendered: boolean;
     signup_step: {
         step: number;
         step_name: string;
@@ -27,6 +28,7 @@ const store: {
 } = {
     content: VALTIO.proxy({
         data: {
+            widget_rendered: false,
             signup_step: {
                 step: 1,
                 step_name: "CREATING_NAME_EMAIL",

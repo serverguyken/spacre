@@ -131,9 +131,9 @@ const Auth: NextPage = () => {
                 {
                     isError ?
                         <div className={styles.auth_ERROR}>
-                            <Alert icon={<AlertCircle size={16} />} title="Error" color="red">
+                            {/* <Alert icon={<AlertCircle size={16} />} title="Error" color="red">
                                 {errors[error] ? errors[error].message : 'An error occured'}
-                            </Alert>
+                            </Alert> */}
 
                         </div>
                         :

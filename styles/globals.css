@@ -340,9 +340,7 @@ body {
 }
 
 @media (max-width: 640px) {
-  .modal_main_background {
-    opacity: 1;
-  }
+  
 
   .modal_main_content {
     padding: 2px;
@@ -716,6 +714,13 @@ body {
     display: none;
   }
   .tooltip_comp {
+    opacity: 0;
+    display: none !important;
+  }
+  .no_hover_bg:hover {
+    background-color: transparent !important;
+  }
+  .no_hover_tooltip:hover {
     opacity: 0;
     display: none !important;
   }

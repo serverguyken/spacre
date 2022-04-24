@@ -5,7 +5,8 @@ import { EyeOnIcon, EyeOffIcon } from "./Iconsvg";
 import { Search } from "tabler-icons-react";
 import Icon from "./Icon";
 import { XCircleIcon } from '@heroicons/react/outline';
-const Input = ({ id, styleToRender, type, hasLabel, label, name, placeholder, value, styles, invalid, togglePassword, showPassword, autoCorrect, autoCapitalize, autoComplete, autoSave, autoFocus, min, max, onChange, onFocus, onBlur, cancelShown, onCancel }: {
+import Tooltip from "./Tooltip";
+const Input = ({ id, styleToRender, type, hasLabel, label, name, placeholder, value, styles, invalid, togglePassword, showPassword, autoCorrect, autoCapitalize, autoComplete, autoSave, autoFocus, min, max, onChange, onFocus, onBlur, cancelShown, onCancel, onKeyUp, onKeyDown }: {
     id: string,
     styleToRender: string;
     type: string;
@@ -30,6 +31,8 @@ const Input = ({ id, styleToRender, type, hasLabel, label, name, placeholder, va
     onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
     cancelShown?: boolean;
     onCancel?: () => void;
+    onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+    onKeyUp?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }) => {
     const [inputValue, setInputValue] = useState(value);
     const handleChange = (e: any) => {
@@ -84,6 +87,8 @@ const Input = ({ id, styleToRender, type, hasLabel, label, name, placeholder, va
                             autoComplete={autoComplete}
                             autoSave={autoSave}
                             autoFocus={autoFocus}
+                            onKeyDown={onKeyDown}
+                            onKeyUp={onKeyUp}
                         />
                         
                     </div>
@@ -109,6 +114,8 @@ const Input = ({ id, styleToRender, type, hasLabel, label, name, placeholder, va
                             autoComplete={autoComplete}
                             autoSave={autoSave}
                             autoFocus={autoFocus}
+                            onKeyDown={onKeyDown}
+                            onKeyUp={onKeyUp}
                         />
                     </div>
                 )
@@ -132,17 +139,44 @@ const Input = ({ id, styleToRender, type, hasLabel, label, name, placeholder, va
                             autoComplete={autoComplete}
                             autoSave={autoSave}
                             autoFocus={autoFocus}
+                            onKeyDown={onKeyDown}
+                            onKeyUp={onKeyUp}
                         />
                         <div className={setClass("absolute top-0 right-3 flex mt-8 cursor-pointer")}>
                             {
                                 showPassword ?
-                                    <button className={setClass("relative")} onClick={action}>
-                                        <EyeOnIcon color="text-black dark:text-gray-400" width={20} height={20} />
-                                    </button>
+                                    <Tooltip
+                                        title="Hide Password"
+                                        placement="center"
+                                        position='bottom'
+                                        transition='fade'
+                                        transitionDuration={200}
+                                        classNames={{
+                                            body: 'tooltip_comp -mt-2 bg-gray-500 dark:bg-black dark:text-white text-[0.55rem] -ml-3',
+                                        }}
+                                        color='gray'
+                                    >
+                                        <button className={setClass("relative")} onClick={action} type="button">
+                                            <EyeOffIcon color="text-black dark:text-gray-400" width={20} height={20} />
+                                        </button>
+                                    </Tooltip>
                                     :
-                                    <button className={setClass("relative")} onClick={action}>
-                                        <EyeOffIcon color="text-black dark:text-gray-400" width={20} height={20} />
-                                    </button>
+                                    <Tooltip
+                                        title="Reveal Password"
+                                        placement="center"
+                                        position='bottom'
+                                        transition='fade'
+                                        transitionDuration={200}
+                                        classNames={{
+                                            body: 'tooltip_comp -mt-2 bg-gray-500 dark:bg-black dark:text-white text-[0.55rem] -ml-3',
+                                        }}
+                                        color='gray'
+                                    >
+                                        <button className={setClass("relative")} onClick={action} type="button">
+                                            <EyeOnIcon color="text-black dark:text-gray-400" width={20} height={20} />
+                                        </button>
+                                    </Tooltip>
+                                    
                             }
                         </div>
                     </div>
@@ -168,6 +202,8 @@ const Input = ({ id, styleToRender, type, hasLabel, label, name, placeholder, va
                             autoComplete={autoComplete}
                             autoSave={autoSave}
                             autoFocus={autoFocus}
+                            onKeyDown={onKeyDown}
+                            onKeyUp={onKeyUp}
                         />
                         <div className={setClass("absolute top-0 left-3 flex mt-8 cursor-pointer")}>
                             <button className={setClass("relative")} onClick={action}>
@@ -197,6 +233,8 @@ const Input = ({ id, styleToRender, type, hasLabel, label, name, placeholder, va
                                 autoComplete={autoComplete}
                                 autoSave={autoSave}
                                 autoFocus={autoFocus}
+                                onKeyDown={onKeyDown}
+                                onKeyUp={onKeyUp}
                             />
                             {
                                 cancelShown && <div className="absolute top-2 right-4  flex items-center justify-center screen-sm:top-2 cursor-pointer select-none" role="button" onClick={handleCancel}>
@@ -234,6 +272,8 @@ const Input = ({ id, styleToRender, type, hasLabel, label, name, placeholder, va
                             autoComplete={autoComplete}
                             autoSave={autoSave}
                             autoFocus={autoFocus}
+                            onKeyDown={onKeyDown}
+                            onKeyUp={onKeyUp}
                         />
                     </div>
                 );

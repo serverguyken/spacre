@@ -141,10 +141,11 @@ const Login: NextPage = () => {
             setSpinner(true)
             signInUser(emailValue, passwordValue, {
                 onSuccess: (user: any) => {
-                    print('user', user)
+                    setTimeout(() => {
+                        setSpinner(false)
+                    }, 8000)
                     setTimeout(() => {
                         redirectOnSuccess()
-                        setSpinner(false)
                     }, 1000)
                 },
                 onError: (error: string) => {
@@ -193,84 +194,130 @@ const Login: NextPage = () => {
                     :
                     <div className={setClass(styles.signup_main_container)} >
                         <Auth />
-                        
-                        <Modal
-                            opened={opened}
-                            onClose={() => redirectOnClose()}
-                            styles={{
-                                icon: {
-                                    placement: "left",
-                                    padding: "0px",
-                                    className: "-ml-4",
-                                    tooltip: {
+                        {
+                            !loginError &&
+                            <Modal
+                                opened={opened}
+                                onClose={() => redirectOnClose()}
+                                styles={{
+                                    icon: {
+                                        placement: "left",
+                                        padding: "0px",
                                         className: "-ml-4",
-                                    }
-                                },
-                            }}
-                            showCloseIcon={true}
-                        >
-                            <div className='absolute top-6 right-3 px-2 py-1 hover:bg-gray-100 rounded-sm'>
-                            </div>
-                            <div className={setClass(styles.signup_main)}>
-                                <div className={setClass(styles.signup_logo)}>
-                                    <Group position='center'>
-                                        <Icon type="logo" color='' width='40' height='40' />
-                                    </Group>
+                                        tooltip: {
+                                            className: "-ml-4",
+                                        }
+                                    },
+                                    modal: {
+                                        content: {
+                                            class: 'modal_main_content'
+                                        }
+                                    },
+                                }}
+                                showCloseIcon={true}
+                            >
+                                <div className='absolute top-6 right-3 px-2 py-1 hover:bg-gray-100 rounded-sm'>
                                 </div>
-                                <div className={setClass(styles.signup_form_main)}>
-                                    <div className={setClass(styles.signup_form_main_top, "overflow-auto")}>
-                                        <div className={setClass(styles.signup_header)}>
-                                            <h1>Welcome back!</h1>
-                                        </div>
-                                        <div className={setClass(styles.signup_form, "mt-4")}>
+                                <div className={setClass(styles.signup_main)}>
+                                    <div className={setClass(styles.signup_logo, 'mt-3')}>
+                                        <Group position='center'>
+                                            <Icon type="logo" color='' width='40' height='40' />
+                                        </Group>
+                                    </div>
+                                        <div className={setClass(styles.signup_form_main)}>
+                                            <form
+                                                onSubmit={(e) => {
+                                                    e.preventDefault()
+                                                    console.log('submitted')
+                                                }}
+                                            >
+                                        <div className={setClass(styles.signup_form_main_top, "overflow-auto")}>
+                                            <div className={setClass(styles.signup_header)}>
+                                                <h1>Welcome back!</h1>
+                                            </div>
+                                            <div className={setClass(styles.signup_form, "mt-4")}>
                                             
-                                            <Input id="email_username_login" styleToRender='email' type="email" hasLabel={false} placeholder='Email' value={emailValue} invalid={emailInvalid && showEmailError} onChange={(v) => { handleEmailInputChange(v) }} />
-                                            <div className={setClass(styles.signup_email_error)}>
-                                                <p className={setClass(styles.signup_email_error_text, "text-red-500 mt-2 text-xs")}>{emailErrorMessage}</p>
-                                            </div>
-                                            <Input id="password_login" styleToRender='password' type="password" hasLabel={false} placeholder='Password' value={passwordValue} invalid={passwordInvalid && showPasswordError} showPassword={showPassword} togglePassword={togglePassword} onChange={(v) => { handlePasswordInputChange(v) }} />
-                                            <div className={setClass(styles.signup_email_error)}>
-                                                <p className={setClass(styles.signup_email_error_text, "text-red-500 mt-2 text-xs")}>{passwordErrorMessage}</p>
+                                                <Input id="email_username_login" styleToRender='email' type="email" hasLabel={false} placeholder='Email' value={emailValue} invalid={emailInvalid && showEmailError} onChange={(v) => { handleEmailInputChange(v) }} />
+                                                <div className={setClass(styles.signup_email_error)}>
+                                                    <p className={setClass(styles.signup_email_error_text, "text-red-500 mt-2 text-xs")}>{emailErrorMessage}</p>
+                                                </div>
+                                                <Input id="password_login" styleToRender='password' type="password" hasLabel={false} placeholder='Password' value={passwordValue} invalid={passwordInvalid && showPasswordError} showPassword={showPassword} togglePassword={togglePassword} onChange={(v) => { handlePasswordInputChange(v) }} />
+                                                <div className={setClass(styles.signup_email_error)}>
+                                                    <p className={setClass(styles.signup_email_error_text, "text-red-500 mt-2 text-xs")}>{passwordErrorMessage}</p>
+                                                </div>
                                             </div>
                                         </div>
+                                        <div className={setClass(styles.signup_form_main_bottom)}>
+                                            <div className={setClass(styles.signup_form_button, "mt-4")}>
+                                                {
+                                                    spinner ?
+
+                                                        <PrimaryButton width={"w-full py-3"} disabled={disabled} textColor="white">
+                                                            <Spinner color='white' width={'20'} />
+                                                        </PrimaryButton>
+                                                        :
+
+                                                        <PrimaryButton text="Log In" width={"w-full py-3"} disabled={disabled} textColor="white" action={handleLogin} type="submit"/>
+                                                }
+                                            </div>
+
+
+                                            <div className={setClass(styles.or_opt_ele, 'after:bg-white border-b border-b-gray-200 dark:after:bg-darkMode dark:after:content-["OR"] dark:border-b-gray-200 dark:border-opacity-20')}>
+                                            </div>
+
+                                            <SocialButton disabled={false} color="bg-white" text="Continue with Github" styles=" border boder-gray-300" textStyle='text-lg dark:text-dark' width="px-16 py-3" icon="github" iconWidth='w-6' action={() => { handleGitHubLogin() }} />
+                                            <div className={setClass(styles.side_right_bottom)}>
+                                                <div className={setClass("signup_legal")}>
+                                                    <p className={setClass("text-xs mt-5 w-9/12 text-center m-auto")}>By signing up, you agree to the <span className={setClass("text-primary underline")}><Link href="/legal/terms">Terms of Service</Link></span> and <span className={setClass("text-primary underline")}><Link href="/legal/privacy">Privacy Policy</Link></span>.</p>
+                                                </div>
+                                                <div className={setClass(styles.alr_login)}>
+                                                    <p className={setClass("text-sm mt-5 w-8/12 text-center m-auto")}>Don&apos;t have an account? <span className={setClass("text-primary underline")}><Link href="/auth/signup">Sign up</Link></span></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </form>
                                     </div>
-                                    <div className={setClass(styles.signup_form_main_bottom)}>
-                                        <div className={setClass(styles.signup_form_button, "mt-4")}>
-                                            {
-                                                spinner ?
-
-                                                    <PrimaryButton width={"w-full py-3"} disabled={disabled} textColor="white">
-                                                        <Spinner color='white' width={'20'} />
-                                                    </PrimaryButton>
-                                                    :
-
-                                                    <PrimaryButton text="Log In" width={"w-full py-3"} disabled={disabled} textColor="white" action={handleLogin} />
-                                            }
-                                        </div>
-
-
-                                        <div className={setClass(styles.or_opt_ele, 'after:bg-white border-b border-b-gray-200 dark:after:bg-darkMode dark:after:content-["OR"] dark:border-b-gray-200 dark:border-opacity-20')}>
-                                        </div>
-
-                                        <SocialButton disabled={false} color="bg-white" text="Continue with Github" styles=" border boder-gray-300" textStyle='text-lg dark:text-dark' width="px-16 py-3" icon="github" iconWidth='w-6' action={() => { handleGitHubLogin() }} />
-                                        <div className={setClass(styles.side_right_bottom)}>
-                                            <div className={setClass("signup_legal")}>
-                                                <p className={setClass("text-xs mt-5 w-9/12 text-center m-auto")}>By signing up, you agree to the <span className={setClass("text-primary underline")}><Link href="/legal/terms">Terms of Service</Link></span> and <span className={setClass("text-primary underline")}><Link href="/legal/privacy">Privacy Policy</Link></span>.</p>
-                                            </div>
-                                            <div className={setClass(styles.alr_login)}>
-                                                <p className={setClass("text-sm mt-5 w-8/12 text-center m-auto")}>Don&apos;t have an account? <span className={setClass("text-primary underline")}><Link href="/auth/signup">Sign up</Link></span></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {loginError ? <div className={setClass(styles.signup_error, 'mt-5')}>
-                                        <Alert icon={<AlertCircle size={16} />} title="Error" color="red">
-                                            {errorMessage}
-                                        </Alert>
-
-                                    </div> : null}
                                 </div>
-                            </div>
-                        </Modal>
+                            </Modal>
+                        }
+                        {loginError ?
+                            <Modal
+                                opened
+                                onClose={() => redirectOnClose()}
+                                styles={{
+                                    modalContainer: {
+                                        background: 'bg-[#5c5d5e] opacity-80 dark:opacity-50',
+                                    },
+                                    modal: {
+                                        class: '',
+                                        content: {
+                                            class: 'modal_error mt-[20vh] mb-[20vh] dark:bg-darkMode dark:border-opacity-10',
+                                            background: 'bg-white dark:bg-darkMode dark:border-opacity-10',
+                                        }
+                                    },
+                                }}
+                            >
+                                <div className={setClass(styles.signup_error, '')}>
+                                    <div className='p-2 w-full  m-auto '>
+                                        <div className="flex  space-x-2">
+                                            <div className="error_icon mt-[0.38rem]">
+                                                <AlertCircle size={16} color="red" />
+                                            </div>
+                                            <div className="error_con">
+                                                <p className='font-bold'>Error</p>
+                                                <p className='mt-1'>{errorMessage}</p>
+
+                                            </div>
+                                        </div>
+                                        <div className="error_button w-[85%] m-auto">
+                                            <SecondaryButton text="Ok" action={() => { redirectOnClose() }} styles={setClass('w-full text-white p-2 mt-4')} />
+                                        </div>
+                                    </div>
+                                </div>
+                            </Modal>
+                            :
+                            null
+                        }
                     </div>
             }
         </div>

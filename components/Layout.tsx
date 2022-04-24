@@ -28,7 +28,6 @@ const Layout = ({ path, content_one, content_two }: any) => {
  
     StorageEvent((event: any) => {
         let dsiplay_mode = localStorage.getItem('theme')
-        console.log(dsiplay_mode)
         if (dsiplay_mode === null) {
             localStorage.setItem('theme', 'light')
             dsiplay_mode = 'light'

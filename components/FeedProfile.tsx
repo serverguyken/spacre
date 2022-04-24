@@ -193,7 +193,7 @@ const FeedProfile = () => {
     }
 
     return (
-        <div className='relative'>
+        <div className='relative mt-2'>
             <div>
                 <TextCard />
             </div>
@@ -213,14 +213,14 @@ const FeedProfile = () => {
                         isPullable={true}
                         onRefresh={handleRefresh}
                         pullingContent={
-                            <div className="pullDownContentHeader pt-8 screen-sm:pt-16 flex justify-center">
+                            <div className="pullDownContentHeader pt-8 screen-sm:pt-20 flex justify-center">
                                 <div className="pullDownContentHeaderText">
                                     <ArrowDownIcon width={20} className="text-gray-500" />
                                 </div>
                             </div>
                         }
                         refreshingContent={
-                            <div className="refreshingConentHeader pt-8 screen-sm:pt-16 flex justify-center">
+                            <div className="refreshingConentHeader pt-8 screen-sm:pt-20 flex justify-center">
                                 <div className="refreshingConentHeaderText">
                                     <Spinner width={24} color="var(--color-primary)" />
                                 </div>
@@ -386,7 +386,7 @@ const FeedProfile = () => {
                                                                             }
                                                                             <p className="text-xs">{user.likesCount}</p>
 
-                                                                            <div className="post_action_tooltip post_like_tooltip invisible opacity-0 absolute top-7 right-0 z-20 bg-gray-500 dark:bg-black dark:text-white w-12 p-1 text-center text-xs text-white rounded shadow-sm">
+                                                                            <div className="post_action_tooltip post_like_tooltip invisible opacity-0 absolute top-7 right-0 z-20 bg-gray-500 dark:bg-darkModeBg dark:text-white w-12 p-1 text-center text-xs text-white rounded shadow-sm">
                                                                                 <div className="like_tooltip_content">
                                                                                     {
                                                                                         user.postLiked ? <span>Unlike</span> : <span>Like</span>
@@ -397,7 +397,7 @@ const FeedProfile = () => {
                                                                         <div className="post_action post_user_comment_action relative select-none flex text-gray-500 dark:text-darkText items-center space-x-2 cursor-pointer p-1 rounded-sm hover:bg-green-600 hover:bg-opacity-10 hover:text-green-600 dark:hover:text-green-600">
                                                                             <AnnotationIcon width={16} />
                                                                             <p className="text-xs">{user.commentsCount}</p>
-                                                                            <div className="post_action_tooltip post_comment_tooltip invisible opacity-0 absolute top-7 right-0 z-20 bg-gray-500 dark:bg-black dark:text-white w-12 p-1 text-center text-xs text-white rounded shadow-sm">
+                                                                            <div className="post_action_tooltip post_comment_tooltip invisible opacity-0 absolute top-7 right-0 z-20 bg-gray-500 dark:bg-darkModeBg dark:text-white w-12 p-1 text-center text-xs text-white rounded shadow-sm">
                                                                                 <div className="comment_tooltip_content">
                                                                                     <span>Reply</span>
                                                                                 </div>
@@ -406,7 +406,7 @@ const FeedProfile = () => {
                                                                         <div className="post_action post_user_share_action relative select-none flex text-gray-500 dark:text-darkText items-center space-x-2 cursor-pointer p-1 rounded-sm hover:bg-primary hover:bg-opacity-10 hover:text-primary dark:hover:text-primary">
                                                                             <UploadIcon width={16} />
                                                                             <p className="text-xs">{user.sharesCount}</p>
-                                                                            <div className="post_action_tooltip post_share_tooltip invisible opacity-0 absolute top-7 right-0 z-20 bg-gray-500 dark:bg-black dark:text-white w-12 p-1 text-center text-xs text-white rounded shadow-sm">
+                                                                            <div className="post_action_tooltip post_share_tooltip invisible opacity-0 absolute top-7 right-0 z-20 bg-gray-500 dark:bg-darkModeBg dark:text-white w-12 p-1 text-center text-xs text-white rounded shadow-sm">
                                                                                 <div className="share_tooltip_content">
                                                                                     <span>Share</span>
                                                                                 </div>
@@ -423,7 +423,7 @@ const FeedProfile = () => {
                                                                                     :
                                                                                     <BookmarkIcon width={16} />
                                                                             }
-                                                                            <div className="post_action_tooltip post_save_tooltip invisible opacity-0 absolute top-7 -right-3 z-20 bg-gray-500 dark:bg-black dark:text-white w-12  p-1 text-center text-xs text-white rounded shadow-sm">
+                                                                            <div className="post_action_tooltip post_save_tooltip invisible opacity-0 absolute top-7 -right-3 z-20 bg-gray-500 dark:bg-darkModeBg dark:text-white w-12  p-1 text-center text-xs text-white rounded shadow-sm">
                                                                                 <div className="save_tooltip_content">
                                                                                     {
                                                                                         user.postSaved ? <span>Saved</span> : <span>Save</span>

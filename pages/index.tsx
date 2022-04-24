@@ -9,14 +9,14 @@ import useUserContext from '../provider/userProvider'
 import { isBrowser } from '../utils/'
 import { useRouter } from 'next/router'
 import { WithAuth } from '../config/auth/route'
-import { User } from '../interface/User'
+import { AuthUser } from '../interface/User'
 
 let isNotification = false
 function renderNotification() {
   isNotification = false
 }
 const Home: NextPage = () => {
-  const { user } = useUserContext()
+  const { authUser } = useUserContext()
   const router = useRouter()
   useEffect(() => {
     let favicon_url = '/favicon-notification.ico'
@@ -32,11 +32,12 @@ const Home: NextPage = () => {
     }
   }, [])
   renderNotification()
-  return WithAuth(user, false, false, {
-    onAuthSuccess: (user: User) => {
+  return WithAuth(authUser, false, false, {
+    onAuthSuccess: (user: AuthUser) => {
       if (isBrowser()) {
         router.push('/home')
       }
+      return (<></>)
     },
     onAuthFail: (error: any) => {
       return (

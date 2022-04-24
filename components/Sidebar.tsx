@@ -102,15 +102,17 @@ const Sidebar = ({ path }: {
                                 <PlusIcon className='ml-auto mr-auto text-white' width={24} />
                             </span>
                         </PrimaryButton>
-                        <PrimaryButton styles={'sidebar_post_button_mb animationScaleup w-12 h-12 fixed bottom-4 right-4 z-50 shadow-lg hidden screen-sm:block'}
-                            action={showPostTextBox}
-                        >
-                            <span className='s_p_b_icon'>
-                                <PlusIcon className='ml-auto mr-auto text-white' width={20} />
-                            </span>
-                        </PrimaryButton>
-                        <div className="sidebar_post_tooltip invisible opacity-0 absolute top-14 -left-2 z-[50] w-[2.5rem] bg-gray-500 dark:bg-black dark:text-white p-1 text-center text-xs text-white rounded shadow-sm">
-                            <span>Post</span>
+                        <div className="relative">
+                            <PrimaryButton styles={'sidebar_post_button_mb animationScaleup w-12 h-12 fixed bottom-4 right-4 z-50 shadow-lg hidden screen-sm:block'}
+                                action={showPostTextBox}
+                            >
+                                <span className='s_p_b_icon'>
+                                    <PlusIcon className='ml-auto mr-auto text-white' width={20} />
+                                </span>
+                                <div className="sidebar_post_tooltip invisible opacity-0 absolute top-11 left-0 right-0 block m-auto z-[50] w-[2.5rem] bg-gray-500 dark:bg-black dark:text-white p-1 text-center text-xs text-white rounded shadow-sm">
+                                    <span>Post</span>
+                                </div>
+                            </PrimaryButton>
                         </div>
                     </div>
                 </div>

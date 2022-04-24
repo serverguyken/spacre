@@ -97,7 +97,7 @@ const SearchBox = ({ isSearch, searchTerm, searchList, renderNoSearch }: {
                                     <div className='flex items-center'>
                                         {
                                             item.type === 'user' && <div className='mr-2'>
-                                                <Image src={item.image} width={'32px'} height={'32px'} alt={item.content} className="rounded-full" />
+                                                <img src={item.image} width={'32px'} height={'32px'} alt={item.content} className="rounded-full" />
                                             </div>
                                         }
                                         {

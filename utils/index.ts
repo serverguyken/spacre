@@ -32,7 +32,11 @@ export function isBrowser(): boolean {
 }
 
 export function isClient(): boolean {
-  return typeof document !== 'undefined';
+  return typeof window !== 'undefined';
+}
+
+export function isServer(): boolean {
+  return !isClient();
 }
 
 export function isSearchQuery(route: string): { isSearchQuery: boolean; query: string | null } {

@@ -13,6 +13,7 @@ interface DEFAULT_BUTTON_PROPS {
     disabled?: boolean
 }
 interface BUTTON_PROPS {
+    type?: string | any;
     textColor?: string;
     width?: string | any;
     height?: string | any;
@@ -34,10 +35,12 @@ function DefaultButton({ color, textColor, width, height, text, textStyle, actio
         </div>
     );
 }
-function PrimaryButton({ textColor, width, height, text, textStyle, styles, action, children, disabled, disabledColor }: BUTTON_PROPS) {
+function PrimaryButton({ type, textColor, width, height, text, textStyle, styles, action, children, disabled, disabledColor }: BUTTON_PROPS) {
     return (
         <div>
-            <button className={setClass("primary_btn_comp select-none", `${disabled ? `${disabledColor ? disabledColor : 'bg-gray-400'}  cursor-not-allowed` : "bg-primary dark:bg-primary primary_bg_transition"}`, "border-radius-main", width, height, styles)} onClick={action} disabled={disabled}>
+            <button
+                type={type ? type : 'button'}
+                className={setClass("primary_btn_comp select-none", `${disabled ? `${disabledColor ? disabledColor : 'bg-gray-400'}  cursor-not-allowed` : "bg-primary dark:bg-primary primary_bg_transition"}`, "border-radius-main", width, height, styles)} onClick={action} disabled={disabled}>
                 <span className={"font-medium text-sm text-center " + textStyle} style={{ color: textColor }}>{text}</span>
                 {children}
             </button>

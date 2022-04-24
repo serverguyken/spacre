@@ -20,6 +20,7 @@ import HashtagEntry from "./HashtagEntry"
 import VALTIO, { SUBSCRIBE } from "../store/valtio"
 import store from "../store"
 import { RenderLinkCard } from "../utils/render"
+import Tooltip from "./Tooltip"
 
 const mentionPlugin = createMentionPlugin({
     mentionPrefix: '@',
@@ -108,7 +109,14 @@ const TextCard = () => {
     const plugins = [mentionPlugin, hashtagPlugin, linkifyPlugin]
 
     
-
+    if (isBrowser()) { 
+        window.addEventListener('resize', () => { 
+            // if width is greater than 800px, set isMobile to false
+            if (window.innerWidth > 800) {
+                setPostTextBoxShown(false)
+            }
+        })
+    }
 
     const handleChange = (state: any) => {
         const value = state.getCurrentContent().getPlainText()
@@ -118,7 +126,6 @@ const TextCard = () => {
         setMaxInitialValue(value.length)
         setTextLength(value.length)
         const hasLink = Linky.isLink(value)
-        print(hasLink)
         const link = Linky.getUrl(value) as string
         if (hasLink) {
             setIsLinkCard(true)
@@ -157,8 +164,20 @@ const TextCard = () => {
     const HashtagSuggestions = hashtagPlugin.MentionSuggestions
     return (
         <div className={setClass("post_textarea", postTextBoxShown ? 'screen-sm:fixed screen-sm:top-0 screen-sm:w-full screen-sm:h-full screen-sm:z-50 screen-sm:bg-white screen-sm:dark:bg-darkMode' : 'bg-white dark:bg-darkMode relative screen-sm:hidden')}>
-            <div className={setClass(postTextBoxShown ? 'block ' : 'hidden', "absolute top-3 left-2 z-20 p-2 rounded-full  cursor-pointer hover:bg-gray-100 hover:bg-opacity-70 hover:transition hover:ease-in-out dark:hover:bg-darkModeBg")} onClick={() => store.content.data.postTextareaShown = false} >
-                <XIcon width={24} height={24} className=""/>
+            <div className={setClass(postTextBoxShown ? 'flex ' : 'hidden', "absolute top-3 left-2 z-20 p-2 justify-center items-center rounded-full  cursor-pointer hover:bg-gray-100 hover:bg-opacity-70 hover:transition hover:ease-in-out dark:hover:bg-darkModeBg")} onClick={() => store.content.data.postTextareaShown = false} >
+                <Tooltip
+                    title="Close"
+                    placement="center"
+                    position='bottom'
+                    transition='fade'
+                    transitionDuration={200}
+                    classNames={{
+                        body: 'tooltip_comp mt-2 bg-gray-500 dark:bg-black dark:text-white text-[0.65rem] ml-1',
+                    }}
+                    color='gray'
+                >
+                    <XIcon width={24} height={24} className="text-gray-500 dark:text-white" />
+                </Tooltip>
             </div>
             <div className={setClass("border-b border-gray-100 dark:border-borderDarkMode p-2 screen-sm:dark:border-b-gray-50 screen-sm:dark:border-opacity-5", postTextBoxShown ? 'screen-sm:p-4 screen-sm:pb-1' : '')}>
                 <div className={setClass("w-auto screen-sm:mt-3")}>
@@ -200,19 +219,55 @@ const TextCard = () => {
                     <div className="text-actions_group flex items-center justify-between">
                         <div className="text_actions_icons flex items-center space-x-3">
                             <div className="text_action">
-                                <div className="text_action_icon cursor-pointer">
-                                    <CodeIcon width={20} height={20} className={'text-primary'} />
-                                </div>
+                                <Tooltip
+                                    title="Code"
+                                    placement="center"
+                                    position='bottom'
+                                    transition='fade'
+                                    transitionDuration={200}
+                                    classNames={{
+                                        body: 'tooltip_comp bg-gray-500 dark:bg-black dark:text-white text-[0.55rem] ml-1',
+                                    }}
+                                    color='gray'
+                                >
+                                    <div className="text_action_icon cursor-pointer">
+                                        <CodeIcon width={20} height={20} className={'text-primary'} />
+                                    </div>
+                                </Tooltip>
                             </div>
                             <div className="text_action">
-                                <div className="text_action_icon cursor-pointer">
-                                    <PhotographIcon width={20} height={20} className={'text-primary'} />
-                                </div>
+                                <Tooltip
+                                    title="Media"
+                                    placement="center"
+                                    position='bottom'
+                                    transition='fade'
+                                    transitionDuration={200}
+                                    classNames={{
+                                        body: 'tooltip_comp bg-gray-500 dark:bg-black dark:text-white text-[0.55rem] ml-1',
+                                    }}
+                                    color='gray'
+                                >
+                                    <div className="text_action_icon cursor-pointer">
+                                        <PhotographIcon width={20} height={20} className={'text-primary'} />
+                                    </div>
+                                </Tooltip>
                             </div>
                             <div className="text_action">
-                                <div className="text_action_icon cursor-pointer">
-                                    <EmojiHappyIcon width={20} height={20} className={'text-primary'} />
-                                </div>
+                                <Tooltip
+                                    title="Emoji"
+                                    placement="center"
+                                    position='bottom'
+                                    transition='fade'
+                                    transitionDuration={200}
+                                    classNames={{
+                                        body: 'tooltip_comp bg-gray-500 dark:bg-black dark:text-white text-[0.55rem] ml-1',
+                                    }}
+                                    color='gray'
+                                >
+                                    <div className="text_action_icon cursor-pointer">
+                                        <EmojiHappyIcon width={20} height={20} className={'text-primary'} />
+                                    </div>
+                                </Tooltip>
                             </div>
                             {
                                 textExceeded && <div className="max_value_count">

@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react'
 import { isBrowser, generateLoadingTime, TimeOut } from '../utils'
 import { Spinner } from '../utils/loader'
 import Video from './Video'
+import WidgetFooter from "./WidgetFooter"
 
 const people_to_follow = [
     {
@@ -118,7 +119,7 @@ const Widget = () => {
     }, [])
     return (
         <div className='widget_main self-start w-full pt-4 sticky top-0 pb-6'>
-            <div className="video_ad_container mb-2">
+            <div className="mb-2">
                 <div className="">
                     <h1 className="text-gray-400 dark:text-white text-sm flex-1 mb-2">Sponsored</h1>
                     <div className="video_ad_container_inner rounded-full">
@@ -210,24 +211,7 @@ const Widget = () => {
                         </div>
                 }
             </div>
-            <div className="widget_footer">
-                <div className="widget_footer_links flex justify-center items-center space-x-3">
-                    {
-                        footer_links.map(link => {
-                            return (
-                                <div key={link.name}>
-                                    <NextLink href={link.to}>
-                                        <a className="text-xs text-dimGray dark:text-white hover:underline">{link.name}</a>
-                                    </NextLink>
-                                </div>
-                            )
-                        })
-                    }
-                </div>
-                <div className="widget_footer_logo mt-3 flex justify-center">
-                    <Icon type="logo" width={'30'} />
-                </div>
-            </div>
+           <WidgetFooter />
         </div>
     )
 }

@@ -79,14 +79,14 @@ const Search: NextPage = () => {
     }
     return (
         <div>
-            <div className='search_spacre_main w-full relative'>
+            <div className='search_spacre_main w-full relative p-2'>
                 <Input id='search_spacre' type='text' styles={'screen-sm:pt-[0.5rem] screen-sm:pb-[0.5rem]'} placeholder='Search Spacre' styleToRender='search' value={searchTerm} hasLabel={false} autoComplete={'off'} onChange={(val: string) => {
                     setSearch(true, val)
                     searchHandler(val)
                 }}
                     onFocus={renderSearch} onBlur={unmountSearch} cancelShown={isSearch} onCancel={unmountSearchCancel} />
                 {
-                    searchBoxRendered && <div className='w-full absolute top-12 left-0 z-40 screen-sm:top-4'><SearchBox isSearch={isSearch} searchTerm={searchTerm} searchList={searchList} renderNoSearch={noSerach} /></div>
+                    searchBoxRendered && <div className='w-full absolute top-12 left-0 z-40 screen-sm:top-8'><SearchBox isSearch={isSearch} searchTerm={searchTerm} searchList={searchList} renderNoSearch={noSerach} /></div>
                 }
             </div>
         </div>
