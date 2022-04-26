@@ -1,44 +1,44 @@
 .auth_land_home {
-    background-color: var(--color-light);
-    min-height: 740px;
+  background-color: var(--color-light);
+  min-height: 740px;
 }
 
 .sides_layout {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    padding-bottom: 112px;
-    padding-top: 160px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding-bottom: 112px;
+  padding-top: 160px;
 }
 
 .side_left {
-    width: 55%;
-    height: 100%;
+  width: 55%;
+  height: 100%;
 }
 
 .side_right {
-    width: 45%;
-    height: 100%;
+  width: 45%;
+  height: 100%;
 }
 
 .side_right_content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-    padding-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding-top: 1.5rem;
 }
 
 .main_heading_contents {
-    width: 80%;
+  width: 80%;
 }
 
 .main_heading_contents .main_heading_tag {
-    line-height: 30px;
+  line-height: 30px;
 }
 
 /* .main_heading {
@@ -46,109 +46,105 @@
 } */
 
 .sign_up_login {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .signup_email {
-    padding-top: 10px;
+  padding-top: 10px;
 }
 
 .or_opt_ele {
-    position: relative;
-    margin-bottom: 20px;
-    padding-top: 20px;
-    padding-bottom: 10px;
+  position: relative;
+  margin-bottom: 20px;
+  padding-top: 20px;
+  padding-bottom: 10px;
 }
 
 .or_opt_ele::after {
-    left: 50%;
-    color: var(--color-lightGray);
-    bottom: -11px;
-    content: "OR";
-    padding: 0 10px;
-    position: absolute;
-    transform: translateX(-50%);
-    line-height: var(--font-caption-height);
+  left: 50%;
+  color: var(--color-lightGray);
+  bottom: -11px;
+  content: "OR";
+  padding: 0 10px;
+  position: absolute;
+  transform: translateX(-50%);
+  line-height: var(--font-caption-height);
 }
 
-
-
 .signup_form_button {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 
 .signup_header {
-    padding-top: 20px;
+  padding-top: 20px;
 }
 
 .signup_header h1 {
-    font-size: 22px;
-    font-weight: 600;
+  font-size: 22px;
+  font-weight: 600;
 }
 
 @media (max-width: 900px) {
-    .sides_layout {
-        display: block;
-        padding-top: 80px;
-    }
+  .sides_layout {
+    display: block;
+    padding-top: 80px;
+  }
 
-    .side_left {
-        width: 100%;
-        height: 100%;
-    }
+  .side_left {
+    width: 100%;
+    height: 100%;
+  }
 
-    .side_right {
-        width: 100%;
-        height: 100%;
-    }
+  .side_right {
+    width: 100%;
+    height: 100%;
+  }
 
-    .main_heading_contents {
-        width: 100%;
-    }
+  .main_heading_contents {
+    width: 100%;
+  }
 
-    .main_heading_contents .main_heading_text {
-        font-size: 3rem;
-        text-align: center;
-    }
+  .main_heading_contents .main_heading_text {
+    font-size: 3rem;
+    text-align: center;
+  }
 
-    .main_heading_contents .main_heading_tag {
-        font-size: 1.3rem;
-        text-align: center;
-        line-height: 28px;
-        width: 100%;
-        max-width: 55%;
-        margin: 1rem auto;
-    }
-
-
+  .main_heading_contents .main_heading_tag {
+    font-size: 1.3rem;
+    text-align: center;
+    line-height: 28px;
+    width: 100%;
+    max-width: 55%;
+    margin: 1rem auto;
+  }
 }
 
 @media (max-width: 768px) {
-    .sides_layout {
-        max-width: 70%;
-    }
+  .sides_layout {
+    max-width: 70%;
+  }
 
-    .main_heading_contents .main_heading_tag {
-        font-size: 1.3rem;
-        text-align: center;
-        width: 100%;
-        max-width: 90%;
-        margin: 1rem auto;
-    }
+  .main_heading_contents .main_heading_tag {
+    font-size: 1.3rem;
+    text-align: center;
+    width: 100%;
+    max-width: 90%;
+    margin: 1rem auto;
+  }
 }
 
 @media (max-width: 600px) {
-    .sides_layout {
-        max-width: 100%;
-    }
+  .sides_layout {
+    max-width: 100%;
+  }
 
-    .main_heading_contents .main_heading_tag {
-        font-size: 1.3rem;
-        text-align: center;
-        width: 100%;
-        max-width: 90%;
-        margin: 1rem auto;
-    }
+  .main_heading_contents .main_heading_tag {
+    font-size: 1.3rem;
+    text-align: center;
+    width: 100%;
+    max-width: 90%;
+    margin: 1rem auto;
+  }
 }

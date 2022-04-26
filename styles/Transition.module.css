@@ -1,0 +1,82 @@
+/* Transition */
+.transitionBegin {
+  display: block;
+}
+
+.transitionEnd {
+  display: none;
+}
+
+.pop {
+  animation: pop_in .2s ease-in;
+}
+
+.pop-1s {
+  animation: pop_in 1s ease-in;
+}
+
+.pop-2s {
+  animation: pop_in 2s ease-in;
+}
+
+.pop-3s {
+  animation: pop_in 3s ease-in;
+}
+
+.pop-4s {
+  animation: pop_in 4s ease-in;
+}
+
+.pop-5s {
+  animation: pop_in 5s ease-in;
+}
+
+.pop_out {
+  animation: pop_out .5s ease-in;
+}
+
+.fadeOut {
+  animation: fadeOut .2s ease-in;
+}
+
+
+@keyframes pop_in {
+  0% {
+    transform: translateY(100%);
+    transform: scale(0.5);
+  }
+
+  100% {
+    transform: translateY(0);
+    transform: scale(1);
+  }
+}
+
+@keyframes pop_out {
+  0% {
+    transform: translateY(0);
+    transform: scale(1);
+  }
+
+  100% {
+    transform: translateY(100%);
+    transform: scale(0.5);
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  50% {
+    opacity: 0.5;
+    transform: translateY(50%);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+}

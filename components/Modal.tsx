@@ -2,7 +2,8 @@ import { XIcon } from "@heroicons/react/outline"
 import {setClass} from '../utils/'
 interface ModalStyles {
     modalContainer?: {
-        background: string,
+        background?: string,
+        className?: string,
     },
     modal?: {
         background?: string,
@@ -14,6 +15,8 @@ interface ModalStyles {
         content?: {
             class?: string,
             background?: string,
+            position?: string,
+            border?: string,
         }
     },
     icon?: {
@@ -40,7 +43,13 @@ interface ModalStyles {
         zIndex?: string,
         padding?: string,
         background?: string,
-    }
+    },
+    overflow?: {
+        hidden?: boolean,
+        scroll?: boolean,
+        auto?: boolean,
+        className?: boolean,
+    },
 }
 const Modal = ({ opened, onClose, children, styles, showCloseIcon }: {
     opened: boolean,
@@ -49,14 +58,24 @@ const Modal = ({ opened, onClose, children, styles, showCloseIcon }: {
     styles?: ModalStyles,
     showCloseIcon?: boolean
 }) => {
+    if (styles?.overflow?.hidden) { 
+        document.body.style.overflow = 'hidden'
+    } else if (styles?.overflow?.scroll) {
+        document.body.style.overflow = 'scroll'
+    } else if (styles?.overflow?.auto) {
+        document.body.style.overflow = 'auto'
+    }
     return (
         <div>
             <div>
-                <div className={setClass("modal_main_inner  absolute opacity-100 z-[300] top-0 left-0 bottom-0 right-0 h-full  pt-12 pb-12 pr-4 pl-4 flex justify-center items-start ", `${styles?.modal?.class ? styles?.modal?.class : 'screen-xssm:bg-white screen-xssm:dark:bg-darkMode'}`)}
+                <div className={setClass("modal_main_inner  opacity-100 z-[300] top-0 left-0 bottom-0 right-0 h-full  pt-12 pb-12 pr-4 pl-4 flex justify-center items-start ", `${styles?.modal?.class ? styles?.modal?.class : 'screen-xssm:bg-white screen-xssm:dark:bg-darkMode'} ${styles?.modal?.content?.position ? styles?.modal?.content?.position : 'absolute'}`
+                )}
+                
                 >
-                    <div className={setClass("z-[1] opacity-100 rounded-lg", `${styles?.modal?.content?.background ? styles?.modal?.content?.background : 'border border-gray-100 screen-xssm:border-none bg-white dark:bg-darkMode dark:border-opacity-10'}`, `${
+                    <div className={setClass("z-[1] opacity-100 rounded-lg", `${styles?.modal?.content?.background ? styles?.modal?.content?.background : 'bg-white dark:bg-darkMode'}`, `${
                         styles?.modal?.width ? styles?.modal?.width : 'w-[440px]'
                         }`,
+                        `${styles?.modal?.content?.border ? styles?.modal?.content?.border : 'border border-gray-100 screen-xssm:border-none bg-white dark:bg-darkMode dark:border-opacity-10'}`,
                         `${styles?.modal?.height ? styles?.modal?.height : 'h-auto'}`,
                         `${styles?.modal?.padding ? styles?.modal?.padding : 'p-[20px]'}`,
                         `${styles?.modal?.position ? styles?.modal?.position : 'relative'}`,
@@ -85,7 +104,7 @@ const Modal = ({ opened, onClose, children, styles, showCloseIcon }: {
                     </div>
                 </div>
             </div>
-            <div className={setClass("modal_main_background fixed top-0 left-0 bottom-0 right-0 z-[200]  pointer-events-none", `${styles?.modalContainer?.background ? styles?.modalContainer?.background : 'bg-[#5c5d5e] screen-xssm:bg-white  dark:bg-darkMode opacity-50 screen-xssm:opacity-100'}`,
+            <div className={setClass("modal_main_background overflow-hidden fixed top-0 left-0 bottom-0 right-0 z-[200]  pointer-events-none", `${styles?.modalContainer?.background ? styles?.modalContainer?.background : 'bg-[#5c5d5e] screen-xssm:bg-white  dark:bg-darkMode opacity-50 screen-xssm:opacity-100'}`,
             )}></div>
         </div>
     )

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { useState } from 'react';
 import { isLink, print } from '.';
 import API from '../config/api';
 const MentionComp = ({ text }: { text: string }) => {
@@ -76,14 +77,29 @@ const meta_lookup_api = 'http://10.0.0.41:3002/api/v1/meta/lookup'
 export const RenderLinkCard = ({ url }: {
     url: string
 }) => {
-
+    const [error, setError] = useState(true)
     if (url === undefined || url === null || url === '') {
         return null
     }
     API.get(`${meta_lookup_api}?url=${url}`).then(res => {
         print(res.data)
+        if (res.data.status.success) {
+            setError(false)
+        } else {
+            setError(true)
+        }
     }).catch(err => {
-        print(err)
+        setError(true)
     })
-    return (<></>)
+    if (!error) {
+        return (
+            <div className="link_card_preview_comp">
+                <div className="border bg-white shdow-lg dark:bg-dark">
+                    <h1>Hello {url}</h1>
+                </div>
+            </div>
+        )
+    } else {
+        return (<></>)
+    }
 }

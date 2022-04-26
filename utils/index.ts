@@ -54,6 +54,21 @@ export function isSearchQuery(route: string): { isSearchQuery: boolean; query: s
   };
 }
 
+
+export function isImage(fileType: any): boolean {
+  if (fileType) {
+    return fileType.split('/')[0] === 'image';
+  } 
+  return false;
+}
+
+export function isVideo(fileType: any): boolean {
+  if (fileType) {
+    return fileType.split('/')[0] === 'video';
+  }
+  return false;
+}
+
 export function serachQueryKeyValues(route: string): { [key: string]: string } {
   const queryObj: {
     [key: string]: string;
@@ -317,20 +332,30 @@ export function formatDate(date: string) {
       const ago: any = moment(date).fromNow();
       const current_date = moment(new Date().toISOString());
       const date_diff = current_date.diff(moment(date), 'hours') + 1;
+      const past_date = moment(date).fromNow();
       const future_date = moment(date).isAfter(current_date);
       const days_ago = moment(date).isBefore(moment().subtract(1, 'days'));
-      if (date_diff >= 24 || future_date) {
+      if (future_date) {
         return ''
+      } else if (past_date === 'a day ago') {
+        return '1d'
       } else if (date_diff === 23) {
-        return `23 hours ago`
+        return `23h`
       } else if (date_diff === 22) {
-        return `22 hours ago`
+        return `22h`
       } else if (date_diff === 21) {
-        return `21 hours ago`
+        return `21h`
       }
       else {
         if (ago !== 'Invalid date') {
-          if (ago === 'a few seconds ago') {
+          if (ago === 'a year ago') { 
+            return moment(date).format('MMM D')
+          } else if (ago === 'a month ago') {
+            return moment(date).format('MMM D')
+          } else if (ago === 'a week ago') {
+            return moment(date).format('MMM D')
+          }
+          else if (ago === 'a few seconds ago') {
             return date_diff === 0 ? 'now' : `${date_diff}s`
           } else if (ago === 'a minute ago') {
             return date_diff === 0 ? '' : `${date_diff}m`
@@ -340,8 +365,14 @@ export function formatDate(date: string) {
             return ''
           } else {
             const ago_time = parseInt(ago.split(' ')[0]);
-            const ago_unit = ago.split(' ')[1] === 'hours' ? 'h' : 'm';
-            return `${ago_time}${ago_unit}`
+            const ago_unit = ago.split(' ')[1] === 'hours' ? 'h' : ago.split(' ')[1] === 'minutes' ? 'm' : ago.split(' ')[1] === 'seconds' ? 's' : ago.split(' ')[1] === 'days' ? 'd' : ago.split(' ')[1] === 'months' ? 'mn' : ago.split(' ')[1] === 'years' ? 'y' : ''
+            if (ago_unit === 'mn') {
+              return moment(date).format('MMM D')
+            } else if (ago_unit === 'd' && ago_time >= 7) { 
+              return moment(date).format('MMM D')
+            } else {
+              return `${ago_time}${ago_unit}`
+            }
           }
         } else {
           return ''

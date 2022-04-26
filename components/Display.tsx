@@ -31,6 +31,7 @@ const Display = () => {
             }
         }
     }
+    
     OnLoad(() => {
         let dsiplay_mode = localStorage.getItem('theme')
         if (dsiplay_mode === null) {
@@ -71,7 +72,7 @@ const Display = () => {
         }
     }, [theme])
     return (
-        <div className='h-screen -mt-10'>
+        <div className='h-screen -mt-10 bg-white dark:bg-darkMode'>
             <div className=''>
                 <h1 className='font-bold text-lg'>Display</h1>
             </div>

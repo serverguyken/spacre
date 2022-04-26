@@ -1,5 +1,5 @@
 import { GithubIcon, LogoIcon, AtIcon, EyeOnIcon, EyeOffIcon, VerifiedIcon } from "./Iconsvg"
-import { ArrowLeftIcon, ArrowRightIcon, AtSymbolIcon } from "@heroicons/react/outline"
+import { ArrowLeftIcon, ArrowRightIcon, AtSymbolIcon, XIcon } from "@heroicons/react/outline"
 export default function Icon({ type, color, width, height, styles }: { type: string, color?: string | any, width?: string, height?: string, styles?: string }) {
     switch (type) {
         case "logo":
@@ -18,7 +18,8 @@ export default function Icon({ type, color, width, height, styles }: { type: str
             return <ArrowLeftIcon className={styles} />
         case 'arrow-right':
             return <ArrowRightIcon className={styles} />
-       
+        case 'close':
+            return <XIcon width={width} height={height} color={color} className={styles} />
         default:
             return null
     }

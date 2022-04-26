@@ -2,7 +2,7 @@ import API from "../config/api";
 import { User, GetUsers } from "../interface/User";
 import useUserContext from "../provider/userProvider";
 import VALTIO, { InitialObject } from "./valtio";
-
+import { api_url } from "../config";
 export interface STORE {
     widget_rendered: boolean;
     signup_step: {
@@ -17,9 +17,16 @@ export interface STORE {
     fetchUsers: {
         users: User[];
         status: Object;
+    };
+    media: {
+        files: any[];
+        fileTypes: any[];
     }
+    files: {
+        length: number;
+    };
     getUsers: (id: any) => Promise<void>;
-}
+} 
 
 const store: {
     content: InitialObject;
@@ -42,8 +49,15 @@ const store: {
                 users: [],
                 status: {}
             },
+            media: {
+                files: [],
+                fileTypes: [],
+            },
+            files: {
+                length: 0
+            },
             getUsers: (id: any) => {
-                return API.get('http://10.0.0.41:3004/api/v1/users/get', {
+                return API.get(`${api_url}/get/users`, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${id}`
@@ -70,7 +84,7 @@ const store: {
                         });
                     }
                 });
-            }
+            },
         } as STORE,
     }),
     set: (name: keyof STORE, value: any) => {
@@ -87,7 +101,7 @@ const store: {
             throw new Error(`content data '${name}' is not available in the store`);
         }
     },
-}
+} 
 
 export default store;
 

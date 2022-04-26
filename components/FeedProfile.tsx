@@ -28,7 +28,9 @@ import Tooltip from './Tooltip'
 
 const FeedProfile = () => {
     const { user, signOutUser, getUsers } = useUserContext()
-    getUsers(user.uid)
+    useEffect(() => {
+        getUsers(user.uid)
+    }, [getUsers, user.uid])
     const [rendered, setRendered] = useState(false)
     const users = store.get('fetchUsers').users
     const _status = store.get('fetchUsers').status
@@ -257,7 +259,7 @@ const FeedProfile = () => {
                                                                                             const window_height = window.innerHeight
                                                                                             const profile_feed_view_rect = profile_feed_view.getBoundingClientRect()
                                                                                             const profile_feed_view_height = window_height - profile_feed_view_rect.top
-                                                                                            if (profile_feed_view_height <= 240) {
+                                                                                            if (profile_feed_view_height <= 200) {
                                                                                                 profile_hover_card.classList.remove('top-6');
                                                                                                 profile_hover_card.classList.add('bottom-6');
                                                                                             } else {
@@ -283,7 +285,7 @@ const FeedProfile = () => {
                                                                                     </div>
                                                                                 }
                                                                             </div>
-                                                                            <div id={`${user.userName}_profile_hover_card`} className="profile_hover_card absolute pt-2 z-20 top-6 -left-14 w-auto hidden invisible opacity-0">
+                                                                            <div id={`${user.userName}_profile_hover_card`} className="profile_hover_card absolute pt-2 z-40 top-6 -left-14 w-auto hidden invisible opacity-0">
                                                                                 <ProfileCardHover user={user} />
                                                                             </div>
                                                                         </div>
@@ -301,7 +303,7 @@ const FeedProfile = () => {
                                                                                 transition='fade'
                                                                                 transitionDuration={200}
                                                                                 classNames={{
-                                                                                    body: setClass('tooltip_comp -mt-1 bg-gray-500 dark:bg-black dark:text-white text-[0.65rem] ml-1', `${formatDate('2022-04-23T09:29:00.001Z').format('MMMM Do YYYY, h:mm:ss a') == "" ? 'hidden' : ''}`),
+                                                                                    body: setClass('tooltip_comp -mt-1 bg-gray-500 dark:bg-darkModeBg dark:text-white text-[0.65rem] ml-1', `${formatDate('2022-04-23T09:29:00.001Z').format('MMMM Do YYYY, h:mm:ss a') == "" ? 'hidden' : ''}`),
                                                                                 }}
                                                                                 color='gray'
                                                                             >
@@ -316,7 +318,7 @@ const FeedProfile = () => {
                                                                         transition='fade'
                                                                         transitionDuration={200}
                                                                         classNames={{
-                                                                            body: 'tooltip_comp -mt-4 bg-gray-500 dark:bg-black dark:text-white text-[0.65rem] ml-1',
+                                                                            body: 'tooltip_comp -mt-4 bg-gray-500 dark:bg-darkModeBg dark:text-white text-[0.65rem] ml-1',
                                                                         }}
                                                                         color='gray'
                                                                         

@@ -109,7 +109,7 @@ const Sidebar = ({ path }: {
                                 <span className='s_p_b_icon'>
                                     <PlusIcon className='ml-auto mr-auto text-white' width={20} />
                                 </span>
-                                <div className="sidebar_post_tooltip invisible opacity-0 absolute top-11 left-0 right-0 block m-auto z-[50] w-[2.5rem] bg-gray-500 dark:bg-black dark:text-white p-1 text-center text-xs text-white rounded shadow-sm">
+                                <div className="sidebar_post_tooltip invisible opacity-0 absolute top-11 left-0 right-0 block m-auto z-[50] w-[2.5rem] bg-gray-500 dark:bg-darkModeBg dark:text-white p-1 text-center text-xs text-white rounded shadow-sm">
                                     <span>Post</span>
                                 </div>
                             </PrimaryButton>
