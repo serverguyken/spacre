@@ -17,7 +17,7 @@ function ImagePreview({ file, onClose }: {
         TimeOut(() => setLoading(false), 1000);
     }
     return ( 
-        <div className="image_preview_container relative">
+        <div className="image_preview_container relative" aria-label="Media" role="group">
             {
                 loading
 
@@ -27,12 +27,20 @@ function ImagePreview({ file, onClose }: {
                         <Spinner width={24} color='var(--color-primary)' />
                     </div>
 
-                    : <div className='image_preview_main relative mt-5'>
-                        <div className='image_preview_image'>
+                    : <div className='image_preview_main relative mt-5 max-w-[100%]'>
+                        <div className='image_preview_image rounded-lg'
+                            style={{
+                                backgroundImage: `url(${image})`,
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center',
+                                height: '200px',
+                                width: 'auto',
+                            }}
+                        >
                             {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img src={image} alt='image' className="w-auto rounded-sm" />
+                            <img src={image} alt='image' className="rounded-lg w-full h-full opacity-0" />
                         </div>
-                        <div className='image_preview_close absolute bg-dimGray top-4 left-4 cursor-pointer absolute  min-w-[28px] min-h-[28px]  z-[24] flex justify-center items-center rounded-full' onClick={onClose}>
+                        <div className='image_preview_close absolute bg-gray-800 dark:bg-dimGray top-4 left-4 cursor-pointer absolute  min-w-[28px] min-h-[28px]  z-[24] flex justify-center items-center rounded-full' onClick={onClose}>
                             <Tooltip
                                 title="Close
                     "
@@ -46,7 +54,7 @@ function ImagePreview({ file, onClose }: {
                                 color='gray'
                             >
 
-                                <Icon type='close' width={'20'} height={'20'} styles={'modal_main_content_close_icon_svg cursor-pointer text-gray-500 dark:text-white'} />
+                                <Icon type='close' width={'20'} height={'20'} styles={'modal_main_content_close_icon_svg cursor-pointer text-white dark:text-white'} />
                             </Tooltip>
                         </div>
                     </div>

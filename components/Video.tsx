@@ -3,7 +3,7 @@ import { PlayIcon, PauseIcon, VolumeUpIcon, VolumeOffIcon } from '@heroicons/rea
 import { ArrowsDiagonal as FullscreenIcon } from 'tabler-icons-react';
 import { Video as VideoType } from '../interface/Video';
 import { useState, useEffect } from 'react';
-const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, videoViews }: VideoType) => {
+const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, videoViews, className, videostyle }: VideoType) => {
 
     const setVideo = (id: string, vSrc: string) => {
         if (isBrowser()) {
@@ -376,7 +376,7 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
             setVideo(id, src);
         }, 0);
         return (
-            <div className="video_post cursor-pointer max-w-md relative z-0 bg -black dark:bg-darkMode dark:border-gray-50 dark:border-opacity-10 shadow-sm dark:shadow-lg rounded-lg" id={`video_${id}`}>
+            <div className={setClass("video_post cursor-pointer max-w-md relative z-0 bg -black dark:bg-darkMode dark:border-gray-50 dark:border-opacity-10 shadow-sm dark:shadow-lg rounded-lg", `${className ? className : ''}`)} id={`video_${id}`}>
                 <div className='w-full'>
                     <div className="video_getseektime hidden absolute bottom-16 z-30 bg-black bg-opacity-60  pl-[0.2rem] pr-[0.2rem] rounded-sm" id={`${id}_video_getseektime`}>
                         <span className="video_get_seek_time-current text-white text-xs" id={`${id}_video_getseektime_current`}>00:00</span>
@@ -387,13 +387,13 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
                         <PlayIcon  width={50} height={50} className={'text-primary'} />
                     </button>
                 </div>
-                <div className="video_top w-full h-3/5   absolute z-10"
+                <div className="video_top w-full h-[92%]  absolute z-10 rounded-t-lg"
                     id={`${id}_video_top`}>
                 </div>
                 {/* <div className="bg-gray-600  p-1 rounded-sm absolute bottom-4 left-4 z-20 video_controls_views__views select-none" id={`${id}_video_views`}>
                     <span className="text-white text-xs">{videoViews} views</span>
                 </div>  */}
-                <div className="video_bottom h-[24%] flex items-center screen-sm:h-[28%]  bg-gradient-to-t from-black opacity-100 w-full absolute bottom-0 z-20 pb-2 pl-2 pr-2 cursor-auto rounded-lg" id={
+                <div className="video_bottom flex items-center bg-gradient-to-t from-black opacity-100 w-full absolute bottom-0 z-20 pb-2 pl-2 pr-2 cursor-auto rounded-lg" id={
                     `${id}_video_bottom`
                 }>
                     <div className='w-full '>
@@ -466,7 +466,11 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
                     disablePictureInPicture
                     playsInline
                     aria-label='Embedded video'
-                    className='bg-black dark:bg-darkMode dark:border-gray-50 dark:border-opacity-10 dark:shadow-lg rounded-lg'
+                    className={setClass('bg-black dark:bg-darkMode dark:border-gray-50 dark:border-opacity-10 dark:shadow-lg rounded-lg')}
+                    style={{
+                        width: videostyle?.width || '' ,
+                        height: videostyle?.height || '',
+                    }}
                 >Video load failed</video>
             </div>
         );

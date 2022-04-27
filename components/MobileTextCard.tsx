@@ -24,7 +24,6 @@ import Tooltip from "./Tooltip"
 import MediaHandler from "./MediaHandler"
 import Transition from "./Transition"
 import Modal from "./Modal"
-import MobileTextCard from "./MobileTextCard"
 
 
 const mentionPlugin = createMentionPlugin({
@@ -61,7 +60,7 @@ const linkifyPlugin = createLinkifyPlugin({
 
 
 
-const TextCard = () => {
+const MobileTextCard = () => {
     const [text, setText] = useState("")
     const [disabled, setDisabled] = useState(true)
     const [postTextBoxShown, setPostTextBoxShown] = useState(false)
@@ -164,22 +163,20 @@ const TextCard = () => {
     }
 
     const onMentionAdd = (mention: any) => {
-       
     }
 
     const onHashtagAdd = (hashtag: any) => {
-       
     }
 
     const onMediaChange = (e: any) => {
-        if (files.length > 0) { 
+        if (files.length > 0) {
             const newFiles = e.target.files
             setError(false, "")
             if (newFiles && newFiles.length > 1) {
                 const arrFiles = Array.from(newFiles)
                 const fileTypes = arrFiles.map((file: any) => file.type)
                 const videos = fileTypes.filter((type: any) => type.includes("video"))
-                if (arrFiles.length > fileLimit) {
+                if (arrFiles.length >= fileLimit) {
                     setFileErrorMsg(`Please choose either 1 video or up to ${fileLimit} photos.`)
                     setErrorTimeout(5000)
                 } else {
@@ -208,7 +205,8 @@ const TextCard = () => {
                         setError(false, "")
                     }
                 } else {
-                    setError(false, "")
+                    setError(true, "Please choose a file.")
+                    setErrorTimeout(5000)
                 }
             }
         }
@@ -220,7 +218,7 @@ const TextCard = () => {
                 const fileTypes = arrFiles.map((file: any) => file.type)
                 const videos = fileTypes.find((type: string) => type.includes("video"))
                 const photos = fileTypes.filter((type: string) => type.includes("image"))
-                if (files.length >= fileLimit) {
+                if (files.length > fileLimit) {
                     setError(true, `Please choose either 1 video or up to ${fileLimit} photos`)
                     setErrorTimeout(5000)
                 } else if (videos) {
@@ -282,7 +280,7 @@ const TextCard = () => {
         }
     }
 
-    const setError = (error: boolean, msg: string) =>{
+    const setError = (error: boolean, msg: string) => {
         setIsFileError(error)
         setFileErrorMsg(msg)
     }
@@ -296,40 +294,69 @@ const TextCard = () => {
     const HashtagSuggestions = hashtagPlugin.MentionSuggestions
     return (
         <div className="">
-            {
-                postTextBoxShown && 
-                    <MobileTextCard />
-            }
+            <Modal
+                opened={postTextBoxShown}
+                onClose={() => {
+                    document.body.style.overflow = "auto"
+                    store.content.data.postTextareaShown = false
+                }}
+                styles={{
+                    modalContainer: {
+                        padding: "pt-12 pb-12 screen-xssm:pt-4 screen-xssm:pb-4",
+                    },
+                    overflow: {
+                        hidden: postTextBoxShown,
+                    },
+                    modal: {
+                        content: {
+                            class: 'modal_main_content max-w-xl w-[100%]  screen-sm:pt-0 screen-sm:mt-5 screen-sm: screen-xssm:top-[0rem!important] screen-sm:top-[3rem]  top-[6rem] screen-sm:left-0 screen-sm:right-0 screen-sm:text-center screen-sm:ml-auto screen-sm:mr-auto screen-sm:w-full overflow-auto',
+                            position: 'fixed',
+                            border: ''
+                        },
+                        height: 'h-auto'
+                    },
 
-            <div className={setClass("post_textarea relative", 'bg-white dark:bg-darkMode relative screen-sm:hidden')}>
-
-                <div className={setClass("border-b border-gray-100 dark:border-borderDarkMode p-2 pb-3 screen-sm:dark:border-b-gray-50 screen-sm:dark:border-opacity-5", postTextBoxShown ? 'screen-sm:p-4 screen-sm:pb-1' : '')}>
+                    icon: {
+                        placement: "right",
+                        padding: "0px",
+                        className: "-mr-3 -mt-3 screen-sm:mr-2 screen-sm:mt-5",
+                        tooltip: {
+                            className: "-mr-3 -mt-3 screen-sm:mr-2 screen-sm:mt-5",
+                        }
+                    },
+                }}
+                showCloseIcon={true}
+            >
+                <div className={setClass("relative mt-6 pb-3 screen-sm:p-4 screen-sm:pb-1 border-b border-gray-100 dark:border-borderDarkMode dark:border-b-gray-50 dark:border-opacity-10")}>
                     <div className={setClass("w-auto screen-sm:mt-3")}>
                         <Editor
                             editorState={editorState}
                             onChange={handleChange}
                             plugins={plugins}
+                            onFocus={() => { }}
                             placeholder="What are you up to?"
                         />
-                        <MentionSuggestions
-                            onSearchChange={onMentionSearchChange}
-                            suggestions={mentionSuggestions}
-                            open={mentionOpen}
-                            onOpenChange={onMentionOpenChange}
-                            onAddMention={onMentionAdd}
-                            entryComponent={(props: any) => <MentionEntry {...props} />}
-                            popoverContainer={({ children }) => <div className="bg-white dark:bg-darkMode dark:border-darkModeBg dark:shadow-3xl absolute z-20 w-3/5  max-h-60 overflow-auto border border-gray-100  mt-3 max-w-md rounded-md shadow-lg">{children}</div>}
+                        <div className="fixed w-full max-w-lg z-[320]">
+                            <MentionSuggestions
+                                onSearchChange={onMentionSearchChange}
+                                suggestions={mentionSuggestions}
+                                open={mentionOpen}
+                                onOpenChange={onMentionOpenChange}
+                                onAddMention={onMentionAdd}
+                                entryComponent={(props: any) => <MentionEntry {...props} />}
+                                popoverContainer={({ children }) => <div className="bg-white dark:bg-darkMode dark:border-darkModeBg dark:shadow-3xl absolute z-[320] w-3/5  max-h-60 overflow-auto border border-gray-100  mt-3 max-w-md rounded-md shadow-lg">{children}</div>}
 
-                        />
-                        <HashtagSuggestions
-                            onSearchChange={onHashtagSearchChange}
-                            suggestions={hashtagSuggestions}
-                            open={hashtagOpen}
-                            onOpenChange={onHashtagOpenChange}
-                            onAddMention={onHashtagAdd}
-                            entryComponent={(props: any) => <HashtagEntry {...props} />}
-                            popoverContainer={({ children }) => <div className="bg-white dark:bg-darkMode dark:border-darkModeBg dark:shadow-3xl absolute z-20 w-3/5  max-h-60 overflow-auto border border-gray-100  mt-3 max-w-md rounded-md shadow-lg">{children}</div>}
-                        />
+                            />
+                            <HashtagSuggestions
+                                onSearchChange={onHashtagSearchChange}
+                                suggestions={hashtagSuggestions}
+                                open={hashtagOpen}
+                                onOpenChange={onHashtagOpenChange}
+                                onAddMention={onHashtagAdd}
+                                entryComponent={(props: any) => <HashtagEntry {...props} />}
+                                popoverContainer={({ children }) => <div className="bg-white dark:bg-darkMode dark:border-darkModeBg dark:shadow-3xl absolute z-[320] w-3/5  max-h-60 overflow-auto border border-gray-100  mt-3 max-w-md rounded-md shadow-lg">{children}</div>}
+                            />
+                        </div>
                     </div>
 
                     <RenderLinkCard url={linkText} />
@@ -344,7 +371,7 @@ const TextCard = () => {
                             setIsFileLimit(isExceeded)
                         }}
                     />
-                    <div className="text_actions_main mt-4">
+                    <div className="text_actions_main mt-4 pt-1">
                         <div className="text-actions_group flex items-center justify-between">
                             <div className="text_actions_icons flex items-center space-x-3">
                                 {/* <div className="text_action">
@@ -415,16 +442,34 @@ const TextCard = () => {
                                 }
                             </div>
                             <div className="text_action_btn">
-                                <PrimaryButton text="Post" textColor="white" styles={'py-1 px-10 screen-md:py-1 screen-md:px-6'}
-                                    textStyle={'screen-md:text-xs'}
-                                    disabled={disabled} disabledColor="bg-primary bg-opacity-60"
-                                />
+                                <Tooltip
+
+                                    title="Post"
+                                    placement="center"
+                                    position='bottom'
+                                    transition='fade'
+                                    transitionDuration={200}
+                                    classNames={{
+                                        body: 'tooltip_comp bg-gray-500 dark:bg-darkModeBg dark:text-white  ml-1',
+                                    }}
+                                    color='gray'
+                                >
+                                    <PrimaryButton styles={'p-[0.4rem]'}
+                                        disabled={disabled} disabledColor="bg-primary bg-opacity-60 dark:bg-opacity-50"
+                                    >
+                                        <span className='s_p_b_icon'>
+                                            <PlusIcon className='ml-auto mr-auto text-white' width={20} />
+                                        </span>
+                                    </PrimaryButton>
+                                </Tooltip>
                             </div>
                         </div>
 
                     </div>
                 </div>
-            </div>
+            </Modal>
+
+
             {
                 isFileError && <Transition
                     transition={'pop'}
@@ -432,7 +477,7 @@ const TextCard = () => {
                 >
                     <div className="bg-primary p-[0.6rem] w-auto inline-block transition transition-scale rounded text-white"
                     >
-                       {fileErrorMsg} 
+                        {fileErrorMsg}
                     </div>
                 </Transition>
             }
@@ -440,4 +485,4 @@ const TextCard = () => {
     )
 }
 
-export default TextCard
+export default MobileTextCard

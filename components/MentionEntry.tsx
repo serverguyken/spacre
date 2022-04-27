@@ -31,12 +31,12 @@ const MentionEntry = (props: MentionEntryProps) => {
     const { mention, theme, searchValue, isFocused, ...parentProps } = props
     if (mention.type && mention.type === "mention_not_found") { 
         return (
-            <div className="p-3 cursor-pointer hover:bg-gray-50 text-black mt-1 mb-1 dark:text-white dark:hover:bg-darkModeBg dark:hover:bg-opacity-50"
+            <div className="p-3 text-left cursor-pointer hover:bg-gray-50 text-black mt-1 mb-1 dark:text-white dark:hover:bg-darkModeBg dark:hover:bg-opacity-50"
                 onMouseEnter={parentProps.onMouseEnter}
                 onMouseUp={parentProps.onMouseUp}
                 onMouseDown={parentProps.onMouseDown}
             >
-                <div className={`${setClass(theme, "mention_not_found")}`}>
+                <div className={`${setClass(theme, "mention_not_found text-ellipsis overflow-hidden whitespace-nowrap")}`}>
                     <span>@{mention.name}</span>
                 </div>
             </div>
@@ -64,15 +64,15 @@ const MentionEntry = (props: MentionEntryProps) => {
                                         : <CreateImage name={mention.name} img={false} width="w-10" height="h-10" />
                                 }
                             </div>
-                            <div>
+                            <div className="">
                                 <div className={theme?.mentionSuggestionsEntryContainerRight}>
-                                    <div className={setClass('w-[160px] text-ellipsis overflow-hidden whitespace-nowrap text-[1.002rem] font-bold')}>
+                                    <div className={setClass('w-[160px] text-left text-ellipsis overflow-hidden whitespace-nowrap text-[1.002rem] font-bold')}>
                                         {mention.fullName}
                                     </div>
                                 </div>
 
                                 <div className={setClass('')}>
-                                    <div className={setClass('w-[160px] text-ellipsis overflow-hidden whitespace-nowrap text-sm text-dimGray dark:text-gray-200 dark:text-opacity-75')}>
+                                    <div className={setClass('w-[160px] text-left  text-ellipsis overflow-hidden whitespace-nowrap text-sm text-dimGray dark:text-gray-200 dark:text-opacity-75')}>
                                         @{mention.username}
                                     </div>
                                 </div>

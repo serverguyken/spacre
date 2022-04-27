@@ -29,7 +29,7 @@ function MediaHandler({ files, types, limit, onClose, onFileExceed }: {
             onFileExceed(true)
         }
         return  (
-            <div className='media_handler_main grid grid-cols-2 gap-2'>
+            <div className='media_handler_main grid grid-cols-2 gap-2 '>
                 {
                     files.map((file, index) => {
                         if (isImage(types[index])) {

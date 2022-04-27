@@ -28,9 +28,9 @@ import Tooltip from './Tooltip'
 
 const FeedProfile = () => {
     const { user, signOutUser, getUsers } = useUserContext()
-    useEffect(() => {
-        getUsers(user.uid)
-    }, [getUsers, user.uid])
+    // useEffect(() => {
+    //     getUsers(user.uid)
+    // }, [getUsers, user.uid])
     const [rendered, setRendered] = useState(false)
     const users = store.get('fetchUsers').users
     const _status = store.get('fetchUsers').status

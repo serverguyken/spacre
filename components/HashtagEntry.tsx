@@ -16,7 +16,7 @@ const HashtagEntry = (props: HashtagEntryProps) => {
     const { ...parentProps } = props
     const hashtag = props.mention.data.text
     return (
-        <div className= "p-3 cursor-pointer hover:bg-gray-50 text-black mt-1 mb-1 dark:text-white dark:hover:bg-darkModeBg dark:hover:bg-opacity-50"
+        <div className= "p-3 text-left cursor-pointer hover:bg-gray-50 text-black mt-1 mb-1 dark:text-white dark:hover:bg-darkModeBg dark:hover:bg-opacity-50"
             onMouseEnter = { parentProps.onMouseEnter }
             onMouseUp = { parentProps.onMouseUp }
             onMouseDown = { parentProps.onMouseDown }

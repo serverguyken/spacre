@@ -8,4 +8,9 @@ export interface Video {
     isAd: boolean;
     styles?: any;
     videoViews?: string;
+    className?: string;
+    videostyle?: {
+        width?: string;
+        height?: string;
+    }
 }
