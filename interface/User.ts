@@ -3,31 +3,31 @@ export interface Post {
     userId: string;
     userName: string;
     userProfileImage: string;
-    postImages: string;
-    postText: string;
+    images: string;
+    content: string;
     hasPoll: boolean;
     poll: Poll;
-    postLikes: Array<string>;
-    postComments: Array<string>;
-    postBoosts: Array<string>;
-    postShares: Array<string>;
-    postTags: Array<string>;
-    postCreatedAt: string;
-    postUpdatedAt: string;
-    postDeletedAt: string;
-    postIsDeleted: boolean;
-    postIsBoosted: boolean;
-    postIsLiked: boolean;
-    postIsShared: boolean;
-    postIsCommented: boolean;
-    postIsReported: boolean;
-    postIsSaved: boolean;
+    likes: Array<string>;
+    comments: Array<string>;
+    boosts: Array<string>;
+    shares: Array<string>;
+    tags: Array<string>;
+    isLiked: boolean;
+    createdAt: string;
+    updatedAt: string;
+    deletedAt: string;
+    isDeleted: boolean;
+    isBoosted: boolean;
+    isReported: boolean;
+    isSaved: boolean;
 }
 
 export interface Poll {
     id: number;
     question: string;
     options: PollOption[];
+    expiresAt: string;
+    createdAt: string;
 }
 
 export interface PollOption {

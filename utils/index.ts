@@ -222,33 +222,43 @@ export const getLink = (str: string) => {
   return linkifyit.match(str);
 }
 
-export function countSet(num: number, upper?: boolean) {
+export function countSet(num: number, upper?: boolean, fixedLength?: number) {
   let value = `${num}`
+  let numFixed = `${value}`;
   let unit = ''
   if (value.length === 0 || value.length === 1 || value.length === 2 || value.length === 3) {
     value = `${value}`
+    numFixed = `${value}`
   } else if (value.length === 4 || value.length === 5 || value.length === 6) {
     unit = upper ? 'K' : 'k'
-    value = `${(num / 1000).toFixed(1)}${unit}`
+    value = `${(num / 1000)}${unit}`
+    numFixed = `${(num / 1000).toFixed(fixedLength ? fixedLength : 1)}${unit}`
   } else if (value.length === 7 || value.length === 8 || value.length === 9) {
     unit = upper ? 'M' : 'm'
-    value = `${(num / 1000000).toFixed(1)}${unit}`
+    value = `${(num / 1000000)}${unit}`
+    numFixed = `${(num / 1000000).toFixed(fixedLength ? fixedLength : 1)}${unit}`
   } else if (value.length === 10 || value.length === 11 || value.length === 12) {
     unit = upper ? 'B' : 'b'
-    value = `${(num / 1000000000).toFixed(1)}${unit}`
+    value = `${(num / 1000000000)}${unit}`
+    numFixed = `${(num / 1000000000).toFixed(fixedLength ? fixedLength : 1)}${unit}`
   } else if (value.length === 13 || value.length === 14 || value.length === 15) {
     unit = upper ? 'T' : 't'
-    value = `${(num / 1000000000000).toFixed(1)}${unit}`
+    value = `${(num / 1000000000000)}${unit}`
+    numFixed = `${(num / 1000000000000).toFixed(fixedLength ? fixedLength : 1)}${unit}`
   } else if (value.length === 16 || value.length === 17 || value.length === 18) {
     unit = upper ? 'Q' : 'q'
-    value = `${(num / 1000000000000000).toFixed(1)}${unit}`
+    value = `${(num / 1000000000000000)}${unit}`
+    numFixed = `${(num / 1000000000000000).toFixed(fixedLength ? fixedLength : 1)}${unit}`
   } else if (value.length === 19 || value.length === 20 || value.length === 21) {
-    value
+    unit = upper ? 'Q' : 'q'
+    value = `${(num / 1000000000000000000)}${unit}`
+    numFixed = `${(num / 1000000000000000000).toFixed(fixedLength ? fixedLength : 1)}${unit}`
   }
   const return_value = {
     value: value,
     unit: unit,
-    inital_value: num
+    inital_value: num,
+    num_fixed: numFixed
   }
   return return_value
 }
@@ -381,4 +391,33 @@ export function formatDate(date: string) {
     },
   }
   return setup;
+}
+
+export function dateFromDays(days: string) {
+  const hour = days.split('')[1] === 'h';
+  const day = days.split('')[1] === 'd';
+  if (day) {
+    const date = moment().add(parseInt(days.split('d')[0]), 'days').format('YYYY-MM-DD')
+    return {
+      date,
+      type: 'day'
+    };
+  } else if (hour) {
+    const date = moment().add(parseInt(days.split('h')[0]), 'hours').format('HH:mm')
+    return {
+      date,
+      type: 'hour'
+    };
+  } else {
+    return {
+      date: '',
+      type: ''
+    }
+  }
+}
+
+
+export function dateFromISOString(date: string) {
+  const newDate = moment(date).format('YYYY-MM-DD')
+  return newDate
 }

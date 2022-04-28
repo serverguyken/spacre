@@ -1,10 +1,11 @@
-import { PlusIcon, XIcon } from "@heroicons/react/outline";
 import { useEffect, useState } from "react";
+import { dateFromDays, dateFromISOString } from "../utils";
 import Icon from "./Icon";
 import Tooltip from "./Tooltip";
 
-function PollCreate({ callback, onClose }: {
+function PollCreate({ callback, isPollValid, onClose }: {
     callback: (poll: {}) => void;
+    isPollValid: (isPollValid: boolean) => void;
     onClose: () => void;
 }) {
     const [optionsCount, setOptionsCount] = useState(2);
@@ -26,17 +27,36 @@ function PollCreate({ callback, onClose }: {
             votes: 0
         },
     ]);
+    const [expiresAt, setExpiresAt] = useState('1h');
     const [poll, setPoll] = useState({
         question: "",
         options: [] as any,
+        expires: {
+            date: dateFromDays('1h').date,
+            type: 'hour'
+        },
+        createdAt: dateFromISOString(new Date().toISOString()),
     });
+    const [pollValid, setPollValid] = useState(false);
     useEffect(() => {
         callback(poll);
     }, [callback, poll]);
+    
+    useEffect(() => {
+        if (question === "" || optionsCount === 2 && optionsInput[0].value === "" || optionsInput[1].value === "") {
+            setPollValid(false);
+        } else {
+            setPollValid(true);
+        }
+    }, [question, optionsCount, optionsInput]);
 
-   
+    useEffect(() => {
+        isPollValid(pollValid);
+    }, [pollValid, isPollValid]);
 
-    const handleOptionChange = (e: any, id: number) => { 
+
+
+    const handleOptionChange = (e: any, id: number) => {
         const newOptionsInput = [...optionsInput];
         newOptionsInput[id].value = e.target.value;
         setOptionsInput(newOptionsInput);
@@ -52,13 +72,28 @@ function PollCreate({ callback, onClose }: {
         });
     };
 
-    const handleQuestionChange = (e: React.ChangeEvent<HTMLInputElement>) => { 
+    const handleQuestionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setQuestion(e.target.value);
         setPoll({
             ...poll,
             question: e.target.value,
         });
     };
+
+    const setExpiry = (value: any) => { 
+        const createdAt = dateFromISOString(new Date().toISOString());
+        const expires = {
+            date: dateFromDays(value).date,
+            type: dateFromDays(value).type
+        }
+        setExpiresAt(value);
+        setPoll({
+            ...poll,
+            expires,
+            createdAt,
+        });
+    };
+
     return (
         <div className="poll_container bg-white dark:bg-darkMode rounded-lg shadow border border-gray-100 dark:border-primary/10 max-w-sm relative mt-2 mb-2">
             <div className="poll_header p-2 relative pb-8">
@@ -68,8 +103,8 @@ function PollCreate({ callback, onClose }: {
                     </button>
                 </div> */}
                 <div className="poll_header_text mt-5">
-                    <textarea 
-                        placeholder="Ask a poll question"
+                    <textarea
+                        placeholder="Ask a question"
                         className="outline-none border-b border-gray-200 dark:bg-darkMode dark:text-white dark:placeholder-gray-500 dark:border-borderDarkMode focus:border-b-primary w-full pb-1 font-medium text-gray-900 placeholder-gray-900 resize-none h-8 max-h-20 overflow-y-auto"
                         onChange={(e: any) => handleQuestionChange(e)}
                     />
@@ -95,7 +130,7 @@ function PollCreate({ callback, onClose }: {
                                                 !option.isLast && index !== optionsLimit - 1 && <div className="min-w-[32px] min-h-[32px]"></div>
                                             }
                                             {
-                                                option.isLast && index !== optionsLimit -1 &&
+                                                option.isLast && index !== optionsLimit - 1 &&
                                                 <Tooltip
                                                     title="Add"
                                                     placement="center"
@@ -112,7 +147,7 @@ function PollCreate({ callback, onClose }: {
                                                         onClick={() => {
                                                             setOptionsCount(optionsCount + 1);
                                                             const lastOption = optionsInput.find(option => option.isLast);
-                                                            if (lastOption) { 
+                                                            if (lastOption) {
                                                                 lastOption.isLast = false;
                                                             }
                                                             setOptionsInput([
@@ -129,7 +164,7 @@ function PollCreate({ callback, onClose }: {
                                                     >
                                                         <button
                                                         >
-                                                            <PlusIcon width={'20'} height={'20'} className="text-primary" />
+                                                            <Icon type="plus" width={'20'} height={'20'} styles="text-primary" />
                                                         </button>
                                                     </div>
                                                 </Tooltip>
@@ -177,12 +212,12 @@ function PollCreate({ callback, onClose }: {
                                                     >
                                                         <button
                                                         >
-                                                            <XIcon width={'20'} height={'20'} className="text-red-500" />
+                                                            <Icon type="close" width={'20'} height={'20'} styles="text-red-500" />
                                                         </button>
                                                     </div>
                                                 </Tooltip>
                                             }
-                                           
+
                                         </div>
                                     </div>
                                 )
@@ -192,7 +227,46 @@ function PollCreate({ callback, onClose }: {
                 </div>
             </div>
             <div className="poll_close flex justify-between p-2 mr-2">
-                <div className=""></div>
+                <div className="poll_expiry">
+                    <div className="flex items-center space-x-2">
+                        <div className="poll_expiry_text">
+                            <div className="text-gray-700 dark:text-white">
+                                Expires: 
+                            </div>
+                        </div>
+                        <div className="poll_expiry_select select-none">
+                            <div className="">
+                                <div className="poll_expiry_select_item flex items-center space-x-2 cursor-pointer select-none relative"
+                                >
+                                    <div className="poll_expiry_selected_item w-full relative flex items-center space-x-2 select-none">
+                                        <select name="" id=""
+                                            className="border border-gray-200 dark:bg-darkMode text-gray-700 dark:text-white dark:placeholder-gray-500 dark:border-borderDarkMode outline-none w-24 pl-1 rounded py-[0.3rem]  placeholder-gray-700 select-none appearance-none hover:bg-red-500 cursor-pointer"
+                                            onChange={(e: any) => {
+                                                const selectedOption = e.target.value;
+                                                setExpiry(selectedOption);
+                                            }}
+                                        >
+                                            <option value="1h">1 hour</option>
+                                            <option value="5h">5 hours</option>
+                                            <option value="1d">1 Day</option>
+                                            <option value="2d">2 Days</option>
+                                            <option value="3d">3 Days</option>
+                                            <option value="4d">4 Days</option>
+                                            <option value="5d">5 Days</option>
+                                            <option value="6d">6 Days</option>
+                                            <option value="7d">7 Days</option>
+                                        </select>
+                                        <div className="poll_expiry_dropdown_open absolute right-2">
+                                            <Icon type="chevron-down" width={'20'} height={'20'} styles={'dark:text-white text-dimGray'} />
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <button className="border border-primary p-1 text-primary hover:bg-primary/10 rounded text-sm" onClick={onClose}>
                     Remove poll
                 </button>

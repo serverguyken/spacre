@@ -46,18 +46,18 @@ const FeedProfile = () => {
         isVerified: true,
         isFollowing: false,
         bio: 'I create things for the web @tech | Business owner #developerlife',
-        followersCount: countSet(1234666669, true).value,
-        followingCount: countSet(50, true).value,
-        spacesCount: countSet(8, true).value,
+        followersCount: countSet(1234666669, true, 2).num_fixed,
+        followingCount: countSet(50, true, 2).num_fixed,
+        spacesCount: countSet(8, true).num_fixed,
         postTimeStamp: 'Jan 28',
         postContent: 'How to create a react app with nextjs',
         posContentHeader: 'How to create a react app with nextjs',
         postContentTagText: 'Creating a react app is very simple. Tips will be provided soon.',
         postLiked: false,
         postSaved: false,
-        likesCount: countSet(12, false).value,
-        commentsCount: countSet(2, false).value,
-        sharesCount: countSet(1, false).value,
+        likesCount: countSet(12, false, 2).num_fixed,
+        commentsCount: countSet(2, false, 2).num_fixed,
+        sharesCount: countSet(1, false, 2).num_fixed,
     },
     {
         id: 2,
@@ -67,17 +67,17 @@ const FeedProfile = () => {
         isVerified: false,
         isFollowing: false,
         bio: 'Content creator work for @daily - Develper Advocate',
-        followersCount: countSet(45693, true).value,
-        followingCount: countSet(2109, true).value,
-        spacesCount: countSet(4, true).value,
+        followersCount: countSet(45693, true, 2).num_fixed,
+        followingCount: countSet(2109, true, 2).num_fixed,
+        spacesCount: countSet(4, true, 2).num_fixed,
         postTimeStamp: 'Feb 16',
         postContent: 'Hello everyone, the last livestream was great. If you missed it, comment below when you think we should have another.😄 bye:)',
         postContentTagText: 'Comment your answer below.',
         postLiked: false,
         postSaved: false,
-        likesCount: countSet(3658, false).value,
-        commentsCount: countSet(100, false).value,
-        sharesCount: countSet(22, false).value,
+        likesCount: countSet(3658, false, 2).num_fixed,
+        commentsCount: countSet(100, false, 2).num_fixed,
+        sharesCount: countSet(22, false, 2).num_fixed,
     },
     {
         id: 3,
@@ -87,18 +87,18 @@ const FeedProfile = () => {
         isVerified: false,
         isFollowing: true,
         bio: 'Web 3.0 Developer - Building the future of the web #future',
-        followersCount: countSet(508, true).value,
-        followingCount: countSet(347, true).value,
-        spacesCount: countSet(10, true).value,
+        followersCount: countSet(508, true, 2).num_fixed,
+        followingCount: countSet(347, true, 2).num_fixed,
+        spacesCount: countSet(10, true, 2).num_fixed,
         postTimeStamp: 'March 10',
         postContent: 'Web 3.0 is coming soon. Check out the link below.',
         postImage: 'https://mlxova6nqons.i.optimole.com/qgiRRAs.XcRg~5bd19/w:auto/h:auto/q:86/https://milyin.com/wp-content/uploads/2022/02/What-is-Web-3.0-Why-it-matter-Web-2.0-vs-Web-3.0.png',
         postLink: 'https://www.web3.0.com/',
         postLiked: true,
         postSaved: false,
-        likesCount: countSet(12).value,
-        commentsCount: countSet(2).value,
-        sharesCount: countSet(0).value,
+        likesCount: countSet(12).num_fixed,
+        commentsCount: countSet(2).num_fixed,
+        sharesCount: countSet(0).num_fixed,
     },
     {
         id: 4,
@@ -108,16 +108,16 @@ const FeedProfile = () => {
         isVerified: true,
         isFollowing: true,
         bio: 'Computer Science Student - Founder @spacre | Helping fellow developers and designers build connect',
-        followersCount: countSet(2689654, true).value,
-        followingCount: countSet(1234, true).value,
-        spacesCount: countSet(1, true).value,
+        followersCount: countSet(2689654, true, 2).num_fixed,
+        followingCount: countSet(1234, true, 2).num_fixed,
+        spacesCount: countSet(1, true, 2).num_fixed,
         postTimeStamp: 'March 10',
         postContent: 'Vote your favorite programming language below. 💯',
         postLiked: true,
         postSaved: false,
-        likesCount: countSet(351).value,
-        commentsCount: countSet(17).value,
-        sharesCount: countSet(1).value,
+        likesCount: countSet(351).num_fixed,
+        commentsCount: countSet(17).num_fixed,
+        sharesCount: countSet(1).num_fixed,
         hasPoll: true,
         poll: {
             question: 'Which is the best programming language?',
@@ -148,16 +148,16 @@ const FeedProfile = () => {
         isVerified: false,
         isFollowing: false,
         bio: 'From baking cookies to coding, I am a full stack developer. I love to learn new things and share my knowledge with others.',
-        followersCount: countSet(162864, true).value,
-        followingCount: countSet(2453, true).value,
-        spacesCount: countSet(7, true).value,
+        followersCount: countSet(162864, true, 2).num_fixed,
+        followingCount: countSet(2453, true, 2).num_fixed,
+        spacesCount: countSet(7, true, 2).num_fixed,
         postTimeStamp: 'March 15',
         postContent: 'Just got a new job @google. I am so excited!. Thanks @mike_bond for the job offer.',
         postLiked: false,
         postSaved: false,
-        likesCount: countSet(3214780).value,
-        commentsCount: countSet(552).value,
-        sharesCount: countSet(0).value,
+        likesCount: countSet(3214780).num_fixed,
+        commentsCount: countSet(552).num_fixed,
+        sharesCount: countSet(0).num_fixed,
     },
     {
         id: 6,
@@ -167,18 +167,18 @@ const FeedProfile = () => {
         isVerified: true,
         isFollowing: true,
         bio: 'Content creator | fireship.io',
-        followersCount: countSet(1786532, true).value,
-        followingCount: countSet(197, true).value,
-        spacesCount: countSet(9, true).value,
+        followersCount: countSet(1786532, true, 2).num_fixed,
+        followingCount: countSet(197, true, 2).num_fixed,
+        spacesCount: countSet(9, true, 2).num_fixed,
         postTimeStamp: '20h',
         postContent: 'Uploaded a new video. Check it out!',
         postVideo: 'https://sfsfiles.spacre.com/videos/666b8d38-2029-499a-9c0d-6e7db12da6f6_yt5s.com-devops_ci_cd_explained_in_100_seconds.mp4',
         postVideoViews: '200.16k',
         postLiked: true,
         postSaved: true,
-        likesCount: countSet(200009).value,
-        commentsCount: countSet(156).value,
-        sharesCount: countSet(5).value,
+        likesCount: countSet(200009).num_fixed,
+        commentsCount: countSet(156).num_fixed,
+        sharesCount: countSet(5).num_fixed,
 
     },
     {
@@ -189,17 +189,17 @@ const FeedProfile = () => {
         isVerified: true,
         isFollowing: true,
         bio: 'Gatsby is a static site generator. It is a framework for building blazing fast websites and apps. visit https://gatsbyjs.com dd',
-        followersCount: countSet(3865027, true).value,
-        followingCount: countSet(52, true).value,
-        spacesCount: countSet(2, true).value,
+        followersCount: countSet(3865027, true, 2).num_fixed,
+        followingCount: countSet(52, true, 2).num_fixed,
+        spacesCount: countSet(2, true, 2).num_fixed,
         postTimeStamp: '2h',
         postContent: 'New feature added to the site. Please feel free to leave a comment.',
         postLink: 'https://www.gatsbyjs.org/',
         postLiked: false,
         postSaved: true,
-        likesCount: countSet(31000).value,
-        commentsCount: countSet(27).value,
-        sharesCount: countSet(2).value,
+        likesCount: countSet(31000).num_fixed,
+        commentsCount: countSet(27).num_fixed,
+        sharesCount: countSet(2).num_fixed,
     }])
     const [profileHoverCard, setProfileHoverCard] = useState(false)
     const [profileHoverCardPosition, setProfileHoverCardPosition] = useState(null)
@@ -219,9 +219,7 @@ const FeedProfile = () => {
 
     return (
         <div className='relative mt-2'>
-            <div>
-                <TextCard />
-            </div>
+            
             {
                 !rendered ?
                     <div className='screen-sm:pt-24'>
@@ -252,7 +250,7 @@ const FeedProfile = () => {
                             </div>
                         }
                     >
-                        <div className='screen-sm:pt-16 mb-5 overflow-hidden'>
+                        <div className='screen-sm:pt-16 mb-5 pb-16 overflow-hidden'>
                             {
                                 refreshed ?
                                     dummyUsers.map((user: any) => {
@@ -277,27 +275,27 @@ const FeedProfile = () => {
                                                                                 <div className="profile_name_link relative max-w-[16rem] inline-block">
                                                                                     <div className='flex items-center'>
                                                                                         <div className="whitespace-nowrap max-w-[16rem] text-ellipsis overflow-hidden hover:underline"
-                                                                                            onMouseOver={() => {
-                                                                                                const profile_feed_view = document.getElementById(`${user.userName}_profile_feed_view`) as HTMLDivElement
-                                                                                                const profile_hover_card = document.getElementById(`${user.userName}_profile_hover_card`) as HTMLDivElement
-                                                                                                if (profile_feed_view && profile_hover_card) {
-                                                                                                    const window_height = window.innerHeight
-                                                                                                    const profile_feed_view_rect = profile_feed_view.getBoundingClientRect()
-                                                                                                    const profile_feed_view_height = window_height - profile_feed_view_rect.top
-                                                                                                    if (profile_feed_view_height <= 200) {
-                                                                                                        profile_hover_card.classList.remove('top-6');
-                                                                                                        profile_hover_card.classList.add('bottom-6');
-                                                                                                    } else {
-                                                                                                        profile_hover_card.classList.remove('bottom-6');
-                                                                                                        profile_hover_card.classList.add('top-6');
-                                                                                                    }
-                                                                                                    const screen_width = window.innerWidth
-                                                                                                    if (screen_width < 800) {
-                                                                                                        profile_hover_card.classList.remove('bottom-6');
-                                                                                                        profile_hover_card.classList.add('top-6');
-                                                                                                    }
-                                                                                                }
-                                                                                            }}
+                                                                                            // onMouseOver={() => {
+                                                                                            //     const profile_feed_view = document.getElementById(`${user.userName}_profile_feed_view`) as HTMLDivElement
+                                                                                            //     const profile_hover_card = document.getElementById(`${user.userName}_profile_hover_card`) as HTMLDivElement
+                                                                                            //     if (profile_feed_view && profile_hover_card) {
+                                                                                            //         const window_height = window.innerHeight
+                                                                                            //         const profile_feed_view_rect = profile_feed_view.getBoundingClientRect()
+                                                                                            //         const profile_feed_view_height = window_height - profile_feed_view_rect.top
+                                                                                            //         if (profile_feed_view_height <= 200) {
+                                                                                            //             profile_hover_card.classList.remove('top-6');
+                                                                                            //             profile_hover_card.classList.add('bottom-6');
+                                                                                            //         } else {
+                                                                                            //             profile_hover_card.classList.remove('bottom-6');
+                                                                                            //             profile_hover_card.classList.add('top-6');
+                                                                                            //         }
+                                                                                            //         const screen_width = window.innerWidth
+                                                                                            //         if (screen_width < 800) {
+                                                                                            //             profile_hover_card.classList.remove('bottom-6');
+                                                                                            //             profile_hover_card.classList.add('top-6');
+                                                                                            //         }
+                                                                                            //     }
+                                                                                            // }}
                                                                                         >
 
                                                                                             <Link href={`/${user.userName}`}>
@@ -392,7 +390,11 @@ const FeedProfile = () => {
                                                                         </div>
                                                                         <div className="post_user_actions mt-3 pb-1 max-w-[80%]">
                                                                             <div className="flex justify-between items-center">
-                                                                                <div className={setClass("post_action post_user_like_action relative select-none flex like_animation items-center space-x-2 cursor-pointer p-1 rounded-sm hover:bg-salmon hover:bg-opacity-10 hover:text-salmon dark:hover:text-salmon", user.postLiked ? "text-salmon dark:text-salmon" : 'text-gray-500  dark:text-darkText')}>
+                                                                                <div className={setClass("post_action post_user_like_action relative select-none flex like_animation items-center space-x-2 cursor-pointer p-1 rounded-sm hover:bg-salmon hover:bg-opacity-10 hover:text-salmon dark:hover:text-salmon", user.postLiked ? "text-salmon dark:text-salmon" : 'text-gray-500  dark:text-darkText')}
+                                                                                    onClick={(e: any) => {
+                                                                                        e.preventDefault();
+                                                                                    }}
+                                                                                >
                                                                                     {
                                                                                         user.postLiked ?
                                                                                             <HeartIconSolid className={'text-salmon'} width={16} />

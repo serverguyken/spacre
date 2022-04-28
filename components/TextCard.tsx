@@ -85,6 +85,7 @@ const TextCard = () => {
     const [pollOpen, setPollOpen] = useState(false)
     const [pollCount, setPollCount] = useState(0)
     const [poll, setPoll] = useState({})
+    const [pollValid, setPollValid] = useState(false)
     const fileLimit = 2
     const pollLimit = 1
     const [isFileLimit, setIsFileLimit] = useState(false)
@@ -112,19 +113,17 @@ const TextCard = () => {
         if (text.length > 0) {
             setDisabled(false)
         } else {
-            if (files.length > 0 || pollOpen) {
+            if (files.length > 0 || pollValid) {
                 setDisabled(false)
             } else {
                 setDisabled(true)
             }
         }
-        if (textExceeded) {
-            setDisabled(true)
-        }
-        if (files.length > 0 || pollOpen) {
+        if (files.length > 0 || pollValid) {
             setDisabled(false)
         }
-    }, [text, textExceeded, files, pollOpen])
+        // check if poll question is empty; poll must have two options
+    }, [text, textExceeded, files, pollOpen, pollValid])
 
     useEffect(() => {
         if (files.length === fileLimit - 1) {
@@ -316,7 +315,9 @@ const TextCard = () => {
     }
 
 
-
+    useEffect(() => {
+        console.log(pollValid, poll)
+    }, [pollValid, poll])
 
 
     const { MentionSuggestions } = mentionPlugin
@@ -375,6 +376,9 @@ const TextCard = () => {
                         pollOpen && <PollCreate
                             callback={(poll: {}) => {
                                 setPoll(poll)
+                            }}
+                            isPollValid={(isPollValid: boolean) => { 
+                                setPollValid(isPollValid)
                             }}
                             onClose={() => {
                                 setPollOpen(false)

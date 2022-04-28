@@ -84,6 +84,7 @@ const MobileTextCard = () => {
     const [pollOpen, setPollOpen] = useState(false)
     const [pollCount, setPollCount] = useState(0)
     const [poll, setPoll] = useState({})
+    const [pollValid, setPollValid] = useState(false)
     const fileLimit = 2
     const pollLimit = 1
     const [isFileLimit, setIsFileLimit] = useState(false)
@@ -396,6 +397,9 @@ const MobileTextCard = () => {
                         pollOpen && <PollCreate
                             callback={(poll: {}) => {
                                 setPoll(poll)
+                            }}
+                            isPollValid={(isPollValid: boolean) => {
+                                setPollValid(isPollValid)
                             }}
                             onClose={() => {
                                 setPollOpen(false)
