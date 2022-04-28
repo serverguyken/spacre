@@ -354,6 +354,7 @@ const MobileTextCard = () => {
                             plugins={plugins}
                             onFocus={() => { }}
                             placeholder="What are you up to?"
+                            stripPastedStyles={true}
                         />
                         <div className="fixed w-full max-w-lg z-[320]">
                             <MentionSuggestions

@@ -1,7 +1,8 @@
 import Link from 'next/link';
-import { useState } from 'react';
-import { isLink, print } from '.';
+import { useEffect, useState } from 'react';
+import { isLink, Linky, print } from '.';
 import API from '../config/api';
+import { Meta } from '../interface/Meta';
 const MentionComp = ({ text }: { text: string }) => {
     return (
         <span className='text-link'>
@@ -78,28 +79,66 @@ export const RenderLinkCard = ({ url }: {
     url: string
 }) => {
     const [error, setError] = useState(true)
-    if (url === undefined || url === null || url === '') {
-        return null
-    }
-    API.get(`${meta_lookup_api}?url=${url}`).then(res => {
-        print(res.data)
-        if (res.data.status.success) {
-            setError(false)
-        } else {
-            setError(true)
-        }
-    }).catch(err => {
-        setError(true)
-    })
-    if (!error) {
+    const hasLink = Linky.isLink(url)
+    const link = Linky.getUrl(url) as string
+    console.log(link)
+    const [hasMeta, setHasMeta] = useState(false)
+    const [meta, setMeta] = useState<Meta>({
+        title: '',
+        description: '',
+        image: '',
+        card: '',
+        url: '',
+        short_url: '',
+        site_name: '',
+        creator: '',
+        initial_url: '',
+    }) as any
+    const [status, setStatus] = useState('')
+    const [loading, setLoading] = useState(false)
+    const setMetaCard = (meta: Meta) => {
         return (
             <div className="link_card_preview_comp">
                 <div className="border bg-white shdow-lg dark:bg-dark">
-                    <h1>Hello {url}</h1>
+                    <h1>Title: {meta.title}</h1>
+                    <p>Description: {meta.description}</p>
+                    <p>Image: {meta.image}</p>
+                    <p>Card: {meta.card}</p>
+                    <p>Url: {meta.url}</p>
+                    <p>Short Url: {meta.short_url}</p>
+                    <p>Site Name: {meta.site_name}</p>
+                    <p>Creator: {meta.creator}</p>
+                    <p>Initial Url: {meta.initial_url}</p>
                 </div>
             </div>
         )
-    } else {
-        return (<></>)
     }
+
+    useEffect(() => {
+        if (hasLink) {
+            fetch(`${meta_lookup_api}?url=${link}`, {
+                method: 'GET',
+            })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.status.success) {
+                        setHasMeta(true)
+                        setMeta(res.meta)
+                    } else {
+                        setHasMeta(false)
+                        setMeta(null)
+                        setStatus(res.status)
+                    }
+                }).catch(err => {
+                    setHasMeta(false)
+                    setMeta(null)
+                    setStatus(err)
+                })
+        } else {
+            setHasMeta(false)
+            setMeta(null)
+        }
+    }, [hasLink, link])
+
+    return (<> {hasMeta && meta ? setMetaCard(meta) : <></>} </>)
 }

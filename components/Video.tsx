@@ -3,9 +3,16 @@ import { PlayIcon, PauseIcon, VolumeUpIcon, VolumeOffIcon } from '@heroicons/rea
 import { ArrowsDiagonal as FullscreenIcon } from 'tabler-icons-react';
 import { Video as VideoType } from '../interface/Video';
 import { useState, useEffect } from 'react';
+import MainLoader from './MainLoader';
+import { PrimaryButton } from './Buttons';
 const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, videoViews, className, videostyle }: VideoType) => {
-
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
     const setVideo = (id: string, vSrc: string) => {
+        TimeOut(() => {
+            setLoading(false);
+            setError(false);
+        }, 3000);
         if (isBrowser()) {
             const video_post: any = document.getElementById(`video_${id}`);
             const v = document.getElementById(id) as HTMLVideoElement;
@@ -58,8 +65,9 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
                 }
             }
             if (v) {
-                v.src = vSrc;
-                v.addEventListener('play', () => { 
+                v.src = vSrc + "#t=0.10";
+               
+                v.addEventListener('play', () => {
                     //addClass(video_views, 'hidden');
                     addClass(play_button_overlay, 'hidden');
                 });
@@ -240,10 +248,10 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
                 }
 
                 //video_progress_container.addEventListener('mousedown', dragStart);
-               // video_progress_container.addEventListener('touchstart', dragStart);
+                // video_progress_container.addEventListener('touchstart', dragStart);
                 // video_progress_container.addEventListener('mouseup', dragEnd);
-               // video_progress_container.addEventListener('touchend', dragEnd);
-               // video_progress_container.addEventListener('touchmove', drag);
+                // video_progress_container.addEventListener('touchend', dragEnd);
+                // video_progress_container.addEventListener('touchmove', drag);
                 // video_progress_container.addEventListener('touchstart', dragStart, false);
                 // video_progress_container.addEventListener('touchend', dragEnd, false);
                 // video_progress_container.addEventListener('touchmove', drag, false);
@@ -337,7 +345,7 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
                 }
                 let observer = new IntersectionObserver(callback, options);
                 observer.observe(video_post);
-            }
+            } 
         }
     }
 
@@ -376,16 +384,40 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
             setVideo(id, src);
         }, 0);
         return (
-            <div className={setClass("video_post cursor-pointer max-w-md relative z-0 bg -black dark:bg-darkMode dark:border-gray-50 dark:border-opacity-10 shadow-sm dark:shadow-lg rounded-lg", `${className ? className : ''}`)} id={`video_${id}`}>
+            <div className={setClass("video_post cursor-pointer max-w-md relative z-0 border border-gray-100 dark:border-primary/10 shadow-sm dark:shadow-sm rounded-lg select-none", `${className ? className : ''}`)} id={`video_${id}`}
+                onClick={(e: any) => {
+                    e.preventDefault();
+                }}
+            >
                 <div className='w-full'>
                     <div className="video_getseektime hidden absolute bottom-16 z-30 bg-black bg-opacity-60  pl-[0.2rem] pr-[0.2rem] rounded-sm" id={`${id}_video_getseektime`}>
                         <span className="video_get_seek_time-current text-white text-xs" id={`${id}_video_getseektime_current`}>00:00</span>
                     </div>
                 </div>
                 <div className="button_overlay absolute top-1/2 left-1/2 mt-[-30px] ml-[-30px]" id={`${id}_play_button_overlay`}>
-                    <button className={setClass("video_button__play bg-white rounded-full")} >
-                        <PlayIcon  width={50} height={50} className={'text-primary'} />
-                    </button>
+                    {
+                        loading && !error && 
+                            <div className='mt-5 ml-5'>
+                                <MainLoader width={30} />
+                            </div>
+                    } 
+                    {
+                        !loading && !error &&
+                        <button className={setClass("video_button__play bg-white rounded-full")} >
+                            <PlayIcon width={50} height={50} className={'text-primary'} />
+                        </button>
+                    }
+                    {
+                        error &&
+                        <div className='text-center -ml-16 -mt-1 text-white dark:text-white z-50'>
+                            <span>This video cannot be played</span>
+                                <div className="mt-3">
+                                    <PrimaryButton styles={'px-6 py-1 text-sm'}>
+                                        <span>Try again</span>
+                                    </PrimaryButton>
+                               </div>
+                        </div>
+                    }
                 </div>
                 <div className="video_top w-full h-[92%]  absolute z-10 rounded-t-lg"
                     id={`${id}_video_top`}>
@@ -426,7 +458,7 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
                                     
                                 </div>
                             </div>
-                            <div className="video_controls_views  video_volume_button_views h-8 flex items-center justify-between  select-none space-x-3">
+                            <div className="video_controls_views  video_volume_button_views h-8 flex items-center justify-between select-none space-x-3">
                                 <div className="video_duration_main">
                                     <div className="video_duration_contents text-white">
                                         <div className="video_duration_main__time text-sm">
@@ -460,18 +492,46 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
                     <div className="replay_video_overlay__content">
                     </div>
                 </div> */}
-                <video
-                    id={id}
-                    src={src}
-                    disablePictureInPicture
-                    playsInline
-                    aria-label='Embedded video'
-                    className={setClass('bg-black dark:bg-darkMode dark:border-gray-50 dark:border-opacity-10 dark:shadow-lg rounded-lg')}
-                    style={{
-                        width: videostyle?.width || '' ,
-                        height: videostyle?.height || '',
-                    }}
-                >Video load failed</video>
+                {
+                    
+                }
+                {
+                    loading  &&
+                        <div className={setClass('bg-black dark:bg-darkMode text-black dark:text-white dark:border-gray-50 dark:border-opacity-10 rounded-lg')}
+                            style={{
+                                width: videostyle?.width || '100%',
+                                height: videostyle?.height || '200px',
+                            }}
+                        >
+                            &nbsp;
+                        </div>
+                } 
+                {
+                    error  &&
+                        <div className={setClass('bg-black dark:bg-darkMode text-black dark:text-white dark:border-gray-50 dark:border-opacity-10 rounded-lg')}
+                            style={{
+                                width: videostyle?.width || '100%',
+                                height: videostyle?.height || '200px',
+                            }}
+                        >
+                            &nbsp;
+                        </div>
+                } 
+                {
+                    !loading && !error &&
+
+                    <video
+                        id={id}
+                        disablePictureInPicture
+                        playsInline
+                        aria-label='Embedded video'
+                        className={setClass('bg-black dark:bg-darkMode dark:border-gray-50 dark:border-opacity-10 rounded-lg')}
+                        style={{
+                            width: videostyle?.width || '',
+                            height: videostyle?.height || '',
+                        }}
+                    >Video load failed</video>
+                }
             </div>
         );
     }

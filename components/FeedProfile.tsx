@@ -13,7 +13,7 @@ import Video from './Video'
 import Poll from './PollCard'
 import PullToRefresh from 'react-simple-pull-to-refresh';
 import { ArrowUpIcon, ArrowDownIcon } from '@heroicons/react/outline';
-import { Spinner } from '../utils/loader'
+import  MainLoader from './MainLoader';
 import ProfileCardHover from './ProfileCardHover'
 import Skeleton from './Skeleton'
 import API from '../config/api'
@@ -36,7 +36,7 @@ const FeedProfile = () => {
     const users = store.get('fetchUsers').users
     const _status = store.get('fetchUsers').status
     const [isUsers, setIsUsers] = useState(false)
-    console.log(users, _status)
+    //console.log(users, _status)
     const [refreshed, setRefreshed] = useState(true)
     const [dummyUsers, setDummyUsers] = useState([{
         id: 1,
@@ -230,7 +230,7 @@ const FeedProfile = () => {
                         </div>
                         <div className='flex absolute top-60 left-1/2  justify-center'>
 
-                            <Spinner width={24} color='var(--color-primary)' />
+                            <MainLoader />
                         </div>
                     </div>
                     :
@@ -247,12 +247,12 @@ const FeedProfile = () => {
                         refreshingContent={
                             <div className="refreshingConentHeader pt-8 screen-sm:pt-20 screen-xssm:pt-32 flex justify-center">
                                 <div className="refreshingConentHeaderText">
-                                    <Spinner width={24} color="var(--color-primary)" />
+                                    <MainLoader />
                                 </div>
                             </div>
                         }
                     >
-                        <div className='screen-sm:pt-16 mb-5 pb-16 overflow-hidden'>
+                        <div className='screen-sm:pt-16 mb-5 pb-16 screen-sm:pb-10 overflow-hidden'>
                             {
                                 refreshed ?
                                     dummyUsers.map((user: any) => {

@@ -113,16 +113,21 @@ const TextCard = () => {
         if (text.length > 0) {
             setDisabled(false)
         } else {
-            if (files.length > 0 || pollValid) {
+            if (files.length > 0) {
+                setDisabled(false)
+            } else if (pollValid) {
                 setDisabled(false)
             } else {
                 setDisabled(true)
             }
         }
-        if (files.length > 0 || pollValid) {
+        if (files.length > 0) {
+            setDisabled(false)
+        } 
+        if (pollValid) {
             setDisabled(false)
         }
-    }, [text, textExceeded, files, pollOpen, pollValid])
+    }, [text, textExceeded, files, pollValid])
 
     useEffect(() => {
         if (files.length === fileLimit - 1) {
@@ -153,17 +158,10 @@ const TextCard = () => {
         const value = state.getCurrentContent().getPlainText()
         setEditorState(state)
         setText(value)
+        setLinkText(value)
         setTextExceeded(value.length > maxValue)
         setMaxInitialValue(value.length)
         setTextLength(value.length)
-        const hasLink = Linky.isLink(value)
-        const link = Linky.getUrl(value) as string
-        if (hasLink) {
-            setIsLinkCard(true)
-            setLinkText(link)
-        } else {
-            setIsLinkCard(false)
-        }
     }
 
     const onMentionSearchChange = ({ value }: any) => {
@@ -337,6 +335,7 @@ const TextCard = () => {
                             onChange={handleChange}
                             plugins={plugins}
                             placeholder="What are you up to?"
+                            stripPastedStyles={true}
                         />
                         <MentionSuggestions
                             onSearchChange={onMentionSearchChange}
