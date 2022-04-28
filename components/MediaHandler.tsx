@@ -15,7 +15,10 @@ function MediaHandler({ files, types, limit, onClose, onFileExceed }: {
             return <ImagePreview file={files[0]} onClose={() => {
                 onClose(0)
                 onFileExceed(false)
-            }} />
+            }} 
+                width={'90%'}
+                height={'90%'}
+            />
         } else if (isVideo(types[0])) {
             onFileExceed(true)
             return <VideoPreview file={files[0]} onClose={() => {
@@ -29,7 +32,7 @@ function MediaHandler({ files, types, limit, onClose, onFileExceed }: {
             onFileExceed(true)
         }
         return  (
-            <div className='media_handler_main grid grid-cols-2 gap-2 '>
+            <div className='media_handler_main grid grid-cols-2 gap-2'>
                 {
                     files.map((file, index) => {
                         if (isImage(types[index])) {
@@ -39,7 +42,10 @@ function MediaHandler({ files, types, limit, onClose, onFileExceed }: {
                                 if (length < limit) {
                                     onFileExceed(false)
                                 }
-                            }} />
+                            }}
+                                width={'auto'}
+                                height={240}
+                            />
                         } else if (isVideo(types[index])) {
                             return <VideoPreview file={file} onClose={() => {
                                 onClose(index)

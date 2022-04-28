@@ -1,12 +1,14 @@
 import { useState } from "react";
-import { TimeOut } from "../utils";
+import { setClass, TimeOut } from "../utils";
 import { Spinner } from "../utils/loader";
 import Icon from "./Icon";
 import Tooltip from "./Tooltip";
 
-function ImagePreview({ file, onClose }: {
+function ImagePreview({ file, onClose, width, height }: {
     file: any;
     onClose: (e: any) => void;
+    width: number | string;
+    height: number | string;
 }) {
     const [image, setImage] = useState('' as any);
     const [loading, setLoading] = useState(true);
@@ -27,20 +29,25 @@ function ImagePreview({ file, onClose }: {
                         <Spinner width={24} color='var(--color-primary)' />
                     </div>
 
-                    : <div className='image_preview_main relative mt-5 max-w-[100%]'>
+                    : <div className='image_preview_main relative mt-5 max-w-[100%] mr-2'>
                         <div className='image_preview_image rounded-lg'
                             style={{
                                 backgroundImage: `url(${image})`,
                                 backgroundSize: 'cover',
                                 backgroundPosition: 'center',
-                                height: '200px',
-                                width: 'auto',
+                                height: typeof height === 'string' ? height : `${height}px`,
+                                width: typeof width === 'string' ? width : `${width}px`,
                             }}
                         >
                             {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img src={image} alt='image' className="rounded-lg w-full h-full opacity-0" />
+                            <img src={image} alt='image' className={setClass(`rounded-lg opacity-0`)}
+                                style={{
+                                    height: typeof height === 'string' ? height : `${height}px`,
+                                    width: typeof width === 'string' ? width : `${width}px`,
+                                }}
+                            />
                         </div>
-                        <div className='image_preview_close absolute bg-gray-800 dark:bg-dimGray top-4 left-4 cursor-pointer absolute  min-w-[28px] min-h-[28px]  z-[24] flex justify-center items-center rounded-full' onClick={onClose}>
+                        <div className='image_preview_close absolute bg-gray-800 dark:bg-dimGray top-2 left-2 cursor-pointer absolute  min-w-[28px] min-h-[28px]  z-[24] flex justify-center items-center rounded-full' onClick={onClose}>
                             <Tooltip
                                 title="Close
                     "
