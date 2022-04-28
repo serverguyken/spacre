@@ -112,19 +112,16 @@ const MobileTextCard = () => {
         if (text.length > 0) {
             setDisabled(false)
         } else {
-            if (files.length > 0 || pollOpen) {
+            if (files.length > 0 || pollValid) {
                 setDisabled(false)
             } else {
                 setDisabled(true)
             }
         }
-        if (textExceeded) {
-            setDisabled(true)
-        }
-        if (files.length > 0 || pollOpen) {
+        if (files.length > 0 || pollValid) {
             setDisabled(false)
         }
-    }, [text, textExceeded, files, pollOpen])
+    }, [text, textExceeded, files, pollOpen, pollValid])
 
     useEffect(() => {
         if (files.length === fileLimit - 1) {

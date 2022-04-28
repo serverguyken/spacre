@@ -219,7 +219,9 @@ const FeedProfile = () => {
 
     return (
         <div className='relative mt-2'>
-            
+            <div>
+                <TextCard />
+            </div>
             {
                 !rendered ?
                     <div className='screen-sm:pt-24'>
@@ -236,14 +238,14 @@ const FeedProfile = () => {
                         isPullable={true}
                         onRefresh={handleRefresh}
                         pullingContent={
-                            <div className="pullDownContentHeader pt-8 screen-sm:pt-20 flex justify-center">
+                            <div className="pullDownContentHeader pt-8 screen-sm:pt-20 screen-xssm:pt-32 flex justify-center">
                                 <div className="pullDownContentHeaderText">
                                     <ArrowDownIcon width={20} className="text-gray-500" />
                                 </div>
                             </div>
                         }
                         refreshingContent={
-                            <div className="refreshingConentHeader pt-8 screen-sm:pt-20 flex justify-center">
+                            <div className="refreshingConentHeader pt-8 screen-sm:pt-20 screen-xssm:pt-32 flex justify-center">
                                 <div className="refreshingConentHeaderText">
                                     <Spinner width={24} color="var(--color-primary)" />
                                 </div>

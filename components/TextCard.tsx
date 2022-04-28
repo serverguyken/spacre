@@ -122,7 +122,6 @@ const TextCard = () => {
         if (files.length > 0 || pollValid) {
             setDisabled(false)
         }
-        // check if poll question is empty; poll must have two options
     }, [text, textExceeded, files, pollOpen, pollValid])
 
     useEffect(() => {
