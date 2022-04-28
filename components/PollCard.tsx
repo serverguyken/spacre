@@ -20,7 +20,18 @@ const PollCard = ({ poll }: {
     }
     const total = calcTotal();
     const votesInPercent = (votes: number) => {
-        return Math.round((votes / total) * 100);
+        const percent = Math.round((votes / total) * 100);
+        if (percent > 92) {
+            return {
+                width: 89,
+                actual: percent,
+            }
+        } else {
+            return {
+                width: percent,
+                actual: percent,
+            }
+        }
     } 
     
     return (
@@ -43,12 +54,12 @@ const PollCard = ({ poll }: {
                                 >{option.option}</button>
                                 <div className="votes_percent_count">
                                     <div className="votes_percent">
-                                        <span className="text-xs text-black dark:text-white">{votesInPercent(option.votes)}%</span>
+                                        <span className="text-xs text-black dark:text-white">{votesInPercent(option.votes).actual}%</span>
                                     </div>
                                 </div>
                                 <div className="absolute -left-2 z-0 bg-gray-200 dark:bg-gray-600 rounded py-[0.15rem]"
                                     style={{
-                                        width: `${votesInPercent(option.votes) + 2.3}%`,
+                                        width: `${votesInPercent(option.votes).width + 2.3}%`,
                                     }}
                                 >
                                     &nbsp;

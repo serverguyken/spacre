@@ -125,7 +125,7 @@ const FeedProfile = () => {
                 {
                     id: 0,
                     option: 'JavaScript',
-                    votes: 257,
+                    votes: 347,
                 },
                 {
                     id: 1,
@@ -135,7 +135,7 @@ const FeedProfile = () => {
                 {
                     id: 2,
                     option: 'C++',
-                    votes: 632,
+                    votes: 629,
                 }
             ],
         }
