@@ -197,7 +197,7 @@ const MobileTextCard = () => {
                 const arrFiles = Array.from(newFiles)
                 const fileTypes = arrFiles.map((file: any) => file.type)
                 const videos = fileTypes.filter((type: any) => type.includes("video"))
-                if (arrFiles.length >= fileLimit) {
+                if (arrFiles.length > fileLimit) {
                     setFileErrorMsg(`Please choose either 1 video or up to ${fileLimit} photos.`)
                     setErrorTimeout(5000)
                 } else {

@@ -242,7 +242,7 @@ const TextCard = () => {
                 const fileTypes = arrFiles.map((file: any) => file.type)
                 const videos = fileTypes.find((type: string) => type.includes("video"))
                 const photos = fileTypes.filter((type: string) => type.includes("image"))
-                if (files.length >= fileLimit) {
+                if (files.length > fileLimit) {
                     setError(true, `Please choose either 1 video or up to ${fileLimit} photos`)
                     setErrorTimeout(5000)
                 } else if (videos) {
