@@ -1,4 +1,4 @@
-import { CodeIcon, PhotographIcon, EmojiHappyIcon, PlusIcon } from "@heroicons/react/outline"
+import { CodeIcon, PhotographIcon, EmojiHappyIcon, PlusIcon, ChartSquareBarIcon } from "@heroicons/react/outline"
 import { PrimaryButton } from "./Buttons"
 import { XIcon } from "@heroicons/react/outline"
 import { useState, useEffect } from "react"
@@ -25,6 +25,7 @@ import MediaHandler from "./MediaHandler"
 import Transition from "./Transition"
 import Modal from "./Modal"
 import MobileTextCard from "./MobileTextCard"
+import PollCreate from "./PollCreate"
 
 
 const mentionPlugin = createMentionPlugin({
@@ -81,8 +82,13 @@ const TextCard = () => {
     const [fileTypes, setFileTypes] = useState([] as any)
     const [isFileError, setIsFileError] = useState(false)
     const [fileErrorMsg, setFileErrorMsg] = useState("")
+    const [pollOpen, setPollOpen] = useState(false)
+    const [pollCount, setPollCount] = useState(0)
+    const [poll, setPoll] = useState({})
     const fileLimit = 2
+    const pollLimit = 1
     const [isFileLimit, setIsFileLimit] = useState(false)
+    const [isPollLimit, setIsPollLimit] = useState(false)
     const testContent = "Hello @serverguyken, this is a test post. I hope you like it :) #test. Visit https://www.web.com for more info."
 
     useEffect(() => {
@@ -106,12 +112,19 @@ const TextCard = () => {
         if (text.length > 0) {
             setDisabled(false)
         } else {
-            setDisabled(true)
+            if (files.length > 0 || pollOpen) {
+                setDisabled(false)
+            } else {
+                setDisabled(true)
+            }
         }
         if (textExceeded) {
             setDisabled(true)
         }
-    }, [text, textExceeded])
+        if (files.length > 0 || pollOpen) {
+            setDisabled(false)
+        }
+    }, [text, textExceeded, files, pollOpen])
 
     useEffect(() => {
         if (files.length === fileLimit - 1) {
@@ -124,10 +137,19 @@ const TextCard = () => {
         }
     }, [files])
 
+
+    useEffect(() => {
+        if (pollCount >= pollLimit) {
+            setIsPollLimit(true)
+        } else {
+            setIsPollLimit(false)
+        }
+    }, [pollCount])
+
     const plugins = [mentionPlugin, hashtagPlugin, linkifyPlugin]
 
 
-   
+
 
     const handleChange = (state: any) => {
         const value = state.getCurrentContent().getPlainText()
@@ -164,15 +186,15 @@ const TextCard = () => {
     }
 
     const onMentionAdd = (mention: any) => {
-       
+
     }
 
     const onHashtagAdd = (hashtag: any) => {
-       
+
     }
 
     const onMediaChange = (e: any) => {
-        if (files.length > 0) { 
+        if (files.length > 0) {
             const newFiles = e.target.files
             setError(false, "")
             if (newFiles && newFiles.length > 1) {
@@ -282,23 +304,28 @@ const TextCard = () => {
         }
     }
 
-    const setError = (error: boolean, msg: string) =>{
+    const setError = (error: boolean, msg: string) => {
         setIsFileError(error)
         setFileErrorMsg(msg)
     }
+
     const setErrorTimeout = (timeout: number) => {
         TimeOut(() => {
             setError(false, "")
         }, timeout)
     }
 
+
+
+
+
     const { MentionSuggestions } = mentionPlugin
     const HashtagSuggestions = hashtagPlugin.MentionSuggestions
     return (
         <div className="">
             {
-                postTextBoxShown && 
-                    <MobileTextCard />
+                postTextBoxShown &&
+                <MobileTextCard />
             }
 
             <div className={setClass("post_textarea relative", 'bg-white dark:bg-darkMode relative screen-sm:hidden')}>
@@ -344,9 +371,21 @@ const TextCard = () => {
                             setIsFileLimit(isExceeded)
                         }}
                     />
+                    {
+                        pollOpen && <PollCreate
+                            callback={(poll: {}) => {
+                                setPoll(poll)
+                            }}
+                            onClose={() => {
+                                setPollOpen(false)
+                                setIsPollLimit(true)
+                                setPollCount(pollCount - 1)
+                            }}
+                        />
+                    }
                     <div className="text_actions_main mt-4">
                         <div className="text-actions_group flex items-center justify-between">
-                            <div className="text_actions_icons flex items-center space-x-3">
+                            <div className="text_actions_icons flex items-center space-x-1">
                                 {/* <div className="text_action">
                                 <Tooltip
                                     title="Code"
@@ -372,12 +411,17 @@ const TextCard = () => {
                                             position='bottom'
                                             transition='fade'
                                             transitionDuration={200}
+                                            className="block"
                                             classNames={{
                                                 body: 'tooltip_comp bg-gray-500 dark:bg-darkModeBg dark:text-white text-[0.55rem] ml-1',
                                             }}
                                             color='gray'
                                         >
-                                            <div className="text_action_icon cursor-pointer">
+                                            <div className="text_action_icon cursor-pointer min-w-[32px] min-h-[32px] hover:bg-primary/10 flex justify-center items-center rounded-full"
+                                                onClick={() => {
+                                                    document.getElementById("media_upload")?.click()
+                                                }}
+                                            >
                                                 <input type="file" id="media_upload" hidden
                                                     multiple
                                                     accept="image/*,video/*,gif/*"
@@ -385,17 +429,43 @@ const TextCard = () => {
                                                         onMediaChange(e)
                                                     }}
                                                 />
-                                                <PhotographIcon width={20} height={20} className={'text-primary'}
-                                                    onClick={() => {
-                                                        document.getElementById("media_upload")?.click()
-                                                    }}
-                                                />
+                                                <PhotographIcon width={20} height={20} className={'text-primary'} />
                                             </div>
                                         </Tooltip>
 
                                             :
                                             <div className="text_action_icon cursor-default opacity-50 select-none">
                                                 <PhotographIcon width={20} height={20} className={'text-primary cursor-default'} />
+                                            </div>
+                                    }
+                                </div>
+                                <div className="text_action">
+                                    {
+                                        !isPollLimit ? <Tooltip
+                                            title="Poll"
+                                            placement="center"
+                                            position='bottom'
+                                            transition='fade'
+                                            transitionDuration={200}
+                                            className="block"
+                                            classNames={{
+                                                body: 'tooltip_comp bg-gray-500 dark:bg-darkModeBg dark:text-white text-[0.55rem] ml-1',
+                                            }}
+                                            color='gray'
+                                        >
+                                            <div className="text_action_icon cursor-pointer min-w-[32px] min-h-[32px] hover:bg-primary/10 flex justify-center items-center rounded-full"
+                                                onClick={() => {
+                                                    setPollOpen(true)
+                                                    setPollCount(pollCount + 1)
+                                                }}
+                                            >
+                                                <ChartSquareBarIcon width={20} height={20} className={'text-primary'} />
+                                            </div>
+                                        </Tooltip>
+
+                                            :
+                                            <div className="text_action_icon cursor-default opacity-50 select-none ml-[0.4rem]">
+                                                <ChartSquareBarIcon width={20} height={20} className={'text-primary cursor-default'} />
                                             </div>
                                     }
                                 </div>
@@ -432,7 +502,7 @@ const TextCard = () => {
                 >
                     <div className="bg-primary p-[0.6rem] w-auto inline-block transition transition-scale rounded text-white"
                     >
-                       {fileErrorMsg} 
+                        {fileErrorMsg}
                     </div>
                 </Transition>
             }

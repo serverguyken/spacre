@@ -3,8 +3,10 @@ export interface Post {
     userId: string;
     userName: string;
     userProfileImage: string;
-    postImage: string;
+    postImages: string;
     postText: string;
+    hasPoll: boolean;
+    poll: Poll;
     postLikes: Array<string>;
     postComments: Array<string>;
     postBoosts: Array<string>;
@@ -20,6 +22,18 @@ export interface Post {
     postIsCommented: boolean;
     postIsReported: boolean;
     postIsSaved: boolean;
+}
+
+export interface Poll {
+    id: number;
+    question: string;
+    options: PollOption[];
+}
+
+export interface PollOption {
+    id: number;
+    option: string;
+    votes: number;
 }
 export interface Reply extends Post {
     replyId: string;

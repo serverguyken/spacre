@@ -1,4 +1,4 @@
-import { CodeIcon, PhotographIcon, EmojiHappyIcon, PlusIcon } from "@heroicons/react/outline"
+import { CodeIcon, PhotographIcon, EmojiHappyIcon, PlusIcon, ChartSquareBarIcon } from "@heroicons/react/outline"
 import { PrimaryButton } from "./Buttons"
 import { XIcon } from "@heroicons/react/outline"
 import { useState, useEffect } from "react"
@@ -24,6 +24,7 @@ import Tooltip from "./Tooltip"
 import MediaHandler from "./MediaHandler"
 import Transition from "./Transition"
 import Modal from "./Modal"
+import PollCreate from "./PollCreate"
 
 
 const mentionPlugin = createMentionPlugin({
@@ -80,8 +81,13 @@ const MobileTextCard = () => {
     const [fileTypes, setFileTypes] = useState([] as any)
     const [isFileError, setIsFileError] = useState(false)
     const [fileErrorMsg, setFileErrorMsg] = useState("")
+    const [pollOpen, setPollOpen] = useState(false)
+    const [pollCount, setPollCount] = useState(0)
+    const [poll, setPoll] = useState({})
     const fileLimit = 2
+    const pollLimit = 1
     const [isFileLimit, setIsFileLimit] = useState(false)
+    const [isPollLimit, setIsPollLimit] = useState(false)
     const testContent = "Hello @serverguyken, this is a test post. I hope you like it :) #test. Visit https://www.web.com for more info."
 
     useEffect(() => {
@@ -105,12 +111,19 @@ const MobileTextCard = () => {
         if (text.length > 0) {
             setDisabled(false)
         } else {
-            setDisabled(true)
+            if (files.length > 0 || pollOpen) {
+                setDisabled(false)
+            } else {
+                setDisabled(true)
+            }
         }
         if (textExceeded) {
             setDisabled(true)
         }
-    }, [text, textExceeded])
+        if (files.length > 0 || pollOpen) {
+            setDisabled(false)
+        }
+    }, [text, textExceeded, files, pollOpen])
 
     useEffect(() => {
         if (files.length === fileLimit - 1) {
@@ -122,6 +135,14 @@ const MobileTextCard = () => {
             }
         }
     }, [files])
+
+    useEffect(() => {
+        if (pollCount >= pollLimit) {
+            setIsPollLimit(true)
+        } else {
+            setIsPollLimit(false)
+        }
+    }, [pollCount])
 
     const plugins = [mentionPlugin, hashtagPlugin, linkifyPlugin]
 
@@ -371,9 +392,21 @@ const MobileTextCard = () => {
                             setIsFileLimit(isExceeded)
                         }}
                     />
+                    {
+                        pollOpen && <PollCreate
+                            callback={(poll: {}) => {
+                                setPoll(poll)
+                            }}
+                            onClose={() => {
+                                setPollOpen(false)
+                                setIsPollLimit(true)
+                                setPollCount(pollCount - 1)
+                            }}
+                        />
+                    }
                     <div className="text_actions_main mt-4 pt-1">
                         <div className="text-actions_group flex items-center justify-between">
-                            <div className="text_actions_icons flex items-center space-x-3">
+                            <div className="text_actions_icons flex items-center space-x-1">
                                 {/* <div className="text_action">
                                 <Tooltip
                                     title="Code"
@@ -399,12 +432,17 @@ const MobileTextCard = () => {
                                             position='bottom'
                                             transition='fade'
                                             transitionDuration={200}
+                                            className="block"
                                             classNames={{
                                                 body: 'tooltip_comp bg-gray-500 dark:bg-darkModeBg dark:text-white text-[0.55rem] ml-1',
                                             }}
                                             color='gray'
                                         >
-                                            <div className="text_action_icon cursor-pointer">
+                                            <div className="text_action_icon cursor-pointer min-w-[32px] min-h-[32px] hover:bg-primary/10 flex justify-center items-center rounded-full"
+                                                onClick={() => {
+                                                    document.getElementById("media_upload")?.click()
+                                                }}
+                                            >
                                                 <input type="file" id="media_upload" hidden
                                                     multiple
                                                     accept="image/*,video/*,gif/*"
@@ -412,11 +450,7 @@ const MobileTextCard = () => {
                                                         onMediaChange(e)
                                                     }}
                                                 />
-                                                <PhotographIcon width={20} height={20} className={'text-primary'}
-                                                    onClick={() => {
-                                                        document.getElementById("media_upload")?.click()
-                                                    }}
-                                                />
+                                                <PhotographIcon width={20} height={20} className={'text-primary'} />
                                             </div>
                                         </Tooltip>
 
@@ -426,7 +460,36 @@ const MobileTextCard = () => {
                                             </div>
                                     }
                                 </div>
+                                <div className="text_action">
+                                    {
+                                        !isPollLimit ? <Tooltip
+                                            title="Poll"
+                                            placement="center"
+                                            position='bottom'
+                                            transition='fade'
+                                            transitionDuration={200}
+                                            className="block"
+                                            classNames={{
+                                                body: 'tooltip_comp bg-gray-500 dark:bg-darkModeBg dark:text-white text-[0.55rem] ml-1',
+                                            }}
+                                            color='gray'
+                                        >
+                                            <div className="text_action_icon cursor-pointer min-w-[32px] min-h-[32px] hover:bg-primary/10 flex justify-center items-center rounded-full"
+                                                onClick={() => {
+                                                    setPollOpen(true)
+                                                    setPollCount(pollCount + 1)
+                                                }}
+                                            >
+                                                <ChartSquareBarIcon width={20} height={20} className={'text-primary'} />
+                                            </div>
+                                        </Tooltip>
 
+                                            :
+                                            <div className="text_action_icon cursor-default opacity-50 select-none ml-[0.4rem]">
+                                                <ChartSquareBarIcon width={20} height={20} className={'text-primary cursor-default'} />
+                                            </div>
+                                    }
+                                </div>
                                 {
                                     textExceeded && <div className="max_value_count">
                                         {
