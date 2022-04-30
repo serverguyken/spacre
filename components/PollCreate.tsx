@@ -97,7 +97,7 @@ function PollCreate({ callback, isPollValid, onClose }: {
     };
     console.log(poll, "poll");
     return (
-        <div className="poll_container bg-white dark:bg-darkMode rounded-lg shadow border border-gray-100 dark:border-primary/10 max-w-sm relative mt-2 mb-2">
+        <div className="poll_container bg-white dark:bg-darkMode rounded-lg  border border-gray-200 dark:border-primary/10 max-w-sm relative mt-2 mb-2">
             <div className="poll_header p-2 relative pb-8">
                 {/* <div className="poll_close min-w-[28px] min-h-[28px] absolute right-0 text-gray-500 hover:text-primary hover:bg-primary/10 flex justify-center items-center rounded-full">
                     <button className="btn btn-clear" onClick={onClose}>
@@ -107,7 +107,7 @@ function PollCreate({ callback, isPollValid, onClose }: {
                 <div className="poll_header_text mt-5">
                     <textarea
                         placeholder="Ask a question"
-                        className="outline-none border-b border-gray-200 dark:bg-darkMode dark:text-white dark:placeholder-gray-500 dark:border-borderDarkMode focus:border-b-primary w-full pb-1 font-medium text-gray-900 placeholder-gray-900 resize-none h-8 max-h-20 overflow-y-auto"
+                        className="outline-none focus:outline-none appearance-none rounded-none border-b border-gray-200 inset-0 py-1 dark:bg-darkMode dark:text-white dark:placeholder-gray-500 dark:border-borderDarkMode focus:border-b-primary w-full font-medium text-gray-900 placeholder-gray-900 resize-none h-[2.2rem] max-h-20 overflow-y-auto"
                         onChange={(e: any) => handleQuestionChange(e)}
                     />
                 </div>
@@ -124,7 +124,7 @@ function PollCreate({ callback, isPollValid, onClose }: {
                                             <div className="poll_option_item_text w-full">
                                                 <input type="text"
                                                     placeholder={option.placeholder}
-                                                    className="border border-gray-200 dark:bg-darkMode dark:text-white dark:placeholder-gray-500 dark:border-borderDarkMode outline-none w-full focus:border-primary dark:focus:border-primary rounded p-1 placeholder-gray-700"
+                                                    className="border border-gray-200 dark:bg-darkMode text-gray-800 dark:text-white dark:placeholder-gray-500 dark:border-borderDarkMode outline-none w-full focus:border-primary dark:focus:border-primary rounded p-1 placeholder-gray-700"
                                                     onChange={(e: any) => handleOptionChange(e, option.id)}
                                                 />
                                             </div>
@@ -242,7 +242,7 @@ function PollCreate({ callback, isPollValid, onClose }: {
                                 >
                                     <div className="poll_expiry_selected_item w-full relative flex items-center space-x-2 select-none">
                                         <select name="" id=""
-                                            className="border border-gray-200 dark:bg-darkMode text-gray-700 dark:text-white dark:placeholder-gray-500 dark:border-borderDarkMode outline-none w-24 pl-1 rounded py-[0.3rem]  placeholder-gray-700 select-none appearance-none hover:bg-red-500 cursor-pointer"
+                                            className="bg-white border border-gray-200 dark:bg-darkMode text-gray-700 dark:text-white dark:placeholder-gray-500 dark:border-borderDarkMode outline-none w-24 pl-1 rounded py-[0.3rem]  placeholder-gray-700 select-none appearance-none cursor-pointer"
                                             onChange={(e: any) => {
                                                 const selectedOption = e.target.value;
                                                 setExpiry(selectedOption);
