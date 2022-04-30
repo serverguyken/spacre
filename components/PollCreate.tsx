@@ -107,7 +107,7 @@ function PollCreate({ callback, isPollValid, onClose }: {
                 <div className="poll_header_text mt-5">
                     <textarea
                         placeholder="Ask a question"
-                        className="outline-none focus:outline-none appearance-none rounded-none border-b border-gray-200 inset-0 py-1 dark:bg-darkMode dark:text-white dark:placeholder-gray-500 dark:border-borderDarkMode focus:border-b-primary w-full font-medium text-gray-900 placeholder-gray-900 resize-none h-[2.2rem] max-h-20 overflow-y-auto"
+                        className="outline-none focus:outline-none appearance-none rounded-none border-b border-gray-200 inset-0 py-1 dark:bg-darkMode dark:text-white dark:placeholder-gray-500 dark:border-borderDarkMode focus:border-b focus:border-primary dark:focus:border-b dark:focus:border-primary w-full font-medium text-gray-900 placeholder-gray-900 resize-none h-[2.2rem] max-h-20 overflow-y-auto"
                         onChange={(e: any) => handleQuestionChange(e)}
                     />
                 </div>
