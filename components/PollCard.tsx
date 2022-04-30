@@ -45,7 +45,7 @@ const PollCard = ({ poll, events }: {
     } 
     
     return (
-        <div className="poll rounded max-w-sm p-2 pb-3">
+        <div className="poll rounded max-w-sm py-2 pb-3">
             <div>
                 <div className="poll_question mb-2">
                     <h2 className="font-medium text-[15px]">{poll.question}</h2>
