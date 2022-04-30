@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { dateFromDays, dateFromISOString } from "../utils";
+import { createDate, dateFromDays, dateFromISOString } from "../utils";
 import Icon from "./Icon";
 import Tooltip from "./Tooltip";
 
@@ -31,9 +31,10 @@ function PollCreate({ callback, isPollValid, onClose }: {
     const [poll, setPoll] = useState({
         question: "",
         options: [] as any,
-        expires: {
+        expiresAt: {
             date: dateFromDays('1h').date,
-            type: 'hour'
+            type: 'hour',
+            unit: '1h'
         },
         createdAt: dateFromISOString(new Date().toISOString()),
     });
@@ -81,19 +82,20 @@ function PollCreate({ callback, isPollValid, onClose }: {
     };
 
     const setExpiry = (value: any) => { 
-        const createdAt = dateFromISOString(new Date().toISOString());
-        const expires = {
+        const createdAt = createDate();
+        const expiresAt = {
             date: dateFromDays(value).date,
-            type: dateFromDays(value).type
+            type: dateFromDays(value).type,
+            unit: value
         }
         setExpiresAt(value);
         setPoll({
             ...poll,
-            expires,
+            expiresAt,
             createdAt,
         });
     };
-
+    console.log(poll, "poll");
     return (
         <div className="poll_container bg-white dark:bg-darkMode rounded-lg shadow border border-gray-100 dark:border-primary/10 max-w-sm relative mt-2 mb-2">
             <div className="poll_header p-2 relative pb-8">

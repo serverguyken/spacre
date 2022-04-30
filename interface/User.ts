@@ -26,7 +26,11 @@ export interface Poll {
     id: number;
     question: string;
     options: PollOption[];
-    expiresAt: string;
+    expiresAt: {
+        date: string;
+        type: string;
+        unit: string;
+    };
     createdAt: string;
 }
 

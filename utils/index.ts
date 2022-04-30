@@ -1,4 +1,9 @@
 import moment from 'moment';
+import linkify, { LinkifyIt } from 'linkify-it';
+import tlds from 'tlds';
+export const MENTION_REGEX = /(^|\s)(@[a-zA-Z0-9_]+)/g
+export const HASHTAG_REGEX = /(^|\s)(#[a-zA-Z0-9_]+)/g
+
 export function print(...args: any) {
   console.log(...args);
   return null;
@@ -157,6 +162,10 @@ export function Interval(callback: () => void, time: number) {
   setInterval(callback, time);
 }
 
+export const stopPropagation = (e: any) => {
+  e.stopPropagation()
+}
+
 export function toHHMMSS(time: number) {
   const sec_num = parseInt(time.toString(), 10);
   let hours: any = Math.floor(sec_num / 3600);
@@ -175,15 +184,25 @@ export function toHHMMSS(time: number) {
   return minutes + ':' + seconds;
 }
 
-import linkify, { LinkifyIt } from 'linkify-it';
-import tlds from 'tlds';
-export const isLink = (str: string) => {
-  const linkifyit: LinkifyIt = linkify().tlds(tlds);
-  return linkifyit.match(str);
-}
+
+
 
 export const Linky = {
-  get: (str: string) => {
+  getUrl: (str: string) => {
+    if (str === null || str === undefined) return null;
+    const linkifyit: LinkifyIt = linkify().tlds(tlds);
+    const matches = linkifyit.match(str);
+    if (matches) return matches[0].url;
+    return null;
+  },
+  isLink: (str: string) => {
+    if (str === null || str === undefined) return false;
+    const linkifyit: LinkifyIt = linkify().tlds(tlds);
+    const matches = linkifyit.match(str);
+    if (matches && matches.length > 0) return true;
+    return false;
+  },
+  match(str: string) {
     const linkifyit: LinkifyIt = linkify().tlds(tlds);
     const matches = linkifyit.match(str);
     if (matches) {
@@ -191,7 +210,7 @@ export const Linky = {
     }
     return null;
   },
-  getAll: (str: string) => {
+  matchAll: (str: string) => {
     const linkifyit: LinkifyIt = linkify().tlds(tlds);
     const matches = linkifyit.match(str);
     if (matches) {
@@ -199,23 +218,12 @@ export const Linky = {
     }
     return [];
   },
-  getUrl: (str: string) => {
+  test(str: string) {
     const linkifyit: LinkifyIt = linkify().tlds(tlds);
-    const matches = linkifyit.match(str);
-    if (matches) {
-      return matches[0].url;
-    }
-    return null;
+    return linkifyit.test(str);
   },
-  isLink: (str: string) => {
-    const linkifyit: LinkifyIt = linkify().tlds(tlds);
-    const matches = linkifyit.match(str);
-    if (matches && matches.length > 0) {
-      return true;
-    }
-    return false;
-  }
 }
+
 
 export const getLink = (str: string) => {
   const linkifyit: LinkifyIt = linkify().tlds(tlds);
@@ -267,13 +275,7 @@ export function countSet(num: number, upper?: boolean, fixedLength?: number) {
 export const toHTML = (text: string) => {
   const original_text = text
   let changed_text = text
-  // regex to replace all mentions with a link and hashtags with a link and links with only http and https with a link
-  const MENTION_REGEX = /(^|\s)(@[a-zA-Z0-9_]+)/g
-  const HASHTAG_REGEX = /(^|\s)(#[a-zA-Z0-9_]+)/g
-  // link regex domain is optional e.g http(s):web and http(s):web.com are valid
-  const valid_domain_prefix = "(http(s)?:\\/\\/|www\\.)"
-  const valid_domain_suffix = "(\\.\\w+|\\w+\\.\\w+|\\w+)"
-  const LINK_REGEX = /(^|\s)((http(s)?:\/\/)?(www\.)?[a-zA-Z0-9_]+\.[a-zA-Z0-9_]+[a-zA-Z0-9_]*)/g
+  
   // if text contains a mention, replace it with a link
   if (text.match(MENTION_REGEX)) {
     // relpace all mentions with a link to the user's profile e.g @rr = <a href="/rr">@rr</a>
@@ -289,17 +291,15 @@ export const toHTML = (text: string) => {
     })
   }
   // if text contains a link, replace it with a link
-  if (text.match(LINK_REGEX)) {
-    // replace all links with a link to the link e.g https://www.web.com = <a href="https://www.web.com">https://www.web.com</a>
-    if (isLink(text)) {
-      changed_text = changed_text.replace(LINK_REGEX, (match, p1, p2) => {
-        return `${p1}<a href="${p2}" class="text-link">${p2}</a>`
-      })
+  if (Linky.test(text)) {
+    if (Linky.isLink(text)) {
+      const match = Linky.match(text);
+      if (match) {
+        const url = match.url;
+        const text = match.text;
+        changed_text = changed_text.replace(text, `<a href="${url}" class="text-link">${text}</a>`);
+      }
     }
-  }
-  // if text contains a new line, replace it with a br
-  if (text.match(/\n/g)) {
-    changed_text = changed_text.replace(/\n/g, "<br>")
   }
   return {
     _html: changed_text,
@@ -393,17 +393,50 @@ export function formatDate(date: string) {
   return setup;
 }
 
+export function dateHelper() {
+  const setup = {
+    isPollExpired: (date: string,  createdAt: string, unit:string) => {
+      if (unit === 'hour') {
+        const expire_date = moment(date).format('YYYY-MM-DD HH:mm:ss')
+        const created_date = moment(createdAt).format('YYYY-MM-DD HH:mm:ss');
+        const now = moment(new Date().toISOString()).format('YYYY-MM-DD HH:mm:ss');
+        const hours_diff = moment(expire_date).diff(moment(created_date), 'hours') + 1;
+        const hours_diff_now = moment(now).diff(moment(created_date), 'hours') + 1;
+        if (hours_diff_now >= hours_diff) {
+          return true
+        } else {
+          return false
+        }
+      } else if (unit === 'day') {
+        const expire_date = moment(date).format('YYYY-MM-DD HH:mm:ss')
+        const created_date = moment(createdAt).format('YYYY-MM-DD HH:mm:ss');
+        const now = moment(new Date().toISOString()).format('YYYY-MM-DD HH:mm:ss');
+        const days_diff = moment(expire_date).diff(moment(created_date), 'days') + 1;
+        const days_diff_now = moment(now).diff(moment(created_date), 'days') + 1;
+        if (days_diff_now >= days_diff) {
+          return true
+        } else {
+          return false
+        }
+      } else {
+        return false
+      }
+     },
+  }
+  return setup;
+}
+
 export function dateFromDays(days: string) {
   const hour = days.split('')[1] === 'h';
   const day = days.split('')[1] === 'd';
   if (day) {
-    const date = moment().add(parseInt(days.split('d')[0]), 'days').format('YYYY-MM-DD')
+    const date = moment().add(parseInt(days.split('d')[0]), 'days').format('YYYY-MM-DD HH:mm:ss');
     return {
       date,
       type: 'day'
     };
   } else if (hour) {
-    const date = moment().add(parseInt(days.split('h')[0]), 'hours').format('HH:mm')
+    const date = moment().add(parseInt(days.split('h')[0]), 'hours').format('YYYY-MM-DD HH:mm:ss');
     return {
       date,
       type: 'hour'
@@ -416,8 +449,12 @@ export function dateFromDays(days: string) {
   }
 }
 
+export function createDate() {
+  const date = moment().format('YYYY-MM-DD HH:mm:ss');
+  return date;
+}
 
 export function dateFromISOString(date: string) {
-  const newDate = moment(date).format('YYYY-MM-DD')
+  const newDate = moment(date).format('YYYY-MM-DD HH:mm:ss');
   return newDate
 }

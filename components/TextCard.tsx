@@ -2,7 +2,7 @@ import { CodeIcon, PhotographIcon, EmojiHappyIcon, PlusIcon, ChartSquareBarIcon 
 import { PrimaryButton } from "./Buttons"
 import { XIcon } from "@heroicons/react/outline"
 import { useState, useEffect } from "react"
-import { setClass, isBrowser, generateLoadingTime, TimeOut, print, StorageEvent, toHTML, getTypeByTrigger, Strategy, isLink, Linky } from "../utils"
+import { setClass, isBrowser, generateLoadingTime, TimeOut, print, StorageEvent, toHTML, getTypeByTrigger, Strategy, Linky } from "../utils"
 import { CompositeDecorator, ContentBlock, ContentState, DefaultDraftInlineStyle, EditorState, Modifier, SelectionState } from "draft-js"
 import Editor, { EditorPlugin } from '@draft-js-plugins/editor'
 import createMentionPlugin, { defaultSuggestionsFilter } from '@draft-js-plugins/mention'

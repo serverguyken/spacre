@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { isLink, Linky, print } from '.';
+import { HASHTAG_REGEX, Linky, MENTION_REGEX, print } from '.';
 import API from '../config/api';
 import { Meta } from '../interface/Meta';
 const MentionComp = ({ text }: { text: string }) => {
@@ -23,48 +23,44 @@ const HashtagComp = ({ text }: { text: string }) => {
     );
 }
 
-const LinkComp = ({ text }: { text: string }) => {
+const LinkComp = ({ text, url }: { text: string, url: string }) => {
     return (
         <span className='text-link'>
-            <a href={text}>{text}</a>
+            <a href={url} className='text-link'
+                rel="noopener noreferrer"
+                target='_blank'
+            >{text}</a>
         </span>
     );
 }
 
+
+
 export const ToJSX = ({ text }: {
     text: string
 }) => {
-    const original_text = text
-    let changed_text = text
     // string regex to match mentions, hashtags and links in the text
-    const MENTION_REGEX = /(^|\s)(@[a-zA-Z0-9_]+)/g
-    const HASHTAG_REGEX = /(^|\s)(#[a-zA-Z0-9_]+)/g
-    // link regex domain is optional e.g http(s):web and http(s):web.com and http(s):web.com/ and (name).(domain)
-    const LINK_REGEX = /(^|\s)((http(s)?:\/\/)?(www\.)?[a-zA-Z0-9_]+\.[a-zA-Z0-9_]+[a-zA-Z0-9_]*)/g
-    const REGEX = new RegExp(MENTION_REGEX.source + '|' + HASHTAG_REGEX.source + '|' + LINK_REGEX.source, 'g')
-
+   
     const setComp = () => {
-        if (text.match(REGEX)) {
-            const arr = text.split(REGEX)
-            return arr.map((item, index) => {
-                if (item !== undefined) {
-                    if (item.match(MENTION_REGEX)) {
-                        return <MentionComp key={index} text={item} />
-                    } else if (item.match(HASHTAG_REGEX)) {
-                        return <HashtagComp key={index} text={item} />
-                    } else if (item.match(LINK_REGEX)) {
-                        if (isLink(item) !== null) {
-                            return <LinkComp key={index} text={item} />
-                        } else {
-                            return <span key={index}>{item}</span>
-                        }
-                    }
-                    return <span key={index}>{item}</span>
+        const REGEX = '_R$1E$2G$3E$4X^$02^%24*x$#~@' // this is a unique string that will not be found in the text
+        const modifiedText = text.replace(/ /g, REGEX + ' ')
+        const arr = modifiedText.split(REGEX)
+        return arr.map((item, index) => {
+            if (item !== undefined) {
+                if (item.match(MENTION_REGEX)) {
+                    return <MentionComp key={index} text={item} />
+                } else if (item.match(HASHTAG_REGEX)) {
+                    return <HashtagComp key={index} text={item} />
                 }
-                return null
-            })
-        }
-        return <span>{text}</span>
+                else if (Linky.match(item)) {
+                    const text: any = Linky.match(item) !== null || Linky.match(item) !== undefined ? Linky.match(item)?.text : item
+                    const url: any = Linky.match(item) !== null || Linky.match(item) !== undefined ? Linky.match(item)?.url : item
+                    return <LinkComp key={index} text={item} url={url} />
+                }
+                return <span key={index}>{item}</span>
+            }
+            return null
+        })
     }
     let Comp = setComp()
     return (

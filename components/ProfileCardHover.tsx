@@ -17,7 +17,7 @@ const ProfileCardHover = ({
     
 
     return (
-        <div className="bg-white dark:bg-darkMode dark:border-none border border-gray-100   shadow-xl dark:shadow-profileCardHover rounded-lg pt-3 p-2 pb-3 w-[300px] max-w-[340px] max-h-[270px] overflow-auto cursor-auto"
+        <div className="bg-white dark:bg-darkMode dark:border-none border border-gray-100 shadow-xl dark:shadow-profileCardHover rounded-lg pt-3 p-2 pb-3 w-[300px] max-w-[340px] max-h-[300px] overflow-auto cursor-auto"
         >
             <div className={pocStyle("profile")}>
                 <div className="flex justify-between space-x-2">
@@ -89,8 +89,9 @@ const ProfileCardHover = ({
                         </div>
                     </div>
                 </div>
-                <div className={pocStyle("profile_bio mt-[0.50rem] mb-2 text-[0.90rem] max-w-[26rem]")}>
-                    dddd
+                <div className={pocStyle("profile_bio mt-[0.50rem] mb-2 text-[0.90rem] max-w-[26rem]")}
+                >
+                    <ToJSX text={user.bio} />
                 </div>
                 <div className={pocStyle("profile_sp_fw_fl_count text-[16px]")}>
                     <div className="flex space-x-4">
