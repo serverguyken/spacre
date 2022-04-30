@@ -286,13 +286,13 @@ const Login: NextPage = () => {
                                 onClose={() => redirectOnClose()}
                                 styles={{
                                     modalContainer: {
-                                        background: 'bg-[#5c5d5e] opacity-80 dark:opacity-50',
+                                        background: 'bg-[#5c5d5e]/80 dark:bg-darkModeBg opacity-80 dark:opacity-100 screen-sm:dark:bg-darkModeBg',
                                     },
                                     modal: {
-                                        class: '',
+                                        class: 'screen-sm:dark:bg-darkModeBg',
                                         content: {
-                                            class: 'modal_error mt-[20vh] mb-[20vh] dark:bg-darkMode dark:border-opacity-10',
-                                            background: 'bg-white dark:bg-darkMode dark:border-opacity-10',
+                                            class: 'modal_error mt-[20vh] mb-[20vh] bg-white/100 border border-gray dark:bg-primary/10 screen-sm:dark:bg-primary/10 dark:border-opacity-0',
+                                            background: 'bg-white/80 dark:bg-primary/10 screen-sm:dark:bg-primary/10 dark:border-opacity-0',
                                         }
                                     },
                                 }}
@@ -310,7 +310,7 @@ const Login: NextPage = () => {
                                             </div>
                                         </div>
                                         <div className="error_button w-[85%] m-auto">
-                                            <SecondaryButton text="Ok" action={() => { redirectOnClose() }} styles={setClass('w-full text-white p-2 mt-4')} />
+                                            <SecondaryButton text="Ok" action={() => { redirectOnClose() }} styles={setClass('w-full text-white p-2 mt-4 dark:bg-white dark:text-black hover:dark:bg-white/90')} />
                                         </div>
                                     </div>
                                 </div>

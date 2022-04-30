@@ -69,7 +69,7 @@ const Modal = ({ opened, onClose, children, styles, showCloseIcon }: {
     return (
         <div>
             <div>
-                <div className={setClass("modal_main_inner  opacity-100 z-[300] top-0 left-0 bottom-0 right-0 h-full overflow-y-scroll  pr-4 pl-4 flex justify-center items-start ", `${styles?.modal?.class ? styles?.modal?.class : 'screen-xssm:bg-white screen-xssm:dark:bg-darkMode'} ${styles?.modal?.content?.position ? styles?.modal?.content?.position : 'absolute'} 
+                <div className={setClass("modal_main_inner  opacity-100 z-[300] top-0 left-0 bottom-0 right-0 h-full overflow-y-auto  pr-4 pl-4 flex justify-center items-start h-full", `${styles?.modal?.class ? styles?.modal?.class : 'screen-xssm:bg-white screen-xssm:dark:bg-darkMode'} ${styles?.modal?.content?.position ? styles?.modal?.content?.position : 'absolute'} 
                 ${styles?.modalContainer?.padding ? styles?.modalContainer.padding : 'pt-12 pb-12'},`
                 )}
                 

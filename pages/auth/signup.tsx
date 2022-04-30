@@ -37,7 +37,7 @@ const Signup: NextPage = () => {
     const [cne_disabled, setCne_disabled] = useState(true)
     const [usn_pst_disabled, setUsn_pst_disabled] = useState(true)
     const [disabled, setDisabled] = useState(true)
-    const [nameInvalid, setNameInvalid] = useState(false)
+    const [nameInvalid, setNameInvalid] = useState(true)
     const [usernameInvalid, setUsernameInvalid] = useState(false)
     const [emailInvalid, setEmailInvalid] = useState(true)
     const [passwordInvalid, setPasswordInvalid] = useState(true)
@@ -65,34 +65,22 @@ const Signup: NextPage = () => {
     })
 
     const { addUserName, getUserNames, signUpUser, error, hasError, signOutUser } = useUserContext();
+
     useEffect(() => {
-        if (step.step_name === 'CREATING_NAME_EMAIL') {
-            if (nameInvalid === false && emailInvalid === false) {
-                setCne_disabled(false)
-            } else {
-                setCne_disabled(true)
-            }
+        if (nameInvalid === false && emailInvalid === false) {
+            setCne_disabled(false)
+        } else {
+            setCne_disabled(true)
         }
-        if (step.step_name === 'USERNAME_PASSWORD_SETUP') {
+    }, [nameInvalid, emailInvalid])
 
-            if (usernameInvalid === false && passwordInvalid === false) {
-                setUsn_pst_disabled(false)
-            } else {
-                setUsn_pst_disabled(true)
-            }
+    useEffect(() => {
+        if (usernameInvalid === false && passwordInvalid === false) {
+            setUsn_pst_disabled(false)
+        } else {
+            setUsn_pst_disabled(true)
         }
-        // if (step.step_name === 'USERNAME_SETUP') { }
-        // if (step.step_name === 'PROFILE_PICTURE_SETUP') { }
-        // if (hasError) {
-        //     setSignupError(true)
-        //     setErrorMessage(errors[error] ? errors[error].message : 'An error occured')
-        // } else {
-        //     setSignupError(false)
-        //     setErrorMessage('')
-        // }
-    }, [step, nameInvalid, emailInvalid, usernameInvalid, passwordInvalid, hasError])
-
-
+    }, [usernameInvalid, passwordInvalid])
 
 
     function SetLoading(loading: boolean) {
@@ -160,13 +148,11 @@ const Signup: NextPage = () => {
             setShowNameError(true)
             setNameInvalid(true)
             setNameErrorMessage('Name is required')
-            setCne_disabled(true)
         } else {
             setShowNameError(false)
             setNameInvalid(false)
             setNameErrorMessage('')
             setDisplayNameValue(value)
-            setCne_disabled(false)
         }
     }
     function handleEmailInputChange(value: any) {
@@ -175,14 +161,12 @@ const Signup: NextPage = () => {
             setShowEmailError(true)
             setEmailInvalid(true)
             setEmailErrorMessage('Email is required')
-            setCne_disabled(true)
         } else {
             let hasError: any = validate('email', value)
             setShowEmailError(hasError.hasError)
             setEmailInvalid(hasError.hasError)
             setEmailErrorMessage(hasError.message)
             setEmailValue(value)
-            setCne_disabled(false)
         }
     }
 
@@ -368,14 +352,14 @@ const Signup: NextPage = () => {
                                 <div className={setClass(styles.signup_main, 'relative')}
                                 >
                                     {
-                                        step.step_name === 'USERNAME_PASSWORD_SETUP' && !signupError && <div className="go_back_setup relative -mt-6 screen-xs:-mt-6 bg-white">
+                                        step.step_name === 'USERNAME_PASSWORD_SETUP' && !signupError && <div className="go_back_setup relative -mt-6 screen-xs:-mt-6 bg-white dark:bg-darkMode">
                                             <div className="flex items-center space-x-1">
                                                 <div className="step_go_back relative -ml-2 min-w-[36px] min-h-[36px] cursor-pointer mt-1 w-auto rounded-full flex justify-center items-center hover:bg-gray-600 hover:bg-opacity-10 hover:transition hover:ease-in-out dark:hover:bg-darkModeBg"
                                                     onClick={() => {
                                                         setNextStep('CREATING_NAME_EMAIL')
                                                     }}
                                                 >
-                                                    <Icon type="arrow-left" styles='w-4 h-4 text-black' />
+                                                    <Icon type="arrow-left" styles='w-4 h-4 text-black dark:text-white' />
 
 
                                                         <div className="go_back_setup_tooltip absolute top-10 invisible z-20 bg-gray-500 dark:bg-darkModeBg dark:text-white w-auto p-1 text-center text-[0.65rem] text-white rounded-sm shadow-sm">
@@ -391,14 +375,14 @@ const Signup: NextPage = () => {
                                         </div>
                                     }
                                     {
-                                        step.step_name === 'PROFILE_PICTURE_SETUP' && !signupError && <div className="go_back_setup relative screen-xs:-mt-6 bg-white">
+                                        step.step_name === 'PROFILE_PICTURE_SETUP' && !signupError && <div className="go_back_setup relative screen-xs:-mt-6 bg-white dark:bg-darkMode">
                                             <div className="flex items-center space-x-1">
                                                 <div className="step_go_back relative -ml-2 min-w-[36px] min-h-[36px] cursor-pointer mt-1 w-auto rounded-full flex justify-center items-center hover:bg-gray-600 hover:bg-opacity-10 hover:transition hover:ease-in-out dark:hover:bg-darkModeBg"
                                                     onClick={() => {
                                                         setNextStep('USERNAME_PASSWORD_SETUP')
                                                     }}
                                                 >
-                                                    <Icon type="arrow-left" styles='w-4 h-4 text-black' />
+                                                    <Icon type="arrow-left" styles='w-4 h-4 text-black dark:text-white' />
 
 
                                                         <div className="go_back_setup_tooltip absolute top-10 invisible z-20 bg-gray-500 dark:bg-darkModeBg dark:text-white w-auto p-1 text-center text-[0.65rem] text-white rounded-sm shadow-sm">
@@ -581,13 +565,13 @@ const Signup: NextPage = () => {
                                 onClose={() => redirectOnClose()}
                                 styles={{
                                     modalContainer: {
-                                        background: 'bg-[#5c5d5e] opacity-80 dark:opacity-50',
+                                        background: 'bg-[#5c5d5e]/80 dark:bg-darkModeBg opacity-80 dark:opacity-100 screen-sm:dark:bg-darkModeBg',
                                     },
                                     modal: {
-                                        class: '',
+                                        class: 'screen-sm:dark:bg-darkModeBg',
                                         content: {
-                                            class: 'modal_error mt-[20vh] mb-[20vh] dark:bg-darkMode dark:border-opacity-10',
-                                            background: 'bg-white dark:bg-darkMode dark:border-opacity-10',
+                                            class: 'modal_error mt-[20vh] mb-[20vh] bg-white/100 border border-gray dark:bg-primary/10 screen-sm:dark:bg-primary/10 dark:border-opacity-0',
+                                            background: 'bg-white/80 dark:bg-primary/10 screen-sm:dark:bg-primary/10 dark:border-opacity-0',
                                         }
                                     },
                                 }}
@@ -605,7 +589,7 @@ const Signup: NextPage = () => {
                                             </div>
                                         </div>
                                         <div className="error_button w-[85%] m-auto">
-                                            <SecondaryButton text="Ok" action={() => { redirectOnClose() }} styles={setClass('w-full text-white p-2 mt-4')} />
+                                            <SecondaryButton text="Ok" action={() => { redirectOnClose() }} styles={setClass('w-full text-white p-2 mt-4 dark:bg-white dark:text-black hover:dark:bg-white/90')} />
                                         </div>
                                     </div>
                                 </div>
