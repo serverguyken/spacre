@@ -465,7 +465,7 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
                             <div className="video_bcontrols" id={`${id}_video_button`}>
                                 <div className="flex items-center space-x-2">
                                     <div className='video_buttons mt-1'>
-                                        <button className={setClass("video_button__play")} >
+                                        <button className={setClass("video_button__play")} id={`${id}_play_button`}>
                                             <Tooltip
                                                 title="Play"
                                                 placement="center"
@@ -477,10 +477,10 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
                                                 }}
                                                 color='gray'
                                             >
-                                                <PlayerPlay id={`${id}_play_button`} width={24} height={24} className={'text-white'} fill="white" />
+                                                <PlayerPlay  width={24} height={24} className={'text-white'} fill="white" />
                                             </Tooltip>
                                         </button>
-                                        <button className={setClass("video_button__pause")}>
+                                        <button className={setClass("video_button__pause hidden")} id={`${id}_pause_button`}>
                                             <Tooltip
                                                 title="Pause"
                                                 placement="center"
@@ -492,7 +492,7 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
                                                 }}
                                                 color='gray'
                                             >
-                                                <PlayerPause id={`${id}_pause_button`} width={24} height={24} className={'text-white hidden'} fill="white" />
+                                                <PlayerPause  width={24} height={24} className={'text-white'} fill="white" />
                                             </Tooltip>
                                         </button>
                                     </div>
@@ -512,7 +512,7 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
                                 </div>
                                 <div className="video_volume_control">
                                     <div className="video_volume_buttto">
-                                        <button className={setClass("video_button__volume_on")}>
+                                        <button className={setClass("video_button__volume_on")} id={`${id}_volume_on_button`}>
                                             <Tooltip
                                                 title="Volume On"
                                                 placement="center"
@@ -524,10 +524,10 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
                                                 }}
                                                 color='gray'
                                             >
-                                                <Volume id={`${id}_volume_on_button`} width={22} height={22} className={'text-white'} strokeWidth={1.4} />
+                                                <Volume  width={22} height={22} className={'text-white'} strokeWidth={1.4} />
                                             </Tooltip>
                                         </button>
-                                        <button className={setClass("video_button__volume_off")}>
+                                        <button className={setClass("video_button__volume_off hidden")} id={`${id}_volume_off_button`}>
                                             <Tooltip
                                                 title="Volume Off"
                                                 placement="center"
@@ -539,13 +539,13 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
                                                 }}
                                                 color='gray'
                                             >
-                                                <Volume3 id={`${id}_volume_off_button`} width={22} height={22} className={'text-white hidden'} strokeWidth={1.4} />
+                                                <Volume3  width={22} height={22} className={'text-white'} strokeWidth={1.4} />
                                             </Tooltip>
                                         </button>
                                     </div>
                                 </div>
                                 <div className="video_fullscreen_control">
-                                    <button className={setClass("video_button__fullscreen")}>
+                                    <button className={setClass("video_button__fullscreen")} id={`${id}_fullscreen_button`}>
                                         <Tooltip
                                             title="Fullscreen"
                                             placement="center"
@@ -557,7 +557,7 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
                                             }}
                                             color='gray'
                                         >
-                                            <FullscreenIcon id={`${id}_fullscreen_button`} width={22} height={22} className={'text-white'} strokeWidth={1.5} />
+                                            <FullscreenIcon  width={22} height={22} className={'text-white'} strokeWidth={1.5} />
                                         </Tooltip>
                                     </button>
                                 </div>
@@ -582,7 +582,7 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
                         className={setClass('dark:border-gray-50 dark:border-opacity-10 rounded-lg')}
                         style={{
                             width: videostyle?.width || '100%',
-                            height: videostyle?.height || '220px',
+                            height: videostyle?.height || 'auto',
                         }}
                     ></video>
                 }
@@ -595,7 +595,7 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
                         className={setClass('dark:border-gray-50 dark:border-opacity-10 rounded-lg')}
                         style={{
                             width: videostyle?.width || '100%',
-                            height: videostyle?.height || '220px',
+                            height: videostyle?.height || 'auto',
                         }}
                     ></video>
                 }
