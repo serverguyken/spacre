@@ -1,13 +1,15 @@
-import { setClass, addClass, removeClass, isBrowser, print, TimeOut, toHHMMSS } from '../utils';
+import { setClass, addClass, removeClass, isBrowser, print, TimeOut, toHHMMSS, stopPropagation } from '../utils';
 import { PlayIcon, PauseIcon, VolumeUpIcon, VolumeOffIcon } from '@heroicons/react/solid';
-import { ArrowsDiagonal as FullscreenIcon } from 'tabler-icons-react';
+import { ArrowsDiagonal as FullscreenIcon, PlayerPlay, PlayerPause, Volume, Volume3 } from 'tabler-icons-react';
 import { Video as VideoType } from '../interface/Video';
 import { useState, useEffect } from 'react';
 import MainLoader from './MainLoader';
 import { PrimaryButton } from './Buttons';
+import Tooltip from './Tooltip';
 const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, videoViews, className, videostyle }: VideoType) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
+    const [videoLoaded, setVideoLoaded] = useState(false);
     const setVideo = (id: string, vSrc: string) => {
         TimeOut(() => {
             setLoading(false);
@@ -43,7 +45,7 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
                 addClass(video_progress_container, 'hidden');
                 addClass(video_getseek_time, 'hidden');
             }
-            
+
             const showControls = () => {
                 removeClass(video_bottom, 'opacity-0');
                 video_bottom.style.transition = 'opacity 0.5s ease-in-out';
@@ -66,7 +68,7 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
             }
             if (v) {
                 v.src = vSrc + "#t=0.10";
-               
+
                 v.addEventListener('play', () => {
                     //addClass(video_views, 'hidden');
                     addClass(play_button_overlay, 'hidden');
@@ -74,32 +76,37 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
                 addClass(v, 'pointer-events-none');
 
                 // Handle play button
-                play_button.onclick = () => {
+                play_button.onclick = (e: any) => {
+                    e?.stopPropagation();
                     addClass(play_button, 'hidden');
                     removeClass(pause_button, 'hidden');
                     v.play();
                 };
                 // Handle pause button
-                pause_button.onclick = () => {
+                pause_button.onclick = (e: any) => {
+                    e?.stopPropagation();
                     addClass(pause_button, 'hidden');
                     removeClass(play_button, 'hidden');
                     v.pause();
                 };
 
                 // Handle volume button
-                volume_on_btn.onclick = () => {
+                volume_on_btn.onclick = (e: any) => {
+                    e?.stopPropagation();
                     addClass(volume_on_btn, 'hidden');
                     removeClass(volume_off_btn, 'hidden');
                     v.muted = true;
                 }
-                volume_off_btn.onclick = () => {
+                volume_off_btn.onclick = (e: any) => {
+                    e?.stopPropagation();
                     addClass(volume_off_btn, 'hidden');
                     removeClass(volume_on_btn, 'hidden');
                     v.muted = false;
                 }
 
                 // Handle fullscreen button
-                fullscreen_btn.onclick = () => {
+                fullscreen_btn.onclick = (e: any) => {
+                    e?.stopPropagation();
                     const vid = v as any;
                     const fullscreenElem = vid.requestFullscreen || vid.mozRequestFullScreen || vid.webkitRequestFullscreen || vid.msRequestFullscreen || vid.webkitEnterFullscreen;
                     if (fullscreenElem) {
@@ -132,6 +139,7 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
                 // When video is loaded
                 v.onloadedmetadata = () => {
                     video_duration.innerHTML = toHHMMSS(v.duration);
+                    setVideoLoaded(true);
                 }
                 const getClientProgressBound = (e: any, isNegativePositive: string, Number: number) => {
                     if (isNegativePositive === 'negative') {
@@ -169,6 +177,7 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
                 }
                 // Go to the seek position when seek bar is clicked
                 video_progress_container.onclick = (e: any) => {
+                    e?.stopPropagation();
                     const seek_time = (e.clientX - video_progress_container.getBoundingClientRect().left) / video_progress_container.clientWidth;
                     v.currentTime = seek_time * v.duration;
                     video_progress.style.width = `${seek_time * 100}%`;
@@ -271,7 +280,8 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
                     clearTimeout(timeout);
                     timeout = setTimeout(hideControls, 2000);
                 }
-                video_bottom.onclick = () => {
+                video_bottom.onclick = (e: any) => {
+                    e?.stopPropagation();
                     showControls();
                     clearTimeout(timeout);
                     timeout = setTimeout(hideControls, 2000);
@@ -279,18 +289,19 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
                 video_bottom.onmousemove = () => {
                     showControls();
                     clearTimeout(timeout);
-                    timeout = setTimeout(hideControls, 2000);
+                    // timeout = setTimeout(hideControls, 2000);
                 }
                 video_bottom.onmouseenter = () => {
                     showControls();
                     clearTimeout(timeout);
-                    timeout = setTimeout(hideControls, 2000);
+                    // timeout = setTimeout(hideControls, 2000);
                 }
                 video_bottom.onmouseleave = () => {
                     hideControls();
                 }
 
-                video_top.onclick = () => {
+                video_top.onclick = (e: any) => {
+                    e?.stopPropagation();
                     if (v.paused || v.ended) {
                         v.play();
                         addClass(play_button, 'hidden');
@@ -345,7 +356,7 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
                 }
                 let observer = new IntersectionObserver(callback, options);
                 observer.observe(video_post);
-            } 
+            }
         }
     }
 
@@ -384,10 +395,12 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
             setVideo(id, src);
         }, 0);
         return (
-            <div className={setClass("video_post cursor-pointer max-w-md relative z-0 border border-gray-100 dark:border-primary/10 shadow-sm dark:shadow-sm rounded-lg select-none", `${className ? className : ''}`)} id={`video_${id}`}
+            <div className={setClass("bg-black video_post cursor-pointer max-w-md relative z-0 rounded-lg select-none", `${className ? className : ''} ${error ? 'bg-black dark:bg-darkMode' : ''} `)} id={`video_${id}`}
                 onClick={(e: any) => {
                     e.preventDefault();
+                    stopPropagation(e);
                 }}
+                
             >
                 <div className='w-full'>
                     <div className="video_getseektime hidden absolute bottom-16 z-30 bg-black bg-opacity-60  pl-[0.2rem] pr-[0.2rem] rounded-sm" id={`${id}_video_getseektime`}>
@@ -396,11 +409,11 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
                 </div>
                 <div className="button_overlay absolute top-1/2 left-1/2 mt-[-30px] ml-[-30px]" id={`${id}_play_button_overlay`}>
                     {
-                        loading && !error && 
-                            <div className='mt-5 ml-5'>
-                                <MainLoader width={30} />
-                            </div>
-                    } 
+                        loading && !error &&
+                        <div className='mt-5 ml-5'>
+                            <MainLoader width={30} />
+                        </div>
+                    }
                     {
                         !loading && !error &&
                         <button className={setClass("video_button__play bg-white rounded-full")} >
@@ -409,13 +422,13 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
                     }
                     {
                         error &&
-                        <div className='text-center -ml-16 -mt-1 text-white dark:text-white z-50'>
+                        <div className='bg-black dark:bg-darkMode text-center -ml-16 -mt-1 text-white dark:text-white z-50'>
                             <span>This video cannot be played</span>
-                                <div className="mt-3">
-                                    <PrimaryButton styles={'px-6 py-1 text-sm'}>
-                                        <span>Try again</span>
-                                    </PrimaryButton>
-                               </div>
+                            <div className="mt-3">
+                                <PrimaryButton styles={'px-6 py-1 text-sm'}>
+                                    <span>Try again</span>
+                                </PrimaryButton>
+                            </div>
                         </div>
                     }
                 </div>
@@ -425,13 +438,18 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
                 {/* <div className="bg-gray-600  p-1 rounded-sm absolute bottom-4 left-4 z-20 video_controls_views__views select-none" id={`${id}_video_views`}>
                     <span className="text-white text-xs">{videoViews} views</span>
                 </div>  */}
-                <div className="video_bottom flex items-center bg-gradient-to-t from-black opacity-100 w-full absolute bottom-0 z-20 pb-2 pl-2 pr-2 cursor-auto rounded-lg" id={
+                <div className="video_bottom flex items-center  opacity-100 w-full absolute bottom-0 z-20 cursor-auto rounded-lg" id={
                     `${id}_video_bottom`
-                }>
+
+                }
+                    style={{
+                        backgroundImage: 'linear-gradient(transparent, rgba(0,0,0,0.77))',
+                    }}
+                >
                     <div className='w-full '>
-                        <div className={setClass("video_progress_container  relative hidden h-[0.2rem] bg-primary w-full rounded-lg cursor-pointer")} id={`${id}_video_progress_container`}>
+                        <div className={setClass("video_progress_container  relative hidden h-[0.14rem] bg-gray-300/60 w-full rounded-lg cursor-pointer")} id={`${id}_video_progress_container`}>
                             <div className=''>
-                                <div className={setClass("video_progress  w-0 h-[0.2rem] bg-white rounded-r-sm")} id={`${id}_video_progress`}>
+                                <div className={setClass("video_progress  w-0 h-[0.14rem] bg-white rounded-r-sm")} id={`${id}_video_progress`}>
                                 </div>
 
                                 {/* <div className='bg-white block w-3  h-3 rounded-full'>
@@ -443,19 +461,43 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
                                 </div>
                             </div>
                         </div>
-                        <div className="hidden justify-between items-center mt-3 screen-sm:mt-2 w-full" id={`${id}_video_bottom-controls`}>
+                        <div className="hidden justify-between items-center mt-2 w-full pb-2 pr-2 pl-2" id={`${id}_video_bottom-controls`}>
                             <div className="video_bcontrols" id={`${id}_video_button`}>
                                 <div className="flex items-center space-x-2">
                                     <div className='video_buttons mt-1'>
                                         <button className={setClass("video_button__play")} >
-                                            <PlayIcon id={`${id}_play_button`} width={24} height={24} className={'text-white'} />
+                                            <Tooltip
+                                                title="Play"
+                                                placement="center"
+                                                position='bottom'
+                                                transition='fade'
+                                                transitionDuration={200}
+                                                classNames={{
+                                                    body: 'tooltip_comp -mt-20 bg-gray-500 dark:bg-darkModeBg dark:text-white text-[0.65rem] ml-1',
+                                                }}
+                                                color='gray'
+                                            >
+                                                <PlayerPlay id={`${id}_play_button`} width={24} height={24} className={'text-white'} fill="white" />
+                                            </Tooltip>
                                         </button>
                                         <button className={setClass("video_button__pause")}>
-                                            <PauseIcon id={`${id}_pause_button`} width={24} height={24} className={'text-white hidden'} />
+                                            <Tooltip
+                                                title="Pause"
+                                                placement="center"
+                                                position='bottom'
+                                                transition='fade'
+                                                transitionDuration={200}
+                                                classNames={{
+                                                    body: 'tooltip_comp -mt-20 bg-gray-500 dark:bg-darkModeBg dark:text-white text-[0.65rem] ml-3',
+                                                }}
+                                                color='gray'
+                                            >
+                                                <PlayerPause id={`${id}_pause_button`} width={24} height={24} className={'text-white hidden'} fill="white" />
+                                            </Tooltip>
                                         </button>
                                     </div>
 
-                                    
+
                                 </div>
                             </div>
                             <div className="video_controls_views  video_volume_button_views h-8 flex items-center justify-between select-none space-x-3">
@@ -471,16 +513,52 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
                                 <div className="video_volume_control">
                                     <div className="video_volume_buttto">
                                         <button className={setClass("video_button__volume_on")}>
-                                            <VolumeUpIcon id={`${id}_volume_on_button`} width={22} height={22} className={'text-white'} />
+                                            <Tooltip
+                                                title="Volume On"
+                                                placement="center"
+                                                position='bottom'
+                                                transition='fade'
+                                                transitionDuration={200}
+                                                classNames={{
+                                                    body: 'tooltip_comp -mt-20 bg-gray-500 dark:bg-darkModeBg dark:text-white text-[0.65rem] ml-1',
+                                                }}
+                                                color='gray'
+                                            >
+                                                <Volume id={`${id}_volume_on_button`} width={22} height={22} className={'text-white'} strokeWidth={1.4} />
+                                            </Tooltip>
                                         </button>
                                         <button className={setClass("video_button__volume_off")}>
-                                            <VolumeOffIcon id={`${id}_volume_off_button`} width={22} height={22} className={'text-white hidden'} />
+                                            <Tooltip
+                                                title="Volume Off"
+                                                placement="center"
+                                                position='bottom'
+                                                transition='fade'
+                                                transitionDuration={200}
+                                                classNames={{
+                                                    body: 'tooltip_comp -mt-20 bg-gray-500 dark:bg-darkModeBg dark:text-white text-[0.65rem] ml-1',
+                                                }}
+                                                color='gray'
+                                            >
+                                                <Volume3 id={`${id}_volume_off_button`} width={22} height={22} className={'text-white hidden'} strokeWidth={1.4} />
+                                            </Tooltip>
                                         </button>
                                     </div>
                                 </div>
                                 <div className="video_fullscreen_control">
                                     <button className={setClass("video_button__fullscreen")}>
-                                        <FullscreenIcon id={`${id}_fullscreen_button`} width={22} height={22} className={'text-white'} />
+                                        <Tooltip
+                                            title="Fullscreen"
+                                            placement="center"
+                                            position='bottom'
+                                            transition='fade'
+                                            transitionDuration={200}
+                                            classNames={{
+                                                body: 'tooltip_comp -mt-20 bg-gray-500 dark:bg-darkModeBg dark:text-white text-[0.65rem] -ml-7',
+                                            }}
+                                            color='gray'
+                                        >
+                                            <FullscreenIcon id={`${id}_fullscreen_button`} width={22} height={22} className={'text-white'} strokeWidth={1.5} />
+                                        </Tooltip>
                                     </button>
                                 </div>
                             </div>
@@ -493,42 +571,45 @@ const Video = ({ id, src, autoPlay, loop, muted, hasControls, isAd, styles, vide
                     </div>
                 </div> */}
                 {
-                    
+
                 }
                 {
-                    loading  &&
-                        <div className={setClass('bg-black dark:bg-darkMode text-black dark:text-white dark:border-gray-50 dark:border-opacity-10 rounded-lg')}
-                            style={{
-                                width: videostyle?.width || '100%',
-                                height: videostyle?.height || '200px',
-                            }}
-                        >
-                            &nbsp;
-                        </div>
-                } 
+                    loading &&
+                    <video
+                        disablePictureInPicture
+                        playsInline
+                        aria-label='Embedded video'
+                        className={setClass('dark:border-gray-50 dark:border-opacity-10 rounded-lg')}
+                        style={{
+                            width: videostyle?.width || '100%',
+                            height: videostyle?.height || '220px',
+                        }}
+                    ></video>
+                }
                 {
-                    error  &&
-                        <div className={setClass('bg-black dark:bg-darkMode text-black dark:text-white dark:border-gray-50 dark:border-opacity-10 rounded-lg')}
-                            style={{
-                                width: videostyle?.width || '100%',
-                                height: videostyle?.height || '200px',
-                            }}
-                        >
-                            &nbsp;
-                        </div>
-                } 
+                    error &&
+                    <video
+                        disablePictureInPicture
+                        playsInline
+                        aria-label='Embedded video'
+                        className={setClass('dark:border-gray-50 dark:border-opacity-10 rounded-lg')}
+                        style={{
+                            width: videostyle?.width || '100%',
+                            height: videostyle?.height || '220px',
+                        }}
+                    ></video>
+                }
                 {
                     !loading && !error &&
-
                     <video
                         id={id}
                         disablePictureInPicture
                         playsInline
                         aria-label='Embedded video'
-                        className={setClass('bg-black dark:bg-darkMode dark:border-gray-50 dark:border-opacity-10 rounded-lg')}
+                        className={setClass(`bg-black dark:border-gray-50 dark:border-opacity-10 rounded-lg ${!videoLoaded ? 'bg-black dark:bg-darkMode' : ''}`)}
                         style={{
-                            width: videostyle?.width || '',
-                            height: videostyle?.height || '',
+                            width: videostyle?.width || '100%',
+                            height: videostyle?.height || 'auto',
                         }}
                     >Video load failed</video>
                 }
