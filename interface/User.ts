@@ -1,9 +1,12 @@
+import { Meta } from "./Meta";
+
 export interface Post {
     postId: string;
     userId: string;
     userName: string;
     userProfileImage: string;
     images: string;
+    meta: Meta;
     content: string;
     hasPoll: boolean;
     poll: Poll;

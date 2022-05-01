@@ -63,7 +63,7 @@ export function isSearchQuery(route: string): { isSearchQuery: boolean; query: s
 export function isImage(fileType: any): boolean {
   if (fileType) {
     return fileType.split('/')[0] === 'image';
-  } 
+  }
   return false;
 }
 
@@ -184,7 +184,24 @@ export function toHHMMSS(time: number) {
   return minutes + ':' + seconds;
 }
 
+export const URLShortener = (url: string) => {
+  if (url === '' || url === null || url === undefined) {
+    return {
+      short: null,
+      domain_protocol: null,
+    }
+  }
+  // get only the domain name and the domain protocol
+  // for domain split url by / and www.
 
+  const domain = url.split('//')[1].split('/')[0];
+  const domain_protocol = url.split('//')[0]
+  const data = {
+    short: domain !== null ? domain.toLowerCase() : null,
+    domain_protocol: domain_protocol
+  }
+  return data
+}
 
 
 export const Linky = {
@@ -275,7 +292,7 @@ export function countSet(num: number, upper?: boolean, fixedLength?: number) {
 export const toHTML = (text: string) => {
   const original_text = text
   let changed_text = text
-  
+
   // if text contains a mention, replace it with a link
   if (text.match(MENTION_REGEX)) {
     // relpace all mentions with a link to the user's profile e.g @rr = <a href="/rr">@rr</a>
@@ -358,7 +375,7 @@ export function formatDate(date: string) {
       }
       else {
         if (ago !== 'Invalid date') {
-          if (ago === 'a year ago') { 
+          if (ago === 'a year ago') {
             return moment(date).format('MMM D')
           } else if (ago === 'a month ago') {
             return moment(date).format('MMM D')
@@ -378,7 +395,7 @@ export function formatDate(date: string) {
             const ago_unit = ago.split(' ')[1] === 'hours' ? 'h' : ago.split(' ')[1] === 'minutes' ? 'm' : ago.split(' ')[1] === 'seconds' ? 's' : ago.split(' ')[1] === 'days' ? 'd' : ago.split(' ')[1] === 'months' ? 'mn' : ago.split(' ')[1] === 'years' ? 'y' : ''
             if (ago_unit === 'mn') {
               return moment(date).format('MMM D')
-            } else if (ago_unit === 'd' && ago_time >= 7) { 
+            } else if (ago_unit === 'd' && ago_time >= 7) {
               return moment(date).format('MMM D')
             } else {
               return `${ago_time}${ago_unit}`
@@ -395,7 +412,7 @@ export function formatDate(date: string) {
 
 export function dateHelper() {
   const setup = {
-    isPollExpired: (date: string,  createdAt: string, unit:string) => {
+    isPollExpired: (date: string, createdAt: string, unit: string) => {
       if (unit === 'hour') {
         const expire_date = moment(date).format('YYYY-MM-DD HH:mm:ss')
         const created_date = moment(createdAt).format('YYYY-MM-DD HH:mm:ss');
@@ -421,7 +438,7 @@ export function dateHelper() {
       } else {
         return false
       }
-     },
+    },
   }
   return setup;
 }

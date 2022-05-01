@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { HASHTAG_REGEX, Linky, MENTION_REGEX, print } from '.';
+import { HASHTAG_REGEX, Linky, MENTION_REGEX, print, URLShortener } from '.';
+import Icon from '../components/Icon';
+import Tooltip from '../components/Tooltip';
 import API from '../config/api';
 import { Meta } from '../interface/Meta';
 const MentionComp = ({ text }: { text: string }) => {
@@ -71,13 +73,15 @@ export const ToJSX = ({ text }: {
 }
 
 const meta_lookup_api = 'http://10.0.0.41:3002/api/v1/meta/lookup'
-export const RenderLinkCard = ({ url }: {
-    url: string
+export const RenderLinkCard = ({ url, fetchMeta, onClose, metaData }: {
+    url: string;
+    fetchMeta: boolean;
+    onClose: (e: any) => void;
+    metaData: (meta: Meta | null) => void;
 }) => {
     const [error, setError] = useState(true)
     const hasLink = Linky.isLink(url)
     const link = Linky.getUrl(url) as string
-    console.log(link)
     const [hasMeta, setHasMeta] = useState(false)
     const [meta, setMeta] = useState<Meta>({
         title: '',
@@ -90,28 +94,112 @@ export const RenderLinkCard = ({ url }: {
         creator: '',
         initial_url: '',
     }) as any
+    console.log(link, meta)
     const [status, setStatus] = useState('')
     const [loading, setLoading] = useState(false)
-    const setMetaCard = (meta: Meta) => {
-        return (
-            <div className="link_card_preview_comp">
-                <div className="border bg-white shdow-lg dark:bg-dark">
-                    <h1>Title: {meta.title}</h1>
-                    <p>Description: {meta.description}</p>
-                    <p>Image: {meta.image}</p>
-                    <p>Card: {meta.card}</p>
-                    <p>Url: {meta.url}</p>
-                    <p>Short Url: {meta.short_url}</p>
-                    <p>Site Name: {meta.site_name}</p>
-                    <p>Creator: {meta.creator}</p>
-                    <p>Initial Url: {meta.initial_url}</p>
-                </div>
-            </div>
-        )
+    const isRequiredProperties = (meta: Meta) => { 
+        if (meta.title === '' || meta.title === null || meta.title === undefined) {
+            return false
+        } else if (meta.description === '' || meta.description === null || meta.description === undefined) {
+            return false
+        } else if (meta.image === '' || meta.image === null || meta.image === undefined) {
+            return false
+        }
+        return true
     }
+    const setMetaProps = (meta: Meta) => { 
+        const meta_props = {
+            title: meta.title,
+            description: meta.description,
+            image: meta.image ? meta.image : '',
+            card: 'large',
+            url: meta.url || meta.initial_url,
+            short_url: meta.short_url || meta.initial_url,
+            site_name: meta.site_name || '',
+            creator: meta.creator || '',
+            initial_url: meta.initial_url || '',
+        }
+        return meta_props
+    }
+    const setMetaCard = (meta: Meta) => {
+        if (isRequiredProperties(meta)) {
+            const { title, description, image, card, url, short_url, site_name, creator, initial_url } = setMetaProps(meta)
+            const cardProps = {
+                large: {
+                    width: 'auto',
+                    maxWidth: '380px',
+                }
+            } as any
+            metaData(setMetaProps(meta))
+            return (
+                <div className='meta_card_header text-left border border-gray-200 dark:border-borderDarkMode max-w-[380px] h-auto rounded relative'>
+                    <div className='meta_card_header_image rounded-t'
+                        style={{
+                            backgroundImage: `url(${image})`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat',
+                            width: cardProps[card].width,
+                            maxWidth: cardProps[card].maxWidth,
+                            height: '200px',
+                        }}
+                    >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={image} alt={title} className='hidden rounded-t' />
+                    </div>
+                    <div className="bg-white dark:bg-darkMode border-t border-gray-200 dark:border-borderDarkMode rounded-b relative">
+                        <div className="px-2 py-2 mt-2">
+                            <div className="">
+                                <p className="text-sm leading-5 text-gray-500">
+                                    {short_url}
+                                </p>
+                            </div>
+                            <h3 className="mt-1 text-sm font-medium text-gray-900 dark:text-white whitespace-nowrap overflow-hidden text-ellipsis">
+                                {title}
+                            </h3>
+                            <div className="mt-1 ">
+                                <p className="text-sm text-gray-500 relative max-h-[40px] overflow-hidden text-ellipsis"
+                                    style={{
+                                        display: '-webkit-box',
+                                        WebkitLineClamp: '2',
+                                        WebkitBoxOrient: 'vertical',
+                                    }}
+                                >
+                                    {description}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className='image_preview_close absolute bg-gray-800 dark:bg-dimGray top-1 left-1 cursor-pointer absolute  min-w-[24px] min-h-[24px]  z-[24] flex justify-center items-center rounded-full' onClick={(e: any) => {
+                        setMeta(null)
+                        onClose(e)
+                    }}>
+                        <Tooltip
+                            title="Close
+                    "
+                            placement="center"
+                            position='bottom'
+                            transition='fade'
+                            transitionDuration={200}
+                            classNames={{
+                                body: 'tooltip_comp bg-gray-500 dark:bg-darkModeBg dark:text-white text-[0.55rem] ml-1',
+                            }}
+                            color='gray'
+                        >
 
+                            <Icon type='close' width={'20'} height={'20'} styles={'modal_main_content_close_icon_svg cursor-pointer text-white dark:text-white'} />
+                        </Tooltip>
+                    </div>
+                </div>
+            )
+        }
+        metaData(null)
+        return (<></>)
+        
+    }
+    console.log(fetchMeta)
     useEffect(() => {
-        if (hasLink) {
+        if (hasLink && fetchMeta) {
             fetch(`${meta_lookup_api}?url=${link}`, {
                 method: 'GET',
             })
@@ -134,7 +222,7 @@ export const RenderLinkCard = ({ url }: {
             setHasMeta(false)
             setMeta(null)
         }
-    }, [hasLink, link])
+    }, [hasLink, link, fetchMeta])
 
     return (<> {hasMeta && meta ? setMetaCard(meta) : <></>} </>)
 }

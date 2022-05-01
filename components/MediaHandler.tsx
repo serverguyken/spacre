@@ -16,8 +16,8 @@ function MediaHandler({ files, types, limit, onClose, onFileExceed }: {
                 onClose(0)
                 onFileExceed(false)
             }} 
-                width={'90%'}
-                height={'90%'}
+                width={'100%'}
+                height={'100%'}
             />
         } else if (isVideo(types[0])) {
             onFileExceed(true)

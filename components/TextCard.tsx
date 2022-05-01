@@ -26,6 +26,7 @@ import Transition from "./Transition"
 import Modal from "./Modal"
 import MobileTextCard from "./MobileTextCard"
 import PollCreate from "./PollCreate"
+import { Meta } from "../interface/Meta"
 
 
 const mentionPlugin = createMentionPlugin({
@@ -90,6 +91,7 @@ const TextCard = () => {
     const pollLimit = 1
     const [isFileLimit, setIsFileLimit] = useState(false)
     const [isPollLimit, setIsPollLimit] = useState(false)
+    const [fetchMeta, setFetchMeta] = useState(true)
     const testContent = "Hello @serverguyken, this is a test post. I hope you like it :) #test. Visit https://www.web.com for more info."
 
     useEffect(() => {
@@ -97,7 +99,6 @@ const TextCard = () => {
             setPostTextBoxShown(get(store.content.data).postTextareaShown)
         })
     }, [])
-
 
 
 
@@ -123,7 +124,7 @@ const TextCard = () => {
         }
         if (files.length > 0) {
             setDisabled(false)
-        } 
+        }
         if (pollValid) {
             setDisabled(false)
         }
@@ -162,6 +163,7 @@ const TextCard = () => {
         setTextExceeded(value.length > maxValue)
         setMaxInitialValue(value.length)
         setTextLength(value.length)
+        setFetchMeta(true)
     }
 
     const onMentionSearchChange = ({ value }: any) => {
@@ -358,32 +360,43 @@ const TextCard = () => {
                         />
                     </div>
 
-                    <RenderLinkCard url={linkText} />
-                    <MediaHandler files={files} types={fileTypes} limit={fileLimit} onClose={(index: number) => {
-                        if (files.length === 1 || files.length === 0) {
-                            setFiles([])
-                        } else {
-                            setFiles(files.filter((file: any, i: number) => i !== index))
-                        }
-                    }}
-                        onFileExceed={(isExceeded: boolean) => {
-                            setIsFileLimit(isExceeded)
+                    <div className="mt-2">
+                        <RenderLinkCard url={linkText} fetchMeta={fetchMeta} onClose={(e: any) => {
+                            setLinkText("")
+                            setFetchMeta(false)
                         }}
-                    />
-                    {
-                        pollOpen && <PollCreate
-                            callback={(poll: {}) => {
-                                setPoll(poll)
-                            }}
-                            isPollValid={(isPollValid: boolean) => { 
-                                setPollValid(isPollValid)
-                            }}
-                            onClose={() => {
-                                setPollOpen(false)
-                                setIsPollLimit(true)
-                                setPollCount(pollCount - 1)
+                            metaData={(meta: any) => store.set('metaData', meta)}
+                        />
+                   </div>
+                    <div className="mt-2">
+                        <MediaHandler files={files} types={fileTypes} limit={fileLimit} onClose={(index: number) => {
+                            if (files.length === 1 || files.length === 0) {
+                                setFiles([])
+                            } else {
+                                setFiles(files.filter((file: any, i: number) => i !== index))
+                            }
+                        }}
+                            onFileExceed={(isExceeded: boolean) => {
+                                setIsFileLimit(isExceeded)
                             }}
                         />
+                   </div>
+                    {
+                        pollOpen && <div className="mt-2">
+                            <PollCreate
+                                callback={(poll: {}) => {
+                                    setPoll(poll)
+                                }}
+                                isPollValid={(isPollValid: boolean) => {
+                                    setPollValid(isPollValid)
+                                }}
+                                onClose={() => {
+                                    setPollOpen(false)
+                                    setIsPollLimit(true)
+                                    setPollCount(pollCount - 1)
+                                }}
+                            />
+                        </div>
                     }
                     <div className="text_actions_main mt-4">
                         <div className="text-actions_group flex items-center justify-between">
@@ -490,6 +503,10 @@ const TextCard = () => {
                                 <PrimaryButton text="Post" textColor="white" styles={'py-1 px-10 screen-md:py-1 screen-md:px-6'}
                                     textStyle={'screen-md:text-xs'}
                                     disabled={disabled} disabledColor="bg-primary bg-opacity-60"
+                                    action={() => {
+                                        // get meta data from store
+                                        console.log(store.get('metaData'))
+                                    }}
                                 />
                             </div>
                         </div>

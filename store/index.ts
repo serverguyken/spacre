@@ -3,6 +3,7 @@ import { User, GetUsers } from "../interface/User";
 import useUserContext from "../provider/userProvider";
 import VALTIO, { InitialObject } from "./valtio";
 import { api_url } from "../config";
+import { Meta } from "../interface/Meta";
 export interface STORE {
     widget_rendered: boolean;
     signup_step: {
@@ -25,6 +26,7 @@ export interface STORE {
     files: {
         length: number;
     };
+    metaData: Meta | null
     getUsers: (id: any) => Promise<void>;
 } 
 
@@ -56,6 +58,7 @@ const store: {
             files: {
                 length: 0
             },
+            metaData: null,
             getUsers: (id: any) => {
                 return API.get(`${api_url}/get/users`, {
                     method: 'GET',

@@ -19,6 +19,7 @@ import API from '../config/api'
 import store from '../store'
 import Tooltip from './Tooltip'
 import PollCard from './PollCard'
+import MetaCard from './MetaCard'
 
 
 
@@ -205,6 +206,16 @@ const FeedProfile = () => {
         likesCount: countSet(31000).num_fixed,
         commentsCount: countSet(27).num_fixed,
         sharesCount: countSet(2).num_fixed,
+        meta: {
+            title: "The Fastest Frontend Framework for Headless CMS's",
+            description: "Gatsby is a React-based open source framework with performace, scalability and security and security built-in, Collaborate, build and deploy 1000x faster with Gatsby Cloud.",
+            image: 'https://www.gatsbyjs.com/gatsby.jpg',
+            card: 'large',
+            short_url: 'https://gatsbyjs.com/',
+            site_name: null,
+            creator: null,
+            initial_url: 'https://gatsbyjs.com/',
+        }
     }])
     const [profileHoverCard, setProfileHoverCard] = useState(false)
     const [profileHoverCardPosition, setProfileHoverCardPosition] = useState(null)
@@ -410,7 +421,12 @@ const FeedProfile = () => {
                                                                                 }}
                                                                             />
                                                                             </div>
-                                                                        }
+                                                                    }
+                                                                    {
+                                                                        user.meta && <div className='mt-2 max-w-[400px]'>
+                                                                            <MetaCard meta={user.meta} />
+                                                                        </div>
+                                                                    }
                                                                     </div>
                                                                     <div className="post_user_actions mt-3 pb-1 max-w-[80%]">
                                                                         <div className="flex justify-between items-center">

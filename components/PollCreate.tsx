@@ -97,7 +97,7 @@ function PollCreate({ callback, isPollValid, onClose }: {
     };
     console.log(poll, "poll");
     return (
-        <div className="poll_container bg-white dark:bg-darkMode rounded-lg  border border-gray-200 dark:border-primary/10 max-w-sm relative mt-2 mb-2">
+        <div className="poll_container bg-white dark:bg-darkMode rounded-lg  border border-gray-200 dark:border-borderDarkMode max-w-sm relative mt-2 mb-2">
             <div className="poll_header p-2 relative pb-8">
                 {/* <div className="poll_close min-w-[28px] min-h-[28px] absolute right-0 text-gray-500 hover:text-primary hover:bg-primary/10 flex justify-center items-center rounded-full">
                     <button className="btn btn-clear" onClick={onClose}>
