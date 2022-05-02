@@ -28,7 +28,7 @@ function MetaCard({ meta }: {
                         maxWidth: cardProps[meta.card].maxWidth,
                         height: '220px',
                     }}
-                >
+                > 
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={meta.image !== null ? meta.image : ''} alt={meta.title} className='hidden rounded-t-lg' />
                 </div>
