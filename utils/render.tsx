@@ -132,8 +132,8 @@ export const RenderLinkCard = ({ url, fetchMeta, onClose, metaData }: {
             } as any
             metaData(setMetaProps(meta))
             return (
-                <div className='meta_card_header text-left border border-gray-200 dark:border-borderDarkMode max-w-[380px] h-auto rounded relative'>
-                    <div className='meta_card_header_image rounded-t'
+                <div className='meta_card_header text-left border border-gray-200 dark:border-borderDarkMode max-w-[380px] h-auto rounded-lg relative'>
+                    <div className='meta_card_header_image rounded-t-lg'
                         style={{
                             backgroundImage: `url(${image})`,
                             backgroundSize: 'cover',
@@ -145,9 +145,9 @@ export const RenderLinkCard = ({ url, fetchMeta, onClose, metaData }: {
                         }}
                     >
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={image} alt={title} className='hidden rounded-t' />
+                        <img src={image} alt={title} className='hidden rounded-t-lg' />
                     </div>
-                    <div className="bg-white dark:bg-darkMode border-t border-gray-200 dark:border-borderDarkMode rounded-b relative">
+                    <div className="bg-white dark:bg-darkMode hover:bg-gray-50 dark:hover:bg-darkModeBg/30  border-t border-gray-200 dark:border-borderDarkMode rounded-b-lg relative">
                         <div className="px-2 py-2 mt-2">
                             <div className="">
                                 <p className="text-sm leading-5 text-gray-500">
@@ -170,7 +170,7 @@ export const RenderLinkCard = ({ url, fetchMeta, onClose, metaData }: {
                             </div>
                         </div>
                     </div>
-                    <div className='image_preview_close absolute bg-gray-800 dark:bg-dimGray top-1 left-1 cursor-pointer absolute  min-w-[24px] min-h-[24px]  z-[24] flex justify-center items-center rounded-full' onClick={(e: any) => {
+                    <div className='meta_close_btn absolute bg-gray-800 dark:bg-dimGray top-1 left-1 cursor-pointer absolute  min-w-[24px] min-h-[24px]  z-[24] flex justify-center items-center rounded-full' onClick={(e: any) => {
                         setMeta(null)
                         onClose(e)
                     }}>

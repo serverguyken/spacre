@@ -280,7 +280,7 @@ const FeedProfile = () => {
                                     dummyUsers.map((user: any) => {
 
                                         return (
-                                            <div key={user.userName} id={`${user.userName}_profile_feed_view`} className="bg-white dark:bg-darkMode hover:bg-gray-50 dark:hover:bg-gray-100 dark:hover:bg-opacity-[0.02] cursor-pointer whitespace-pre-wrap feed_post_contents_card pt-3 pb-2 p-2  border-b border-gray-100  dark:border-borderDarkMode"
+                                            <div key={user.userName} id={`${user.userName}_profile_feed_view`} className="bg-white dark:bg-darkMode hover:bg-gray-50 dark:hover:bg-darkModeBg/20 cursor-pointer whitespace-pre-wrap feed_post_contents_card pt-3 pb-2 p-2  border-b border-gray-100  dark:border-borderDarkMode"
                                                 onClick={() => viewUserPost(user.userName)}
                                             >
                                                     <div className="flex justify-between">
@@ -400,7 +400,11 @@ const FeedProfile = () => {
                                                                             </div>
                                                                         }
                                                                         {
-                                                                            user.postLink && <div className="mt-4 w-full">
+                                                                        user.postLink && <div className="mt-4 w-full"
+                                                                            onClick={(e: any) => {
+                                                                                stopPropagation(e);
+                                                                            }}
+                                                                        >
                                                                                 <a href={user.postLink} target="_blank" rel="noopener noreferrer" className='text-link'>
                                                                                     {user.postLink}
                                                                                 </a>
@@ -444,7 +448,7 @@ const FeedProfile = () => {
                                                                                 }
                                                                                 <p className="text-xs">{user.likesCount}</p>
 
-                                                                                <div className="post_action_tooltip post_like_tooltip invisible opacity-0 absolute top-7 right-0 z-20 bg-gray-500 dark:bg-darkModeBg dark:text-white w-12 p-1 text-center text-xs text-white rounded shadow-sm">
+                                                                                <div className="post_action_tooltip post_like_tooltip invisible opacity-0 absolute top-7 right-1 z-20 bg-gray-500 dark:bg-darkModeBg dark:text-white w-12 p-1 text-center text-xs text-white rounded shadow-sm">
                                                                                     <div className="like_tooltip_content">
                                                                                         {
                                                                                             user.postLiked ? <span>Unlike</span> : <span>Like</span>
@@ -464,7 +468,7 @@ const FeedProfile = () => {
                                                                             <div className="post_action post_user_share_action relative select-none flex text-gray-500 dark:text-darkText items-center space-x-2 cursor-pointer p-1 rounded-sm hover:bg-primary hover:bg-opacity-10 hover:text-primary dark:hover:text-primary">
                                                                                 <UploadIcon width={16} />
                                                                                 <p className="text-xs">{user.sharesCount}</p>
-                                                                                <div className="post_action_tooltip post_share_tooltip invisible opacity-0 absolute top-7 right-0 z-20 bg-gray-500 dark:bg-darkModeBg dark:text-white w-12 p-1 text-center text-xs text-white rounded shadow-sm">
+                                                                                <div className="post_action_tooltip post_share_tooltip invisible opacity-0 absolute top-7 -right-1 z-20 bg-gray-500 dark:bg-darkModeBg dark:text-white w-12 p-1 text-center text-xs text-white rounded shadow-sm">
                                                                                     <div className="share_tooltip_content">
                                                                                         <span>Share</span>
                                                                                     </div>

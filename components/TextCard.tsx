@@ -432,7 +432,7 @@ const TextCard = () => {
                                             }}
                                             color='gray'
                                         >
-                                            <div className="text_action_icon cursor-pointer min-w-[32px] min-h-[32px] hover:bg-primary/10 flex justify-center items-center rounded-full"
+                                            <button className="text_action_icon outline-none cursor-pointer min-w-[32px] min-h-[32px] hover:bg-primary/10 flex justify-center items-center rounded-full"
                                                 onClick={() => {
                                                     document.getElementById("media_upload")?.click()
                                                 }}
@@ -445,7 +445,7 @@ const TextCard = () => {
                                                     }}
                                                 />
                                                 <PhotographIcon width={20} height={20} className={'text-primary'} />
-                                            </div>
+                                            </button>
                                         </Tooltip>
 
                                             :
@@ -468,14 +468,14 @@ const TextCard = () => {
                                             }}
                                             color='gray'
                                         >
-                                            <div className="text_action_icon cursor-pointer min-w-[32px] min-h-[32px] hover:bg-primary/10 flex justify-center items-center rounded-full"
+                                            <button className="text_action_icon outline-none cursor-pointer min-w-[32px] min-h-[32px] hover:bg-primary/10 flex justify-center items-center rounded-full"
                                                 onClick={() => {
                                                     setPollOpen(true)
                                                     setPollCount(pollCount + 1)
                                                 }}
                                             >
                                                 <ChartSquareBarIcon width={20} height={20} className={'text-primary'} />
-                                            </div>
+                                            </button>
                                         </Tooltip>
 
                                             :
