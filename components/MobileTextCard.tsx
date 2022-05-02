@@ -80,7 +80,7 @@ const MobileTextCard = () => {
     const [files, setFiles] = useState([] as any)
     const [fileTypes, setFileTypes] = useState([] as any)
     const [isFileError, setIsFileError] = useState(false)
-    const [fileErrorMsg, setFileErrorMsg] = useState("")
+    const [fileErrorMsg, setErrorMsg] = useState("")
     const [pollOpen, setPollOpen] = useState(false)
     const [pollCount, setPollCount] = useState(0)
     const [poll, setPoll] = useState({})
@@ -176,11 +176,6 @@ const MobileTextCard = () => {
         setHashtagOpen(open)
     }
 
-    const onMentionAdd = (mention: any) => {
-    }
-
-    const onHashtagAdd = (hashtag: any) => {
-    }
 
     const onMediaChange = (e: any) => {
         if (files.length > 0) {
@@ -191,12 +186,12 @@ const MobileTextCard = () => {
                 const fileTypes = arrFiles.map((file: any) => file.type)
                 const videos = fileTypes.filter((type: any) => type.includes("video"))
                 if (arrFiles.length > fileLimit) {
-                    setFileErrorMsg(`Please choose either 1 video or up to ${fileLimit} photos.`)
+                    setErrorMsg(`Please choose either 1 video or up to ${fileLimit} photos.`)
                     setErrorTimeout(5000)
                 } else {
                     if (videos) {
                         setIsFileError(true)
-                        setFileErrorMsg(`Please choose either 1 video or up to ${fileLimit} photos.`)
+                        setErrorMsg(`Please choose either 1 video or up to ${fileLimit} photos.`)
                         setErrorTimeout(5000)
                     } else {
                         setFiles(files.concat(arrFiles))
@@ -211,7 +206,7 @@ const MobileTextCard = () => {
                     const isImage = files.every((file: any) => file.type.includes("image"))
                     if (isVideo && isImage) {
                         setIsFileError(true)
-                        setFileErrorMsg(`Please choose either 1 video or up to ${fileLimit} photos.`)
+                        setErrorMsg(`Please choose either 1 video or up to ${fileLimit} photos.`)
                         setErrorTimeout(5000)
                     } else {
                         setFiles(files.concat(e.target.files[0]))
@@ -296,7 +291,7 @@ const MobileTextCard = () => {
 
     const setError = (error: boolean, msg: string) => {
         setIsFileError(error)
-        setFileErrorMsg(msg)
+        setErrorMsg(msg)
     }
     const setErrorTimeout = (timeout: number) => {
         TimeOut(() => {
@@ -357,7 +352,6 @@ const MobileTextCard = () => {
                                 suggestions={mentionSuggestions}
                                 open={mentionOpen}
                                 onOpenChange={onMentionOpenChange}
-                                onAddMention={onMentionAdd}
                                 entryComponent={(props: any) => <MentionEntry {...props} />}
                                 popoverContainer={({ children }) => <div className="bg-white dark:bg-darkMode dark:border-darkModeBg dark:shadow-3xl absolute z-[320] w-3/5  max-h-60 overflow-auto border border-gray-100  mt-3 max-w-md rounded-md shadow-lg">{children}</div>}
 
@@ -367,7 +361,6 @@ const MobileTextCard = () => {
                                 suggestions={hashtagSuggestions}
                                 open={hashtagOpen}
                                 onOpenChange={onHashtagOpenChange}
-                                onAddMention={onHashtagAdd}
                                 entryComponent={(props: any) => <HashtagEntry {...props} />}
                                 popoverContainer={({ children }) => <div className="bg-white dark:bg-darkMode dark:border-darkModeBg dark:shadow-3xl absolute z-[320] w-3/5  max-h-60 overflow-auto border border-gray-100  mt-3 max-w-md rounded-md shadow-lg">{children}</div>}
                             />

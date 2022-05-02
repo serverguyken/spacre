@@ -19,10 +19,11 @@ import {
     u_deleteUserName,
     u_getUserNames,
     getCurrentUser,
+    u_addPost,
 } from "../config/auth/user";
-import { AuthUser, User, UserContext } from "../interface/User";
+import { AuthUser, Space, User, UserContext } from "../interface/User";
 
-import {isBrowser, print} from "../utils";
+import {createDate, isBrowser, print} from "../utils";
 
 const userContext = createContext({} as UserContext<User>);
 
@@ -31,9 +32,8 @@ export default function useUserContext() {
 }
 
 const setCreatedAt = () => {
-    const now = new Date();
-    const createdAt = now.toISOString();
-    return createdAt;
+    const now = createDate();
+    return now;
 };
 
 export const UserProvider = ({ children }: any) => {
@@ -55,9 +55,9 @@ export const UserProvider = ({ children }: any) => {
         displayName: "",
         userName: "",
         profileImage: null,
-        isBlocked: false,
-        isPremium: false,
-        isVerified: false,
+        blocked: false,
+        premium: false,
+        verified: false,
         bio: null,
         followers: [],
         following: [],
@@ -97,9 +97,9 @@ export const UserProvider = ({ children }: any) => {
                             displayName: data.displayName,
                             userName: data.userName,
                             profileImage: data.profileImage,
-                            isBlocked: data.isBlocked,
-                            isPremium: data.isPremium,
-                            isVerified: data.isVerified,
+                            blocked: data.blocked,
+                            premium: data.premium,
+                            verified: data.verified,
                             bio: data.bio,
                             followers: data.followers,
                             following: data.following,
@@ -118,9 +118,9 @@ export const UserProvider = ({ children }: any) => {
                             displayName: uuser.displayName,
                             userName: uuser.displayName,
                             profileImage: uuser.photoURL,
-                            isBlocked: false,
-                            isPremium: false,
-                            isVerified: false,
+                            blocked: false,
+                            premium: false,
+                            verified: false,
                             bio: null,
                             followers: [],
                             following: [],
@@ -168,9 +168,9 @@ export const UserProvider = ({ children }: any) => {
                         displayName: data.displayName,
                         userName: data.userName,
                         profileImage: data.profileImage,
-                        isBlocked: data.isBlocked,
-                        isPremium: data.isPremium,
-                        isVerified: data.isVerified,
+                        blocked: data.blocked,
+                        premium: data.premium,
+                        verified: data.verified,
                         bio: data.bio,
                         followers: data.followers,
                         following: data.following,
@@ -368,7 +368,21 @@ export const UserProvider = ({ children }: any) => {
         }
     };
 
-    
+    const addSpace = (uid: string, post: Space, cb: (message: any) => void) => {
+        try {
+            u_addPost(uid, post).then((result: any) => {
+                if (result) {
+                    cb(result);
+                }
+            }).catch((error: any) => {
+                setError("An error occured");
+                setHasError(true);
+            });
+        } catch (error: any) {
+            setError("An error occured");
+            setHasError(true);
+        }
+    };
 
     const context: UserContext<any> | any = {
         authUser,
@@ -389,6 +403,7 @@ export const UserProvider = ({ children }: any) => {
         updateUser,
         deleteUser,
         getUsers,
+        addSpace,
     };
 
     return <userContext.Provider value={context} >{children}</userContext.Provider>;

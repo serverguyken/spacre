@@ -1,8 +1,13 @@
+import { v4 as uuidv4 } from 'uuid';
 import moment from 'moment';
 import linkify, { LinkifyIt } from 'linkify-it';
 import tlds from 'tlds';
 export const MENTION_REGEX = /(^|\s)(@[a-zA-Z0-9_]+)/g
 export const HASHTAG_REGEX = /(^|\s)(#[a-zA-Z0-9_]+)/g
+
+export const generateID = () => {
+  return uuidv4();
+};
 
 export function print(...args: any) {
   console.log(...args);

@@ -26,6 +26,7 @@ export interface STORE {
     files: {
         length: number;
     };
+    filesUrl: Array<string>;
     metaData: Meta | null
     getUsers: (id: any) => Promise<void>;
 } 
@@ -58,6 +59,7 @@ const store: {
             files: {
                 length: 0
             },
+            filesUrl: [],
             metaData: null,
             getUsers: (id: any) => {
                 return API.get(`${api_url}/get/users`, {

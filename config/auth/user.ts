@@ -4,6 +4,7 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfi
 import { User } from '../../interface/User';
 import API from '../api';
 import store from '../../store';
+import { api_url } from '..';
 
 export const u_createUserWithEmailAndPassword = (email: string, password: string) => {
     return createUserWithEmailAndPassword(auth, email, password)
@@ -89,6 +90,15 @@ export const u_updateUser = (id: any, data: {}) => {
 export const u_deleteUser = (id: any) => {
     const usersCollectionRef: any = docRef('users', id);
     return DeleteDoc(usersCollectionRef);
+};
+
+export const u_addPost = (id: any, data: {}) => { 
+    const response = API.post(`${api_url}/create/space`, data, {
+        headers: {
+            'Authorization': `Bearer ${id}`
+        }
+    })
+    return response;
 };
 
 export function u_getRedirectResult(auth: any) {

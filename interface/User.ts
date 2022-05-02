@@ -1,13 +1,14 @@
 import { Meta } from "./Meta";
 
-export interface Post {
-    postId: string;
+export interface Space {
+    spaceId: string;
     userId: string;
     userName: string;
-    userProfileImage: string;
-    images: string;
+    userProfileImage: string | null;
+    images: Array<any> | any;
+    videos: Array<any> | any;
     meta: Meta;
-    content: string;
+    text: string;
     hasPoll: boolean;
     poll: Poll;
     likes: Array<string>;
@@ -15,18 +16,17 @@ export interface Post {
     boosts: Array<string>;
     shares: Array<string>;
     tags: Array<string>;
-    isLiked: boolean;
+    liked: boolean;
     createdAt: string;
     updatedAt: string;
     deletedAt: string;
-    isDeleted: boolean;
-    isBoosted: boolean;
-    isReported: boolean;
-    isSaved: boolean;
+    deleted: boolean;
+    boosted: boolean;
+    reported: boolean;
+    saved: boolean;
 }
 
 export interface Poll {
-    id: number;
     question: string;
     options: PollOption[];
     expiresAt: {
@@ -42,7 +42,7 @@ export interface PollOption {
     option: string;
     votes: number;
 }
-export interface Reply extends Post {
+export interface Reply extends Space {
     replyId: string;
 }
 
@@ -65,9 +65,9 @@ export interface User {
     displayName: string;
     userName: string;
     profileImage: string | null;
-    isBlocked: boolean;
-    isPremium: boolean;
-    isVerified: boolean;
+    blocked: boolean;
+    premium: boolean;
+    verified: boolean;
     bio: string | null;
     followers: Array<any>;
     following: Array<any>;
@@ -94,11 +94,11 @@ export interface UserData {
     followersCount: number;
     followingsCount: number;
     spacesCount: number;
-    posts: Post[];
-    savedPosts: Array<any>;
+    Spaces: Space[];
+    savedSpaces: Array<any>;
     notifications: Array<any>;
     blockedUsers: Array<any>;
-    boostedPosts: Array<any>;
+    boostedSpaces: Array<any>;
     recentSearches: Array<any>;
 }
 
@@ -109,8 +109,8 @@ export interface DBUsers {
     hashTags: {
         [hashTag: string]: Array<string>;
     };
-    posts: {
-        [postId: string]: Post;
+    Spaces: {
+        [SpaceId: string]: Space;
     };
 }
 
@@ -151,4 +151,5 @@ export interface UserContext<User> {
     updateUser: (user: User) => Promise<void>;
     deleteUser: () => Promise<void>;
     getUsers: (id: any) => Promise<GetUsers<Object>>;
+    addSpace: (id: any, Space: Space, callback: (message: any) => void) => Promise<void>;
 }

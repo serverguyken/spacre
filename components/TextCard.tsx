@@ -2,7 +2,7 @@ import { CodeIcon, PhotographIcon, EmojiHappyIcon, PlusIcon, ChartSquareBarIcon 
 import { PrimaryButton } from "./Buttons"
 import { XIcon } from "@heroicons/react/outline"
 import { useState, useEffect } from "react"
-import { setClass, isBrowser, generateLoadingTime, TimeOut, print, StorageEvent, toHTML, getTypeByTrigger, Strategy, Linky } from "../utils"
+import { setClass, isBrowser, generateLoadingTime, TimeOut, print, StorageEvent, toHTML, getTypeByTrigger, Strategy, Linky, generateID, createDate } from "../utils"
 import { CompositeDecorator, ContentBlock, ContentState, DefaultDraftInlineStyle, EditorState, Modifier, SelectionState } from "draft-js"
 import Editor, { EditorPlugin } from '@draft-js-plugins/editor'
 import createMentionPlugin, { defaultSuggestionsFilter } from '@draft-js-plugins/mention'
@@ -27,6 +27,10 @@ import Modal from "./Modal"
 import MobileTextCard from "./MobileTextCard"
 import PollCreate from "./PollCreate"
 import { Meta } from "../interface/Meta"
+import useUserContext from "../provider/userProvider"
+import { Poll, Space } from "../interface/User"
+import { upload_api_url } from "../config"
+import API from "../config/api"
 
 
 const mentionPlugin = createMentionPlugin({
@@ -64,6 +68,7 @@ const linkifyPlugin = createLinkifyPlugin({
 
 
 const TextCard = () => {
+    const { user, addSpace, hasError, error } = useUserContext()
     const [text, setText] = useState("")
     const [disabled, setDisabled] = useState(true)
     const [postTextBoxShown, setPostTextBoxShown] = useState(false)
@@ -80,12 +85,22 @@ const TextCard = () => {
     const [isLinkCard, setIsLinkCard] = useState(false)
     const [linkText, setLinkText] = useState("")
     const [files, setFiles] = useState([] as any)
+    const [filesUrl, setFilesUrl] = useState([] as any)
     const [fileTypes, setFileTypes] = useState([] as any)
     const [isFileError, setIsFileError] = useState(false)
-    const [fileErrorMsg, setFileErrorMsg] = useState("")
+    const [errorMsg, setErrorMsg] = useState("")
     const [pollOpen, setPollOpen] = useState(false)
     const [pollCount, setPollCount] = useState(0)
-    const [poll, setPoll] = useState({})
+    const [poll, setPoll] = useState<Poll>({
+        question: "",
+        options: [],
+        expiresAt: {
+            date: "",
+            type: "",
+            unit: "",
+        },
+        createdAt: "",
+    })
     const [pollValid, setPollValid] = useState(false)
     const fileLimit = 2
     const pollLimit = 1
@@ -183,13 +198,84 @@ const TextCard = () => {
         setHashtagOpen(open)
     }
 
-    const onMentionAdd = (mention: any) => {
-
+    const uploadImages = async (files: any) => { 
+        const data: any = []
+        let type = ""
+        const formData = new FormData()
+        const handleUpload = async (type: string, formData: FormData) => {
+            const repsonse = await API.post(`${upload_api_url}/upload/multiple?type=${type}`, formData).then(res => res.data.urls).catch(err => { })
+            return repsonse
+        }
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i]
+            const fileType = file.type.split("/")[0] 
+            if (fileType === "image") {
+                type = "image"
+                formData.append("images", file)
+            }
+            else {
+                return []
+            }
+        }
+        return handleUpload(type, formData)
     }
 
-    const onHashtagAdd = (hashtag: any) => {
-
+    const uploadVideo = async (files: any) => {
+        const data: any = []
+        let type = ""
+        const formData = new FormData()
+        const handleUpload = async (type: string, formData: FormData) => {
+            const repsonse = await API.post(`${upload_api_url}/upload/multiple?type=${type}`, formData).then(res => res.data.urls).catch(err => { })
+            return repsonse
+        }
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i]
+            const fileType = file.type.split("/")[0]
+            if (fileType === "video") {
+                type = "video"
+                formData.append("videos", file)
+            }
+            else {
+                return []
+            }
+        }
+        return handleUpload(type, formData)
     }
+
+    const handlePost = async () => { 
+        const spaceData: Space = {
+            spaceId: generateID(),
+            userId: user.uid,
+            userName: user.userName,
+            userProfileImage: user.profileImage,
+            images: files.length > 0 ? await uploadImages(files).then(res => res).catch(err => []) : [],
+            videos: files.length > 0 ? await uploadVideo(files).then(res => res).catch(err => []) : [],
+            meta: store.get('metaData'),
+            text: text,
+            hasPoll: pollValid,
+            poll: poll,
+            likes: [],
+            comments: [],
+            boosts: [],
+            shares: [],
+            tags: [],
+            liked: false,
+            createdAt: createDate(),
+            updatedAt: createDate(),
+            deletedAt: "",
+            deleted: false,
+            boosted: false,
+            reported: false,
+            saved: false,
+        }
+        addSpace(user.uid, spaceData, (message: any) => {
+            console.log(message)
+        });
+        if (hasError) {
+            setError(true, error)
+            setErrorTimeout(5000)
+        }
+    };
 
     const onMediaChange = (e: any) => {
         if (files.length > 0) {
@@ -200,12 +286,12 @@ const TextCard = () => {
                 const fileTypes = arrFiles.map((file: any) => file.type)
                 const videos = fileTypes.filter((type: any) => type.includes("video"))
                 if (arrFiles.length > fileLimit) {
-                    setFileErrorMsg(`Please choose either 1 video or up to ${fileLimit} photos.`)
+                    setErrorMsg(`Please choose either 1 video or up to ${fileLimit} photos.`)
                     setErrorTimeout(5000)
                 } else {
                     if (videos) {
                         setIsFileError(true)
-                        setFileErrorMsg(`Please choose either 1 video or up to ${fileLimit} photos.`)
+                        setErrorMsg(`Please choose either 1 video or up to ${fileLimit} photos.`)
                         setErrorTimeout(5000)
                     } else {
                         setFiles(files.concat(arrFiles))
@@ -220,7 +306,7 @@ const TextCard = () => {
                     const isImage = files.every((file: any) => file.type.includes("image"))
                     if (isVideo && isImage) {
                         setIsFileError(true)
-                        setFileErrorMsg(`Please choose either 1 video or up to ${fileLimit} photos.`)
+                        setErrorMsg(`Please choose either 1 video or up to ${fileLimit} photos.`)
                         setErrorTimeout(5000)
                     } else {
                         setFiles(files.concat(e.target.files[0]))
@@ -304,7 +390,7 @@ const TextCard = () => {
 
     const setError = (error: boolean, msg: string) => {
         setIsFileError(error)
-        setFileErrorMsg(msg)
+        setErrorMsg(msg)
     }
 
     const setErrorTimeout = (timeout: number) => {
@@ -314,9 +400,7 @@ const TextCard = () => {
     }
 
 
-    useEffect(() => {
-        console.log(pollValid, poll)
-    }, [pollValid, poll])
+    
 
 
     const { MentionSuggestions } = mentionPlugin
@@ -344,7 +428,6 @@ const TextCard = () => {
                             suggestions={mentionSuggestions}
                             open={mentionOpen}
                             onOpenChange={onMentionOpenChange}
-                            onAddMention={onMentionAdd}
                             entryComponent={(props: any) => <MentionEntry {...props} />}
                             popoverContainer={({ children }) => <div className="bg-white dark:bg-darkMode dark:border-darkModeBg dark:shadow-3xl absolute z-20 w-3/5  max-h-60 overflow-auto border border-gray-100  mt-3 max-w-md rounded-md shadow-lg">{children}</div>}
 
@@ -354,7 +437,6 @@ const TextCard = () => {
                             suggestions={hashtagSuggestions}
                             open={hashtagOpen}
                             onOpenChange={onHashtagOpenChange}
-                            onAddMention={onHashtagAdd}
                             entryComponent={(props: any) => <HashtagEntry {...props} />}
                             popoverContainer={({ children }) => <div className="bg-white dark:bg-darkMode dark:border-darkModeBg dark:shadow-3xl absolute z-20 w-3/5  max-h-60 overflow-auto border border-gray-100  mt-3 max-w-md rounded-md shadow-lg">{children}</div>}
                         />
@@ -384,7 +466,7 @@ const TextCard = () => {
                     {
                         pollOpen && <div className="mt-2">
                             <PollCreate
-                                callback={(poll: {}) => {
+                                callback={(poll: Poll) => {
                                     setPoll(poll)
                                 }}
                                 isPollValid={(isPollValid: boolean) => {
@@ -500,14 +582,13 @@ const TextCard = () => {
                                 }
                             </div>
                             <div className="text_action_btn">
-                                <PrimaryButton text="Post" textColor="white" styles={'py-1 px-10 screen-md:py-1 screen-md:px-6'}
+                                <PrimaryButton textColor="white" styles={'py-1 px-10 screen-md:py-1 screen-md:px-6 text-white text-sm'}
                                     textStyle={'screen-md:text-xs'}
                                     disabled={disabled} disabledColor="bg-primary bg-opacity-60"
                                     action={() => {
-                                        // get meta data from store
-                                        console.log(store.get('metaData'))
+                                        handlePost()
                                     }}
-                                />
+                                ><span>Post</span></PrimaryButton>
                             </div>
                         </div>
 
@@ -521,7 +602,7 @@ const TextCard = () => {
                 >
                     <div className="bg-primary p-[0.6rem] w-auto inline-block transition transition-scale rounded text-white"
                     >
-                        {fileErrorMsg}
+                        {errorMsg}
                     </div>
                 </Transition>
             }

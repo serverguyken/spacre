@@ -87,14 +87,14 @@ export const RenderLinkCard = ({ url, fetchMeta, onClose, metaData }: {
         title: '',
         description: '',
         image: '',
-        card: '',
+        card: '', 
         url: '',
         short_url: '',
         site_name: '',
         creator: '',
         initial_url: '',
     }) as any
-    console.log(link, meta)
+
     const [status, setStatus] = useState('')
     const [loading, setLoading] = useState(false)
     const isRequiredProperties = (meta: Meta) => { 
@@ -197,7 +197,7 @@ export const RenderLinkCard = ({ url, fetchMeta, onClose, metaData }: {
         return (<></>)
         
     }
-    console.log(fetchMeta)
+
     useEffect(() => {
         if (hasLink && fetchMeta) {
             fetch(`${meta_lookup_api}?url=${link}`, {

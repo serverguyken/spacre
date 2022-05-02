@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
+import { Poll } from "../interface/User";
 import { createDate, dateFromDays, dateFromISOString } from "../utils";
 import Icon from "./Icon";
 import Tooltip from "./Tooltip";
 
 function PollCreate({ callback, isPollValid, onClose }: {
-    callback: (poll: {}) => void;
+    callback: (poll: Poll) => void;
     isPollValid: (isPollValid: boolean) => void;
     onClose: () => void;
 }) {
