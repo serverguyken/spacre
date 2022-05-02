@@ -383,11 +383,11 @@ const FeedProfile = () => {
                                                                         }
                                                                         {
                                                                             user.postContent && <div className='break-words whitespace-pre-wrap'>
-                                                                                <span className="text-sm text-black dark:text-white">{user.postContent}</span>
+                                                                                <span className="text-[15px] leading-6 text-black dark:text-white">{user.postContent}</span>
                                                                             </div>
                                                                         }
                                                                         {
-                                                                            user.postContentTagText && <p className="mt-2 text-sm text-black dark:text-white">{user.postContentTagText}</p>
+                                                                            user.postContentTagText && <p className="mt-2 text-[15px] leading-6 text-black dark:text-white">{user.postContentTagText}</p>
                                                                         }
                                                                         {
                                                                             user.postVideo && <div className="mt-4 w-full">
