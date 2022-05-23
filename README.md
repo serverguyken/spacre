@@ -1,8 +1,8 @@
 # Spacre
 
-## A social network web application for developers and designers.
+## A social network web application.
 
-In this project, I built a social network web application for developers and designers to share their knowledge and experience.
+In this project, I built a social network web application.
 
 Installation
 <br>run `npm install`
