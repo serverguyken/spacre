@@ -38,11 +38,12 @@ const Signup: NextPage = () => {
     const [usn_pst_disabled, setUsn_pst_disabled] = useState(true)
     const [disabled, setDisabled] = useState(true)
     const [nameInvalid, setNameInvalid] = useState(true)
-    const [usernameInvalid, setUsernameInvalid] = useState(false)
+    const [usernameInvalid, setUsernameInvalid] = useState(true)
     const [emailInvalid, setEmailInvalid] = useState(true)
     const [passwordInvalid, setPasswordInvalid] = useState(true)
     const [showNameError, setShowNameError] = useState(false)
     const [showEmailError, setShowEmailError] = useState(false)
+    const [showUsernameError, setShowUsernameError] = useState(false)
     const [showPasswordError, setShowPasswordError] = useState(false)
     const [nameErrorMessage, setNameErrorMessage] = useState('')
     const [usernameErrorMessage, setUsernameErrorMessage] = useState('')
@@ -125,15 +126,32 @@ const Signup: NextPage = () => {
     function togglePassword() {
         setShowPassword(!showPassword)
     }
+    function checkUserName(value: string) {
+        getUserNames().then((userNames: any) => {
+            const userName = userNames.find((userName: any) => userName.name === value)
+            if (userName) {
+                setUsernameInvalid(true)
+                setUsernameErrorMessage('Username is already taken')
+                setShowUsernameError(true)
+            } else {
+                setUsernameInvalid(false)
+                setUsernameErrorMessage('')
+                setShowUsernameError(false)
+            }
+        })
+    }
+
     function handleUsernameChange(value: any) {
         if (value == "") {
             setUsernameInvalid(true)
             setUsernameErrorMessage('Username is required')
+            setShowUsernameError(true)
             setUsernameValue('')
         } else {
             let hasError: any = validate('username', value)
             setUsernameInvalid(hasError.hasError)
             setUsernameErrorMessage(hasError.message)
+            setShowUsernameError(hasError.hasError)
             if (!hasError.hasError) {
                 setUsernameValue(value)
                 setUsernameValue(value)
@@ -170,6 +188,22 @@ const Signup: NextPage = () => {
         }
     }
 
+    function handlePasswordInputChange(value: any) {
+        if (value == "") {
+            setPasswordValue('')
+            setShowPasswordError(true)
+            setPasswordInvalid(true)
+            setPasswordErrorMessage('Password is required')
+            setUsn_pst_disabled(true)
+        } else {
+            let hasError: any = validate('password', value)
+            setShowPasswordError(hasError.hasError)
+            setPasswordInvalid(hasError.hasError)
+            setPasswordErrorMessage(hasError.message)
+            setPasswordValue(value)
+            setUsn_pst_disabled(hasError.hasError)
+        }
+    }
     const setNextStep = (_type: string) => {
         $.switch(_type, {
             'CREATING_NAME_EMAIL': () => {
@@ -195,37 +229,9 @@ const Signup: NextPage = () => {
         })
     }
 
-    function handlePasswordInputChange(value: any) {
-        if (value == "") {
-            setPasswordValue('')
-            setShowPasswordError(true)
-            setPasswordInvalid(true)
-            setPasswordErrorMessage('Password is required')
-            setUsn_pst_disabled(true)
-        } else {
-            let hasError: any = validate('password', value)
-            setShowPasswordError(hasError.hasError)
-            setPasswordInvalid(hasError.hasError)
-            setPasswordErrorMessage(hasError.message)
-            setPasswordValue(value)
-            setUsn_pst_disabled(hasError.hasError)
-        }
-    }
+    
 
-    function checkUserName(value: string) {
-        getUserNames().then((userNames: any) => {
-            const userName = userNames.find((userName: any) => userName.name === value)
-            if (userName) {
-                setUsernameInvalid(true)
-                setUsernameErrorMessage('Username is already taken')
-                setUsn_pst_disabled(true)
-            } else {
-                setUsernameInvalid(false)
-                setUsernameErrorMessage('')
-                setUsn_pst_disabled(false)
-            }
-        })
-    }
+    
 
 
 
@@ -271,9 +277,9 @@ const Signup: NextPage = () => {
                 displayName: displayNameValue,
                 userName: usernameValue,
                 profileImage: null,
-                isBlocked: false,
-                isPremium: false,
-                isVerified: false,
+                blocked: false,
+                premium: false,
+                verified: false,
                 bio: null,
                 followers: [],
                 following: [],
@@ -298,6 +304,8 @@ const Signup: NextPage = () => {
                     }, 1000)
                 },
                 onError: (error: string) => {
+                    console.log(error);
+                    
                     setSpinner(false)
                     setSignupError(true)
                     setErrorMessage(errors[error] ? errors[error].message : 'An error occured')
@@ -352,7 +360,7 @@ const Signup: NextPage = () => {
                                 <div className={setClass(styles.signup_main, 'relative')}
                                 >
                                     {
-                                        step.step_name === 'USERNAME_PASSWORD_SETUP' && !signupError && <div className="go_back_setup relative -mt-6 screen-xs:-mt-6 bg-white dark:bg-darkMode">
+                                        step.step_name === 'USERNAME_PASSWORD_SETUP' && !signupError && <div className="go_back_setup relative  screen-xs:-mt-4 bg-white dark:bg-darkMode">
                                             <div className="flex items-center space-x-1">
                                                 <div className="step_go_back relative -ml-2 min-w-[36px] min-h-[36px] cursor-pointer mt-1 w-auto rounded-full flex justify-center items-center hover:bg-gray-600 hover:bg-opacity-10 hover:transition hover:ease-in-out dark:hover:bg-darkModeBg"
                                                     onClick={() => {
@@ -449,7 +457,7 @@ const Signup: NextPage = () => {
                                                                 }}
                                                             >
                                                                 <div className="signup_us_ps_input">
-                                                                    <Input id="username_signup" styleToRender='username' type="text" hasLabel={false} placeholder='Username' styles={'dark:border-gray-50 dark:border-opacity-20"'} value={usernameValue} invalid={usernameInvalid} onChange={(v) => { handleUsernameChange(v) }} />
+                                                                    <Input id="username_signup" styleToRender='username' type="text" hasLabel={false} placeholder='Username' styles={'dark:border-gray-50 dark:border-opacity-20"'} value={usernameValue} invalid={usernameInvalid && showUsernameError} onChange={(v) => { handleUsernameChange(v) }} />
                                                                     < div className={setClass(styles.signup_username_error)}>
                                                                         <p className={setClass(styles.signup_username_error_text, "text-red-500 mt-2 text-xs")}>{usernameErrorMessage}</p>
                                                                     </div>

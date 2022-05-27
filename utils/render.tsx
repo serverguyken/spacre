@@ -5,6 +5,7 @@ import Icon from '../components/Icon';
 import Tooltip from '../components/Tooltip';
 import API from '../config/api';
 import { Meta } from '../interface/Meta';
+import store from '../store';
 const MentionComp = ({ text }: { text: string }) => {
     return (
         <span className='text-link'>
@@ -72,7 +73,7 @@ export const ToJSX = ({ text }: {
     )
 }
 
-const meta_lookup_api = 'http://10.0.0.41:3002/api/v1/meta/lookup'
+const meta_lookup_api = 'http://10.0.0.138:3002/api/v1/meta/lookup'
 export const RenderLinkCard = ({ url, fetchMeta, onClose, metaData }: {
     url: string;
     fetchMeta: boolean;
@@ -170,7 +171,7 @@ export const RenderLinkCard = ({ url, fetchMeta, onClose, metaData }: {
                             </div>
                         </div>
                     </div>
-                    <div className='meta_close_btn absolute bg-gray-800 dark:bg-dimGray top-1 left-1 cursor-pointer absolute  min-w-[24px] min-h-[24px]  z-[24] flex justify-center items-center rounded-full' onClick={(e: any) => {
+                    <div className='meta_close_btn absolute bg-gray-800 dark:bg-dimGray top-1 left-1 cursor-pointer   min-w-[24px] min-h-[24px]  z-[24] flex justify-center items-center rounded-full' onClick={(e: any) => {
                         setMeta(null)
                         onClose(e)
                     }}>
@@ -211,16 +212,19 @@ export const RenderLinkCard = ({ url, fetchMeta, onClose, metaData }: {
                     } else {
                         setHasMeta(false)
                         setMeta(null)
+                        store.set('metaData', null)
                         setStatus(res.status)
                     }
                 }).catch(err => {
                     setHasMeta(false)
                     setMeta(null)
+                    store.set('metaData', null)
                     setStatus(err)
                 })
         } else {
             setHasMeta(false)
             setMeta(null)
+            store.set('metaData', null)
         }
     }, [hasLink, link, fetchMeta])
 

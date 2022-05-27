@@ -31,6 +31,7 @@ import useUserContext from "../provider/userProvider"
 import { Poll, Space } from "../interface/User"
 import { upload_api_url } from "../config"
 import API from "../config/api"
+import { LineLoader } from "../utils/loader"
 
 
 const mentionPlugin = createMentionPlugin({
@@ -88,7 +89,7 @@ const TextCard = () => {
     const [filesUrl, setFilesUrl] = useState([] as any)
     const [fileTypes, setFileTypes] = useState([] as any)
     const [isFileError, setIsFileError] = useState(false)
-    const [errorMsg, setErrorMsg] = useState("")
+    const [popupMsg, setPopUpMsg] = useState("")
     const [pollOpen, setPollOpen] = useState(false)
     const [pollCount, setPollCount] = useState(0)
     const [poll, setPoll] = useState<Poll>({
@@ -107,6 +108,7 @@ const TextCard = () => {
     const [isFileLimit, setIsFileLimit] = useState(false)
     const [isPollLimit, setIsPollLimit] = useState(false)
     const [fetchMeta, setFetchMeta] = useState(true)
+    const [spaceCreated, setSpaceCreated] = useState(false)
     const testContent = "Hello @serverguyken, this is a test post. I hope you like it :) #test. Visit https://www.web.com for more info."
 
     useEffect(() => {
@@ -198,7 +200,7 @@ const TextCard = () => {
         setHashtagOpen(open)
     }
 
-    const uploadImages = async (files: any) => { 
+    const uploadImages = async (files: any) => {
         const data: any = []
         let type = ""
         const formData = new FormData()
@@ -208,7 +210,7 @@ const TextCard = () => {
         }
         for (let i = 0; i < files.length; i++) {
             const file = files[i]
-            const fileType = file.type.split("/")[0] 
+            const fileType = file.type.split("/")[0]
             if (fileType === "image") {
                 type = "image"
                 formData.append("images", file)
@@ -242,11 +244,12 @@ const TextCard = () => {
         return handleUpload(type, formData)
     }
 
-    const handlePost = async () => { 
+    const handlePost = async () => {
         const spaceData: Space = {
-            spaceId: generateID(),
+            spaceId: user.uid,
             userId: user.uid,
             userName: user.userName,
+            displayName: user.displayName,
             userProfileImage: user.profileImage,
             images: files.length > 0 ? await uploadImages(files).then(res => res).catch(err => []) : [],
             videos: files.length > 0 ? await uploadVideo(files).then(res => res).catch(err => []) : [],
@@ -269,34 +272,62 @@ const TextCard = () => {
             saved: false,
         }
         addSpace(user.uid, spaceData, (message: any) => {
-            console.log(message)
+            setPopUp(true, 'Space created successfully')
+            setPopUpTimeout(4000)
+            setSpaceCreated(true)
+            setTimeout(() => {
+                setText('')
+                store.set('metaData', null)
+                setPollOpen(false)
+                setPollCount(0)
+                setPoll({
+                    question: "",
+                    options: [],
+                    expiresAt: {
+                        date: "",
+                        type: "",
+                        unit: "",
+                    },
+                    createdAt: "",
+                })
+                setFiles([])
+                setEditorState(EditorState.createEmpty())
+                setLinkText('')
+                setTextExceeded(false)
+                setMaxInitialValue(0)
+                setTextLength(0)
+                setFetchMeta(false)
+            }, 500)
+            setTimeout(() => {
+                setSpaceCreated(false)
+            }, 2000)
         });
         if (hasError) {
-            setError(true, error)
-            setErrorTimeout(5000)
+            setPopUp(true, error)
+            setPopUpTimeout(5000)
         }
     };
 
     const onMediaChange = (e: any) => {
         if (files.length > 0) {
             const newFiles = e.target.files
-            setError(false, "")
+            setPopUp(false, "")
             if (newFiles && newFiles.length > 1) {
                 const arrFiles = Array.from(newFiles)
                 const fileTypes = arrFiles.map((file: any) => file.type)
                 const videos = fileTypes.filter((type: any) => type.includes("video"))
                 if (arrFiles.length > fileLimit) {
-                    setErrorMsg(`Please choose either 1 video or up to ${fileLimit} photos.`)
-                    setErrorTimeout(5000)
+                    setPopUpMsg(`Please choose either 1 video or up to ${fileLimit} photos.`)
+                    setPopUpTimeout(5000)
                 } else {
                     if (videos) {
                         setIsFileError(true)
-                        setErrorMsg(`Please choose either 1 video or up to ${fileLimit} photos.`)
-                        setErrorTimeout(5000)
+                        setPopUpMsg(`Please choose either 1 video or up to ${fileLimit} photos.`)
+                        setPopUpTimeout(5000)
                     } else {
                         setFiles(files.concat(arrFiles))
                         setFileTypes(fileTypes)
-                        setError(false, "")
+                        setPopUp(false, "")
                     }
                 }
             } else {
@@ -306,32 +337,32 @@ const TextCard = () => {
                     const isImage = files.every((file: any) => file.type.includes("image"))
                     if (isVideo && isImage) {
                         setIsFileError(true)
-                        setErrorMsg(`Please choose either 1 video or up to ${fileLimit} photos.`)
-                        setErrorTimeout(5000)
+                        setPopUpMsg(`Please choose either 1 video or up to ${fileLimit} photos.`)
+                        setPopUpTimeout(5000)
                     } else {
                         setFiles(files.concat(e.target.files[0]))
                         setFileTypes([...fileTypes, e.target.files[0].type])
-                        setError(false, "")
+                        setPopUp(false, "")
                     }
                 } else {
-                    setError(false, "")
+                    setPopUp(false, "")
                 }
             }
         }
         else {
             const files = e.target.files
-            setError(false, "")
+            setPopUp(false, "")
             if (files && files.length > 1) {
                 const arrFiles = Array.from(files)
                 const fileTypes = arrFiles.map((file: any) => file.type)
                 const videos = fileTypes.find((type: string) => type.includes("video"))
                 const photos = fileTypes.filter((type: string) => type.includes("image"))
                 if (files.length > fileLimit) {
-                    setError(true, `Please choose either 1 video or up to ${fileLimit} photos`)
-                    setErrorTimeout(5000)
+                    setPopUp(true, `Please choose either 1 video or up to ${fileLimit} photos`)
+                    setPopUpTimeout(5000)
                 } else if (videos) {
-                    setError(true, `Please choose either 1 video or up to ${fileLimit} photos`)
-                    setErrorTimeout(5000)
+                    setPopUp(true, `Please choose either 1 video or up to ${fileLimit} photos`)
+                    setPopUpTimeout(5000)
                 }
                 else {
                     setFiles(arrFiles)
@@ -340,7 +371,7 @@ const TextCard = () => {
                         files: arrFiles,
                         fileTypes: fileTypes
                     }
-                    setError(false, "")
+                    setPopUp(false, "")
                 }
             } else if (files && files.length === 1) {
                 const file = files[0]
@@ -350,12 +381,12 @@ const TextCard = () => {
                     v.src = URL.createObjectURL(file)
                     v.onloadedmetadata = () => {
                         if (v.duration > 120) {
-                            setError(true, "Cannot upload videos longer than 2 minutes.")
-                            setErrorTimeout(5000)
+                            setPopUp(true, "Cannot upload videos longer than 2 minutes.")
+                            setPopUpTimeout(5000)
                         } else {
                             if (file.size > 100000000) {
-                                setError(true, "Cannot upload videos greater than 100mb.")
-                                setErrorTimeout(5000)
+                                setPopUp(true, "Cannot upload videos greater than 100mb.")
+                                setPopUpTimeout(5000)
                             } else {
                                 setFiles([file])
                                 setFileTypes([file.type])
@@ -363,7 +394,7 @@ const TextCard = () => {
                                     files: [file],
                                     fileTypes: [file.type]
                                 })
-                                setError(false, "")
+                                setPopUp(false, "")
                             }
                         }
                     }
@@ -374,7 +405,7 @@ const TextCard = () => {
                         files: [file],
                         fileTypes: [file.type]
                     }
-                    setError(false, "")
+                    setPopUp(false, "")
                 }
             } else {
                 setFiles([])
@@ -383,24 +414,24 @@ const TextCard = () => {
                     files: [],
                     fileTypes: []
                 }
-                setError(false, "")
+                setPopUp(false, "")
             }
         }
     }
 
-    const setError = (error: boolean, msg: string) => {
-        setIsFileError(error)
-        setErrorMsg(msg)
+    const setPopUp = (show: boolean, msg: string) => {
+        setIsFileError(show)
+        setPopUpMsg(msg)
     }
 
-    const setErrorTimeout = (timeout: number) => {
+    const setPopUpTimeout = (timeout: number) => {
         TimeOut(() => {
-            setError(false, "")
+            setPopUp(false, "")
         }, timeout)
     }
 
 
-    
+
 
 
     const { MentionSuggestions } = mentionPlugin
@@ -413,7 +444,9 @@ const TextCard = () => {
             }
 
             <div className={setClass("post_textarea relative", 'bg-white dark:bg-darkMode relative screen-sm:hidden')}>
-
+                {spaceCreated && <div className="relative">
+                    <LineLoader width="100%" position='absolute' />
+                </div>}
                 <div className={setClass("border-b border-gray-100 dark:border-borderDarkMode p-2 pb-3 screen-sm:dark:border-b-gray-50 screen-sm:dark:border-opacity-5", postTextBoxShown ? 'screen-sm:p-4 screen-sm:pb-1' : '')}>
                     <div className={setClass("w-auto screen-sm:mt-3")}>
                         <Editor
@@ -446,10 +479,11 @@ const TextCard = () => {
                         <RenderLinkCard url={linkText} fetchMeta={fetchMeta} onClose={(e: any) => {
                             setLinkText("")
                             setFetchMeta(false)
+                            store.set('metaData', null)
                         }}
                             metaData={(meta: any) => store.set('metaData', meta)}
                         />
-                   </div>
+                    </div>
                     <div className="mt-2">
                         <MediaHandler files={files} types={fileTypes} limit={fileLimit} onClose={(index: number) => {
                             if (files.length === 1 || files.length === 0) {
@@ -462,7 +496,7 @@ const TextCard = () => {
                                 setIsFileLimit(isExceeded)
                             }}
                         />
-                   </div>
+                    </div>
                     {
                         pollOpen && <div className="mt-2">
                             <PollCreate
@@ -475,6 +509,16 @@ const TextCard = () => {
                                 onClose={() => {
                                     setPollOpen(false)
                                     setIsPollLimit(true)
+                                    setPoll({
+                                        question: "",
+                                        options: [],
+                                        expiresAt: {
+                                            date: "",
+                                            type: "",
+                                            unit: "",
+                                        },
+                                        createdAt: "",
+                                    })
                                     setPollCount(pollCount - 1)
                                 }}
                             />
@@ -602,7 +646,7 @@ const TextCard = () => {
                 >
                     <div className="bg-primary p-[0.6rem] w-auto inline-block transition transition-scale rounded text-white"
                     >
-                        {errorMsg}
+                        {popupMsg}
                     </div>
                 </Transition>
             }

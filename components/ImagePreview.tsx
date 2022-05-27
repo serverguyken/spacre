@@ -47,7 +47,7 @@ function ImagePreview({ file, onClose, width, height }: {
                                 }}
                             />
                         </div>
-                        <div className='image_preview_close absolute bg-gray-800 dark:bg-dimGray top-2 left-2 cursor-pointer absolute  min-w-[28px] min-h-[28px]  z-[24] flex justify-center items-center rounded-full' onClick={onClose}>
+                        <div className='image_preview_close absolute bg-gray-800 dark:bg-dimGray top-2 left-2 cursor-pointer   min-w-[28px] min-h-[28px]  z-[24] flex justify-center items-center rounded-full' onClick={onClose}>
                             <Tooltip
                                 title="Close
                     "

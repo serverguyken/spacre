@@ -40,7 +40,11 @@ export const SetDoc = async (collection: any, data: any) => await setDoc(collect
 export const AddDoc = async (collection: any, data: any) => await addDoc(collection, data);
 export const UpdateDoc = async (collection: any, data: any) => await updateDoc(collection, data);
 export const DeleteDoc = async (collection: any) => await deleteDoc(collection);
-const usernamesCollection = collectionRef('usernames');
-const usernameDoc = docRef('usernames', 'errt');
+export const createDocRef = (name: string, id: string) => {
+    return docRef(name, id)
+}
+export const createCollectionRef = (name: string) => {
+    return collectionRef(name)
+}
 
-
+export const OnSnapshot = onSnapshot

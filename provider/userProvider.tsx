@@ -19,7 +19,8 @@ import {
     u_deleteUserName,
     u_getUserNames,
     getCurrentUser,
-    u_addPost,
+    u_addSpace,
+    u_getSpaces,
 } from "../config/auth/user";
 import { AuthUser, Space, User, UserContext } from "../interface/User";
 
@@ -332,14 +333,23 @@ export const UserProvider = ({ children }: any) => {
         
     };
 
-    const getUser = (user: User) => {
+    const getUser = (id: string, cb:(user: User) => void) => {
         try {
-            return u_getUser(user.uid);
+            u_getUser(id).then((result: any) => {
+                if (result) {
+                    cb(result.data.user);
+                };
+            }).catch((error: any) => {
+                setError("An error occured");
+                setHasError(true);
+            });
         } catch (error: any) {
             setError("unable to get user");
             setHasError(true);
         }
     };
+
+    
 
     const updateUser = (user: User, data: any) => {
         try {
@@ -368,9 +378,24 @@ export const UserProvider = ({ children }: any) => {
         }
     };
 
+    const getSpaces = (uid: string, limit: number, cb: (message: any) => void) => {
+        try {
+            u_getSpaces(uid, limit).then((result: any) => {
+                if (result) {
+                    cb(result.data.spaces);
+                }
+            }).catch((error: any) => {
+                setError("An error occured");
+                setHasError(true);
+            });
+        } catch (error: any) {
+            setError("An error occured");
+            setHasError(true);
+        }
+    };
     const addSpace = (uid: string, post: Space, cb: (message: any) => void) => {
         try {
-            u_addPost(uid, post).then((result: any) => {
+            u_addSpace(uid, post).then((result: any) => {
                 if (result) {
                     cb(result);
                 }
@@ -404,6 +429,7 @@ export const UserProvider = ({ children }: any) => {
         deleteUser,
         getUsers,
         addSpace,
+        getSpaces,
     };
 
     return <userContext.Provider value={context} >{children}</userContext.Provider>;

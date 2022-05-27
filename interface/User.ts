@@ -4,6 +4,7 @@ export interface Space {
     spaceId: string;
     userId: string;
     userName: string;
+    displayName: string
     userProfileImage: string | null;
     images: Array<any> | any;
     videos: Array<any> | any;
@@ -147,9 +148,10 @@ export interface UserContext<User> {
     deleteUserName: () => Promise<void>;
     getUserNames: () => Promise<void>;
     addUser: (user: User) => Promise<void>;
-    getUser: () => Promise<void>;
+    getUser: (id: string, cb:(user: User) => void) => User;
     updateUser: (user: User) => Promise<void>;
     deleteUser: () => Promise<void>;
     getUsers: (id: any) => Promise<GetUsers<Object>>;
-    addSpace: (id: any, Space: Space, callback: (message: any) => void) => Promise<void>;
+    addSpace: (id: any, Space: Space, callback: (result: any) => void) => Promise<void>;
+    getSpaces: (id: any, limit: number, callback: (result: any) => void) => Promise<void>;
 }

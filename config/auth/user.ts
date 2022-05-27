@@ -72,10 +72,17 @@ export const u_addUser = (id: any, data: {}) => {
     return SetDoc(usersCollectionRef, data);
 };
 
-export const u_getUser = (id: any) => {
-    const usersCollectionRef: any = docRef('users', id);
-    return GetDoc(usersCollectionRef);
+export const u_getUser =  async (id: any) => {
+    const response = API.get(`${api_url}/get/user?id=${id}`, {
+        headers: {
+            'Authorization': `Bearer ${id}`
+        }
+    })
+    return response;
 };
+
+
+
 
 export const u_getUsers = (id: any) => {
     return store.content.data.getUsers(id)
@@ -92,8 +99,16 @@ export const u_deleteUser = (id: any) => {
     return DeleteDoc(usersCollectionRef);
 };
 
-export const u_addPost = (id: any, data: {}) => { 
+export const u_addSpace = (id: any, data: {}) => { 
     const response = API.post(`${api_url}/create/space`, data, {
+        headers: {
+            'Authorization': `Bearer ${id}`
+        }
+    })
+    return response;
+};
+export const u_getSpaces = (id: any, limit: number) => { 
+    const response = API.get(`${api_url}/get/spaces?limit=${limit}`, {
         headers: {
             'Authorization': `Bearer ${id}`
         }

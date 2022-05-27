@@ -96,7 +96,6 @@ function PollCreate({ callback, isPollValid, onClose }: {
             createdAt,
         });
     };
-    console.log(poll, "poll");
     return (
         <div className="poll_container bg-white dark:bg-darkMode rounded-lg  border border-gray-200 dark:border-borderDarkMode max-w-sm relative mt-2 mb-2">
             <div className="poll_header p-2 relative pb-8">

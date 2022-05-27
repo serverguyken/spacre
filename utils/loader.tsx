@@ -25,9 +25,17 @@ function setClass(...classesArr: string[]) {
     return classesArr.join(' ');
 }
 
-function LineLoader() {
+function LineLoader({ width, position }: {
+    width?: string
+    position?: string | any
+}) {
     return (
-        <div className={setClass(styles.loader, styles.gradient)}>
+        <div className={setClass(styles.loader, styles.gradient)}
+            style={{
+                width: width,
+                position: position
+            }}
+        >
         </div>
     );
 }
