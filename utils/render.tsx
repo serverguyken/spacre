@@ -45,6 +45,7 @@ export const ToJSX = ({ text }: {
     // string regex to match mentions, hashtags and links in the text
    
     const setComp = () => {
+        if (text === null) return ''
         const REGEX = '_R$1E$2G$3E$4X^$02^%24*x$#~@' // this is a unique string that will not be found in the text
         const modifiedText = text.replace(/ /g, REGEX + ' ')
         const arr = modifiedText.split(REGEX)

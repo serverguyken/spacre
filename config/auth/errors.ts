@@ -1,4 +1,7 @@
 const errors: { [key: string]: { [key: string]: string } } = {
+    'auth/too-many-requests': {
+        message: 'Too many request.',
+    },
     'auth/unauthorized-domain': {
         message: 'This domain is not authorized for OAuth operations.',
     },

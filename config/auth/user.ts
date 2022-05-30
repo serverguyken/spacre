@@ -39,19 +39,23 @@ export function u_signInWithGitHub() {
     return signInWithPopup(auth, provider);
 }
 
-export const u_addUserName = (user_name: string) => {
-    const usernamesCollectionRef: any = collectionRef('usernames');
-    return AddDoc(usernamesCollectionRef, { name: user_name });
+export const u_addUserName = (user_name: string, email: string) => {
+    const response = API.post(`${api_url}/create/username`, {
+        name: user_name,
+        email
+    })
+    return response;
 };
 
-export const u_getUserName = (id: any) => {
-    const usernameDoc = docRef('usernames', id);
-    return GetDoc(usernameDoc);
+export const u_getUserName = (id: string) => {
+    // const response = API.get(`${api_url}/get/usernames`)
+    // console.log(response);
+    // return response;
 };
 
 export const u_getUserNames = () => {
-    const usernamesCollectionRef: any = collectionRef('usernames');
-    return GetDocs(usernamesCollectionRef);
+    const response = API.get(`${api_url}/get/usernames`)
+    return response;
 };
 
 export const u_updateUserName = (id: string, user_name: string) => {

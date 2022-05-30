@@ -4,7 +4,7 @@ import { Spinner, LineLoader, LineLoaderDark } from '../../utils/loader'
 import { PrimaryButton, SecondaryButton, SocialButton } from '../../components/Buttons'
 import { useState, useEffect } from 'react'
 import Modal from '../../components/Modal'
-import {  Group } from '@mantine/core';
+import { Group } from '@mantine/core';
 import { useRouter } from 'next/router'
 import { isBrowser } from '../../utils'
 import Auth from '../../auth/index'
@@ -36,27 +36,89 @@ const Login: NextPage = () => {
     const [opened, setOpened] = useState(true);
     const [showPassword, setShowPassword] = useState(false);
     const [emailValue, setEmailValue] = useState('')
+    const [usernameValue, setUsernameValue] = useState('')
     const [passwordValue, setPasswordValue] = useState('')
     const [disabled, setDisabled] = useState(true)
     const [emailInvalid, setEmailInvalid] = useState(true)
+    const [usernameInvalid, setUsernameInvalid] = useState(true)
     const [passwordInvalid, setPasswordInvalid] = useState(true)
     const [showEmailError, setShowEmailError] = useState(false)
+    const [showUsernameError, setShowUsernameError] = useState(false)
     const [showPasswordError, setShowPasswordError] = useState(false)
     const [emailErrorMessage, setEmailErrorMessage] = useState('')
+    const [usernameErrorMessage, setUsernameErrorMessage] = useState('')
     const [passwordErrorMessage, setPasswordErrorMessage] = useState('')
     const [loginError, setLoginError] = useState(false)
     const [errorMessage, setErrorMessage] = useState('')
     const [spinner, setSpinner] = useState(false)
-    const { signInUser, signInWithGitHubUser, error, hasError } = useUserContext();
+    const { getUserNames, signInUser, signInWithGitHubUser, error, hasError } = useUserContext();
+    const [signinWithUsername, setSigninWithUsername] = useState(true)
+    const [toggleEmail_UsernameText, setToggleEmail_UsernameText] = useState('email')
+    const [usernames, setUserNames] = useState([])
+    const [ usernameLoginError, setUsernameLoginError] = useState(false)
+    const [ usernameLoginErrorMessage, setUsernameLoginErrorMessage] = useState('')
+
+    useEffect(() => {
+        getUserNames().then((usernames: any) => setUserNames(usernames))
+    }, [])
+
+    
+
+    
+    useEffect(() => {
+        if (emailValue === '') {
+            setEmailInvalid(true)
+        } else {
+            let hasError: any = validate('email', emailValue)
+            setShowEmailError(hasError.hasError)
+            setEmailInvalid(hasError.hasError)
+            setEmailErrorMessage(hasError.message)
+        }
+        if (usernameValue === '') {
+            setUsernameInvalid(true)
+        } else {
+            setUsernameInvalid(false)
+        }
+        if (passwordValue === '') {
+            setPasswordInvalid(true)
+        } else {
+            setPasswordInvalid(false)
+        }
+    }, [emailValue, usernameValue, passwordValue])
+
+    useEffect(() => {
+        if (signinWithUsername) {
+            if (!usernameInvalid && !passwordInvalid) {
+                setDisabled(false)
+            } else {
+                setDisabled(true)
+            }
+        }
+        else {
+            if (!emailInvalid && !passwordInvalid) {
+                setDisabled(false)
+            } else {
+                setDisabled(true)
+            }
+        }
+    }, [usernameInvalid, emailInvalid, passwordInvalid])
+
+    const getEmailFromUserName = (name: string): any => {
+        const found = usernames.find((username: any) => username.name === name)
+        return found
+    }
+
+
     
     
+
     function SetLoading(loading: boolean) {
         setTimeout(() => {
             setLoading(loading)
         }, 1300)
     }
     SetLoading(false)
-    
+
 
     function setFocus() {
         if (isBrowser()) {
@@ -78,10 +140,16 @@ const Login: NextPage = () => {
             router.push('/')
         }
     }
+    function redirectOnError() {
+        setLoginError(false)
+        if (isBrowser()) {
+            router.push('/auth/login')
+        }
+    }
     function togglePassword() {
         setShowPassword(!showPassword)
     }
-    
+
 
     function handleEmailInputChange(value: any) {
         if (value == "") {
@@ -94,6 +162,18 @@ const Login: NextPage = () => {
             setEmailInvalid(hasError.hasError)
             setEmailErrorMessage(hasError.message)
             setEmailValue(value)
+        }
+    }
+    function handleUsernameInputChange(value: any) {
+        if (value == "") {
+            setShowUsernameError(true)
+            setUsernameInvalid(true)
+            setUsernameErrorMessage('Username is required')
+        } else {
+            setShowUsernameError(false)
+            setUsernameInvalid(false)
+            setUsernameErrorMessage('')
+            setUsernameValue(value)
         }
     }
 
@@ -111,16 +191,9 @@ const Login: NextPage = () => {
     }
 
 
-    useEffect(() => {
-        if (!emailInvalid && !passwordInvalid) {
-            setDisabled(false)
-        } else {
-            setDisabled(true)
-        }
-    }, [emailInvalid, passwordInvalid])
 
-   
-    
+
+
 
     function redirectOnSuccess() {
         if (isBrowser()) {
@@ -130,37 +203,82 @@ const Login: NextPage = () => {
 
 
     function handleLogin() {
-        if (emailValue === "") {
-            handleEmailInputChange('')
-        }
-        if (passwordValue === "") {
-            handlePasswordInputChange('')
-        }
-
-        if (!emailInvalid && !passwordInvalid) {
-            setSpinner(true)
-            signInUser(emailValue, passwordValue, {
-                onSuccess: (user: any) => {
-                    setTimeout(() => {
-                        setSpinner(false)
-                    }, 8000)
-                    setTimeout(() => {
-                        redirectOnSuccess()
-                    }, 1000)
-                },
-                onError: (error: string) => {
-                    setTimeout(() => {
-                        setSpinner(false)
-                        setLoginError(true)
-                        setErrorMessage(errors[error] ? errors[error].message : 'An error occured')
-                    }, 1000)
+        if (signinWithUsername) {
+            if (usernameValue === "") {
+                handleUsernameInputChange('')
+            }
+            if (passwordValue === "") {
+                handlePasswordInputChange('')
+            }
+            if (!usernameInvalid && !passwordInvalid) {
+                if (getEmailFromUserName(usernameValue) !== undefined && getEmailFromUserName(usernameValue).email && getEmailFromUserName(usernameValue).email !== '') {
+                    setUsernameLoginError(false)
+                    setUsernameLoginErrorMessage('')
+                    let email = getEmailFromUserName(usernameValue).email
+                    setSpinner(true)
+                    signInUser(email, passwordValue, {
+                        onSuccess: (user: any) => {
+                            setTimeout(() => {
+                                setSpinner(false)
+                            }, 8000)
+                            setTimeout(() => {
+                                redirectOnSuccess()
+                            }, 1000)
+                            setDisabled(true)
+                            setUsernameValue('')
+                            setPasswordValue('')
+                        },
+                        onError: (error: string) => {
+                            setTimeout(() => {
+                                setSpinner(false)
+                                setLoginError(true)
+                                setErrorMessage(errors[error] ? errors[error].message : 'An error occurred')
+                                setDisabled(true)
+                                setUsernameValue('')
+                                setPasswordValue('')
+                            }, 1000)
+                        }
+                    })
+                } else {
+                    setUsernameLoginError(true) 
+                    setUsernameLoginErrorMessage('Sorry, no account found')
                 }
-            })
+               
+            }
+        } else {
+            if (emailValue === "") {
+                handleEmailInputChange('')
+            }
+            if (passwordValue === "") {
+                handlePasswordInputChange('')
+            }
+    
+            if (!emailInvalid && !passwordInvalid) {
+                setSpinner(true)
+                signInUser(emailValue, passwordValue, {
+                    onSuccess: (user: any) => {
+                        setTimeout(() => {
+                            setSpinner(false)
+                        }, 8000)
+                        setTimeout(() => {
+                            redirectOnSuccess()
+                        }, 1000)
+                    },
+                    onError: (error: string) => {
+                        setTimeout(() => {
+                            setSpinner(false)
+                            setLoginError(true)
+                            setErrorMessage(errors[error] ? errors[error].message : 'An error occurred')
+                        }, 1000)
+                    }
+                })
+            }
         }
+        
 
     }
 
-    function handleGitHubLogin() { 
+    function handleGitHubLogin() {
         setLoading(true)
         signInWithGitHubUser({
             onSuccess: () => {
@@ -171,7 +289,7 @@ const Login: NextPage = () => {
             onError: (error: string) => {
                 setTimeout(() => {
                     setLoginError(true)
-                    setErrorMessage(errors[error] ? errors[error].message : 'An error occured')
+                    setErrorMessage(errors[error] ? errors[error].message : 'An error occurred')
                 }, 1000)
             }
         })
@@ -224,57 +342,89 @@ const Login: NextPage = () => {
                                             <Icon type="logo" color='' width='40' height='40' />
                                         </Group>
                                     </div>
-                                        <div className={setClass(styles.signup_form_main)}>
-                                            <form
-                                                onSubmit={(e) => {
-                                                    e.preventDefault()
-                                                    console.log('submitted')
-                                                }}
-                                            >
-                                        <div className={setClass(styles.signup_form_main_top, "overflow-auto")}>
-                                            <div className={setClass(styles.signup_header)}>
-                                                <h1>Welcome back!</h1>
-                                            </div>
-                                            <div className={setClass(styles.signup_form, "mt-4")}>
-                                            
-                                                <Input id="email_username_login" styleToRender='email' type="email" hasLabel={false} placeholder='Email' value={emailValue} invalid={emailInvalid && showEmailError} onChange={(v) => { handleEmailInputChange(v) }} />
-                                                <div className={setClass(styles.signup_email_error)}>
-                                                    <p className={setClass(styles.signup_email_error_text, "text-red-500 mt-2 text-xs")}>{emailErrorMessage}</p>
+                                    <div className={setClass(styles.signup_form_main)}>
+                                        <form
+                                            onSubmit={(e) => {
+                                                e.preventDefault()
+                                                console.log('submitted')
+                                            }}
+                                        >
+                                            <div className={setClass(styles.signup_form_main_top, "overflow-auto")}>
+                                                <div className={setClass(styles.signup_header)}>
+                                                    <h1>Welcome back!</h1>
                                                 </div>
-                                                <Input id="password_login" styleToRender='password' type="password" hasLabel={false} placeholder='Password' value={passwordValue} invalid={passwordInvalid && showPasswordError} showPassword={showPassword} togglePassword={togglePassword} onChange={(v) => { handlePasswordInputChange(v) }} />
-                                                <div className={setClass(styles.signup_email_error)}>
-                                                    <p className={setClass(styles.signup_email_error_text, "text-red-500 mt-2 text-xs")}>{passwordErrorMessage}</p>
+                                                <div className={setClass(styles.signup_form, "mt-4")}>
+
+
+                                                    {
+                                                        signinWithUsername ? <div>
+                                                            <Input id="username_username_login" styleToRender='default' type="text" hasLabel={false} placeholder='Username' value={usernameValue} invalid={usernameInvalid && showUsernameError} onChange={(v) => { handleUsernameInputChange(v) }} />
+                                                            <div className={setClass(styles.signup_username_error)}>
+                                                                <p className={setClass(styles.signup_username_error_text, "text-red-500 mt-2 text-xs")}>{usernameErrorMessage}</p>
+                                                            </div>
+                                                        </div>
+                                                            :
+                                                            <div>
+                                                                <Input id="email_username_login" styleToRender='email' type="email" hasLabel={false} placeholder='Email' value={emailValue} invalid={emailInvalid && showEmailError} onChange={(v) => { handleEmailInputChange(v) }} />
+                                                                <div className={setClass(styles.signup_email_error)}>
+                                                                    <p className={setClass(styles.signup_email_error_text, "text-red-500 mt-2 text-xs")}>{emailErrorMessage}</p>
+                                                                </div>
+                                                            </div>
+                                                    }
+                                                    {
+                                                       !usernameLoginError &&  <button type='button'
+                                                        onClick={(e: any) => {
+                                                            e.preventDefault()
+                                                            setSigninWithUsername(!signinWithUsername)
+                                                            setToggleEmail_UsernameText(signinWithUsername ? 'username' : 'email')
+                                                        }}
+                                                     className='text-sm text-primary cursor-pointer'>
+                                                        Sign in with { toggleEmail_UsernameText }
+                                                    </button>
+                                                    }
+                                                    {
+                                                        usernameLoginError &&   <p 
+                                                        
+                                                        className='text-sm text-red-400'>
+                                                           {usernameLoginErrorMessage}
+                                                       </p>
+                                                    }
+                                                   
+                                                    <Input id="password_login" styleToRender='password' type="password" hasLabel={false} placeholder='Password' value={passwordValue} invalid={passwordInvalid && showPasswordError} showPassword={showPassword} togglePassword={togglePassword} onChange={(v) => { handlePasswordInputChange(v) }} />
+                                                    <div className={setClass(styles.signup_email_error)}>
+                                                        <p className={setClass(styles.signup_email_error_text, "text-red-500 mt-2 text-xs")}>{passwordErrorMessage}</p>
+                                                    </div>
+                                                   
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div className={setClass(styles.signup_form_main_bottom)}>
-                                            <div className={setClass(styles.signup_form_button, "mt-4")}>
-                                                {
-                                                    spinner ?
+                                            <div className={setClass(styles.signup_form_main_bottom)}>
+                                                <div className={setClass(styles.signup_form_button, "mt-4")}>
+                                                    {
+                                                        spinner ?
 
-                                                        <PrimaryButton width={"w-full py-3"} disabled={disabled} textColor="white">
-                                                            <Spinner color='white' width={'20'} />
-                                                        </PrimaryButton>
-                                                        :
+                                                            <PrimaryButton width={"w-full py-3"} disabled={disabled} textColor="white">
+                                                                <Spinner color='white' width={'20'} />
+                                                            </PrimaryButton>
+                                                            :
 
-                                                        <PrimaryButton text="Log In" width={"w-full py-3"} disabled={disabled} textColor="white" action={handleLogin} type="submit"/>
-                                                }
-                                            </div>
-
-
-                                            <div className={setClass(styles.or_opt_ele, 'after:bg-white border-b border-b-gray-200 dark:after:bg-darkMode dark:after:content-["OR"] dark:border-b-gray-200 dark:border-opacity-20')}>
-                                            </div>
-
-                                            <SocialButton disabled={false} color="bg-white" text="Continue with Github" styles=" border boder-gray-300" textStyle='text-lg dark:text-dark' width="px-16 py-3" icon="github" iconWidth='w-6' action={() => { handleGitHubLogin() }} />
-                                            <div className={setClass(styles.side_right_bottom)}>
-                                                <div className={setClass("signup_legal")}>
-                                                    <p className={setClass("text-xs mt-5 w-9/12 text-center m-auto")}>By signing up, you agree to the <span className={setClass("text-primary underline")}><Link href="/legal/terms">Terms of Service</Link></span> and <span className={setClass("text-primary underline")}><Link href="/legal/privacy">Privacy Policy</Link></span>.</p>
+                                                            <PrimaryButton text="Log In" width={"w-full py-3"} disabled={disabled} textColor="white" action={handleLogin} type="submit" />
+                                                    }
                                                 </div>
-                                                <div className={setClass(styles.alr_login)}>
-                                                    <p className={setClass("text-sm mt-5 w-8/12 text-center m-auto")}>Don&apos;t have an account? <span className={setClass("text-primary underline")}><Link href="/auth/signup">Sign up</Link></span></p>
+
+
+                                                <div className={setClass(styles.or_opt_ele, 'after:bg-white border-b border-b-gray-200 dark:after:bg-darkMode dark:after:content-["OR"] dark:border-b-gray-200 dark:border-opacity-20')}>
+                                                </div>
+
+                                                <SocialButton disabled={false} color="bg-white" text="Continue with Github" styles=" border boder-gray-300" textStyle='text-lg dark:text-dark' width="px-16 py-3" icon="github" iconWidth='w-6' action={() => { handleGitHubLogin() }} />
+                                                <div className={setClass(styles.side_right_bottom)}>
+                                                    <div className={setClass("signup_legal")}>
+                                                        <p className={setClass("text-xs mt-5 w-9/12 text-center m-auto")}>By signing up, you agree to the <span className={setClass("text-primary underline")}><Link href="/legal/terms">Terms of Service</Link></span> and <span className={setClass("text-primary underline")}><Link href="/legal/privacy">Privacy Policy</Link></span>.</p>
+                                                    </div>
+                                                    <div className={setClass(styles.alr_login)}>
+                                                        <p className={setClass("text-sm mt-5 w-8/12 text-center m-auto")}>Don&apos;t have an account? <span className={setClass("text-primary underline")}><Link href="/auth/signup">Sign up</Link></span></p>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
                                         </form>
                                     </div>
                                 </div>
@@ -310,7 +460,7 @@ const Login: NextPage = () => {
                                             </div>
                                         </div>
                                         <div className="error_button w-[85%] m-auto">
-                                            <SecondaryButton text="Ok" action={() => { redirectOnClose() }} styles={setClass('w-full text-white p-2 mt-4 dark:bg-white dark:text-black hover:dark:bg-white/90')} />
+                                            <SecondaryButton text="Ok" action={() => { redirectOnError()  }} styles={setClass('w-full text-white p-2 mt-4 dark:bg-white dark:text-black hover:dark:bg-white/90')} />
                                         </div>
                                     </div>
                                 </div>

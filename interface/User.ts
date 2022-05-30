@@ -1,6 +1,7 @@
 import { Meta } from "./Meta";
 
 export interface Space {
+    user: User;
     spaceId: string;
     userId: string;
     userName: string;
@@ -152,6 +153,8 @@ export interface UserContext<User> {
     updateUser: (user: User) => Promise<void>;
     deleteUser: () => Promise<void>;
     getUsers: (id: any) => Promise<GetUsers<Object>>;
-    addSpace: (id: any, Space: Space, callback: (result: any) => void) => Promise<void>;
+    addSpace: (id: any, Space: Space,  cbs: {
+        onSuccess: (result: any) => void, onError: (result: any) => void
+    }) => Promise<void>;
     getSpaces: (id: any, limit: number, callback: (result: any) => void) => Promise<void>;
 }

@@ -271,39 +271,46 @@ const TextCard = () => {
             reported: false,
             saved: false,
         }
-        addSpace(user.uid, spaceData, (message: any) => {
-            setPopUp(true, 'Space created successfully')
-            setPopUpTimeout(4000)
-            setSpaceCreated(true)
-            setTimeout(() => {
-                setText('')
-                store.set('metaData', null)
-                setPollOpen(false)
-                setPollCount(0)
-                setPoll({
-                    question: "",
-                    options: [],
-                    expiresAt: {
-                        date: "",
-                        type: "",
-                        unit: "",
-                    },
-                    createdAt: "",
-                })
-                setFiles([])
-                setEditorState(EditorState.createEmpty())
-                setLinkText('')
-                setTextExceeded(false)
-                setMaxInitialValue(0)
-                setTextLength(0)
-                setFetchMeta(false)
-            }, 500)
-            setTimeout(() => {
-                setSpaceCreated(false)
-            }, 2000)
+        addSpace(user.uid, spaceData, {
+            onSuccess: (result: any) => {
+                setPopUp(true, 'Space created successfully')
+                setPopUpTimeout(4000)
+                setSpaceCreated(true)
+                setTimeout(() => {
+                    setText('')
+                    store.set('metaData', null)
+                    setPollOpen(false)
+                    setPollCount(0)
+                    setPoll({
+                        question: "",
+                        options: [],
+                        expiresAt: {
+                            date: "",
+                            type: "",
+                            unit: "",
+                        },
+                        createdAt: "",
+                    })
+                    setFiles([])
+                    setEditorState(EditorState.createEmpty())
+                    setLinkText('')
+                    setTextExceeded(false)
+                    setMaxInitialValue(0)
+                    setTextLength(0)
+                    setFetchMeta(false)
+                }, 500)
+                setTimeout(() => {
+                    setSpaceCreated(false)
+                }, 2000)
+
+            },
+            onError: () => { 
+                // setPopUp(true, 'An error occurred')
+                // setPopUpTimeout(5000)
+            }
         });
         if (hasError) {
-            setPopUp(true, error)
+            setPopUp(true, 'An error occurred')
             setPopUpTimeout(5000)
         }
     };

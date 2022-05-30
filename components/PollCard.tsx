@@ -14,6 +14,8 @@ const PollCard = ({ poll, events }: {
 }) => {
     const question = poll.question;
     const options = poll.options;
+    console.log(options);
+    
     const expiresAt = poll.expiresAt;
     const createdAt = poll.createdAt;
     const expired = dateHelper().isPollExpired(expiresAt.date, createdAt, expiresAt.type);

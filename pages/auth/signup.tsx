@@ -68,6 +68,7 @@ const Signup: NextPage = () => {
     const { addUserName, getUserNames, signUpUser, error, hasError, signOutUser } = useUserContext();
 
     useEffect(() => {
+
         if (nameInvalid === false && emailInvalid === false) {
             setCne_disabled(false)
         } else {
@@ -121,6 +122,12 @@ const Signup: NextPage = () => {
         setSignupError(false)
         if (isBrowser()) {
             router.push('/')
+        }
+    }
+    function redirectOnError() {
+        setSignupError(false)
+        if (isBrowser()) {
+            router.push('/auth/login')
         }
     }
     function togglePassword() {
@@ -229,9 +236,9 @@ const Signup: NextPage = () => {
         })
     }
 
-    
 
-    
+
+
 
 
 
@@ -242,7 +249,7 @@ const Signup: NextPage = () => {
         }
     }
 
-    const reset = () => { 
+    const reset = () => {
         setStep({
             step: 1,
             step_name: 'CREATING_NAME_EMAIL',
@@ -270,7 +277,7 @@ const Signup: NextPage = () => {
     }
 
     function handleSignup() {
-        if (usn_pst_disabled === false) { 
+        if (usn_pst_disabled === false) {
             setSpinner(true)
             const data = {
                 email: emailValue,
@@ -302,13 +309,18 @@ const Signup: NextPage = () => {
                     setTimeout(() => {
                         redirectOnSuccess()
                     }, 1000)
+                    setDisabled(true)
+                    setUsernameValue('')
+                    setPasswordValue('')
                 },
                 onError: (error: string) => {
                     console.log(error);
-                    
                     setSpinner(false)
                     setSignupError(true)
-                    setErrorMessage(errors[error] ? errors[error].message : 'An error occured')
+                    setErrorMessage(errors[error] ? errors[error].message : 'An error occurred')
+                    setDisabled(true)
+                    setUsernameValue('')
+                    setPasswordValue('')
                     reset()
                 }
             })
@@ -370,7 +382,7 @@ const Signup: NextPage = () => {
                                                     <Icon type="arrow-left" styles='w-4 h-4 text-black dark:text-white' />
 
 
-                                                        <div className="go_back_setup_tooltip absolute top-10 invisible z-20 bg-gray-500 dark:bg-darkModeBg dark:text-white w-auto p-1 text-center text-[0.65rem] text-white rounded-sm shadow-sm">
+                                                    <div className="go_back_setup_tooltip absolute top-10 invisible z-20 bg-gray-500 dark:bg-darkModeBg dark:text-white w-auto p-1 text-center text-[0.65rem] text-white rounded-sm shadow-sm">
                                                         <div className="like_tooltip_content">
                                                             Back
                                                         </div>
@@ -393,7 +405,7 @@ const Signup: NextPage = () => {
                                                     <Icon type="arrow-left" styles='w-4 h-4 text-black dark:text-white' />
 
 
-                                                        <div className="go_back_setup_tooltip absolute top-10 invisible z-20 bg-gray-500 dark:bg-darkModeBg dark:text-white w-auto p-1 text-center text-[0.65rem] text-white rounded-sm shadow-sm">
+                                                    <div className="go_back_setup_tooltip absolute top-10 invisible z-20 bg-gray-500 dark:bg-darkModeBg dark:text-white w-auto p-1 text-center text-[0.65rem] text-white rounded-sm shadow-sm">
                                                         <div className="like_tooltip_content">
                                                             Back
                                                         </div>
@@ -415,131 +427,131 @@ const Signup: NextPage = () => {
                                         }
                                     </div>
                                     <div className={setClass(styles.signup_form_main, 'mt-2 mb-3 relative', `${signupError ? 'h-[40vh]' : ''}`)}>
-                                         <div className={setClass(styles.signup_form_main_top, "overflow-auto")}>
-                                                <div className={setClass(styles.signup_form)}>
-                                                    {
-                                                        step.step_name === "CREATING_NAME_EMAIL" && <div id="name_email_setup">
-                                                            <div className={setClass(styles.signup_header, "mb-4")}>
-                                                                <h1>Let&apos;s create your account</h1>
-                                                            </div>
-                                                            <form
-                                                                onSubmit={(e) => {
-                                                                    e.preventDefault();
-                                                                }}
-                                                            >
-                                                                <Input id="name_signup" styleToRender='default' type="text" hasLabel={false} placeholder='Name' value={displayNameValue} invalid={nameInvalid && showNameError} onChange={(v) => { handleNameInputChange(v) }} />
-                                                                <div className={setClass(styles.signup_name_error)}>
-                                                                    <p className={setClass(styles.signup_name_error_text, "text-red-500 mt-2 text-xs")}>{nameErrorMessage}</p>
-                                                                </div>
-                                                                <Input id="email_signup" styleToRender='email' type="email" hasLabel={false} placeholder='Email' value={emailValue} invalid={emailInvalid && showEmailError} onChange={(v) => { handleEmailInputChange(v) }}
-
-                                                                />
-                                                                <div className={setClass(styles.signup_email_error)}>
-                                                                    <p className={setClass(styles.signup_email_error_text, "text-red-500 mt-2 text-xs")}>{emailErrorMessage}</p>
-                                                                </div>
-                                                                <div className="mt-4">
-                                                                    <PrimaryButton text="Next" width={"w-full py-3"} disabled={cne_disabled} textColor="white" action={() => {
-                                                                        setNextStep('USERNAME_PASSWORD_SETUP')
-                                                                    }} />
-                                                                </div>
-                                                            </form>
+                                        <div className={setClass(styles.signup_form_main_top, "overflow-auto")}>
+                                            <div className={setClass(styles.signup_form)}>
+                                                {
+                                                    step.step_name === "CREATING_NAME_EMAIL" && <div id="name_email_setup">
+                                                        <div className={setClass(styles.signup_header, "mb-4")}>
+                                                            <h1>Let&apos;s create your account</h1>
                                                         </div>
-                                                    }
-                                                    {
-                                                        step.step_name === "USERNAME_PASSWORD_SETUP" && <div id="username_password_setup">
-                                                            <div className={setClass(styles.signup_step, "mt-3 mb-1")}>
-                                                                <h1 className='font-semibold text-lg'>Choose your username</h1>
+                                                        <form
+                                                            onSubmit={(e) => {
+                                                                e.preventDefault();
+                                                            }}
+                                                        >
+                                                            <Input id="name_signup" styleToRender='default' type="text" hasLabel={false} placeholder='Name' value={displayNameValue} invalid={nameInvalid && showNameError} onChange={(v) => { handleNameInputChange(v) }} />
+                                                            <div className={setClass(styles.signup_name_error)}>
+                                                                <p className={setClass(styles.signup_name_error_text, "text-red-500 mt-2 text-xs")}>{nameErrorMessage}</p>
                                                             </div>
-                                                            <form
-                                                                    onSubmit={(e) => {
-                                                                   handleSignup()
-                                                                    e.preventDefault();
-                                                                }}
-                                                            >
-                                                                <div className="signup_us_ps_input">
-                                                                    <Input id="username_signup" styleToRender='username' type="text" hasLabel={false} placeholder='Username' styles={'dark:border-gray-50 dark:border-opacity-20"'} value={usernameValue} invalid={usernameInvalid && showUsernameError} onChange={(v) => { handleUsernameChange(v) }} />
-                                                                    < div className={setClass(styles.signup_username_error)}>
-                                                                        <p className={setClass(styles.signup_username_error_text, "text-red-500 mt-2 text-xs")}>{usernameErrorMessage}</p>
-                                                                    </div>
-                                                                    <div className="username_suggestions mt-4 mb-5" id='username_suggestions'>
-                                                                        <div className="suggestions">
-                                                                            <div className="suggestions_header">
-                                                                                <h3 className="font-semibold mb-1">Suggestions</h3>
-                                                                            </div>
-                                                                            <div className="suggestions_items">
-                                                                                <p className="suggestion_item text-primary cursor-pointer" id="suggestion_item_3"
-                                                                                    onClick={() => {
+                                                            <Input id="email_signup" styleToRender='email' type="email" hasLabel={false} placeholder='Email' value={emailValue} invalid={emailInvalid && showEmailError} onChange={(v) => { handleEmailInputChange(v) }}
+
+                                                            />
+                                                            <div className={setClass(styles.signup_email_error)}>
+                                                                <p className={setClass(styles.signup_email_error_text, "text-red-500 mt-2 text-xs")}>{emailErrorMessage}</p>
+                                                            </div>
+                                                            <div className="mt-4">
+                                                                <PrimaryButton text="Next" width={"w-full py-3"} disabled={cne_disabled} textColor="white" action={() => {
+                                                                    setNextStep('USERNAME_PASSWORD_SETUP')
+                                                                }} />
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                }
+                                                {
+                                                    step.step_name === "USERNAME_PASSWORD_SETUP" && <div id="username_password_setup">
+                                                        <div className={setClass(styles.signup_step, "mt-3 mb-1")}>
+                                                            <h1 className='font-semibold text-lg'>Choose your username</h1>
+                                                        </div>
+                                                        <form
+                                                            onSubmit={(e) => {
+                                                                handleSignup()
+                                                                e.preventDefault();
+                                                            }}
+                                                        >
+                                                            <div className="signup_us_ps_input">
+                                                                <Input id="username_signup" styleToRender='username' type="text" hasLabel={false} placeholder='Username' styles={'dark:border-gray-50 dark:border-opacity-20"'} value={usernameValue} invalid={usernameInvalid && showUsernameError} onChange={(v) => { handleUsernameChange(v) }} />
+                                                                < div className={setClass(styles.signup_username_error)}>
+                                                                    <p className={setClass(styles.signup_username_error_text, "text-red-500 mt-2 text-xs")}>{usernameErrorMessage}</p>
+                                                                </div>
+                                                                <div className="username_suggestions mt-4 mb-5" id='username_suggestions'>
+                                                                    <div className="suggestions">
+                                                                        <div className="suggestions_header">
+                                                                            <h3 className="font-semibold mb-1">Suggestions</h3>
+                                                                        </div>
+                                                                        <div className="suggestions_items">
+                                                                            <p className="suggestion_item text-primary cursor-pointer" id="suggestion_item_3"
+                                                                                onClick={() => {
 
 
-                                                                                        // const usernameinput = document.getElementById('username_signup') as HTMLInputElement
-                                                                                        // usernameinput.value = emailValue.split('@')[0]
-                                                                                        // handleUsernameChange(emailValue.split('@')[0])
-                                                                                    }}
-                                                                                >
-                                                                                    {emailValue.split('@')[0]}
-                                                                                </p>
-                                                                                {
-                                                                                    generatedUsernames.map((username, index) => {
-                                                                                        return (
-                                                                                            <p key={index} className="suggestion_item text-primary cursor-pointer" id="suggestion_item_2"
+                                                                                    // const usernameinput = document.getElementById('username_signup') as HTMLInputElement
+                                                                                    // usernameinput.value = emailValue.split('@')[0]
+                                                                                    // handleUsernameChange(emailValue.split('@')[0])
+                                                                                }}
+                                                                            >
+                                                                                {emailValue.split('@')[0]}
+                                                                            </p>
+                                                                            {
+                                                                                generatedUsernames.map((username, index) => {
+                                                                                    return (
+                                                                                        <p key={index} className="suggestion_item text-primary cursor-pointer" id="suggestion_item_2"
 
-                                                                                            >
-                                                                                                {username}
-                                                                                            </p>
-                                                                                        )
-                                                                                    })
-                                                                                }
-                                                                            </div>
+                                                                                        >
+                                                                                            {username}
+                                                                                        </p>
+                                                                                    )
+                                                                                })
+                                                                            }
                                                                         </div>
                                                                     </div>
-                                                                    <Input id="password_signup" styleToRender='password' type="password" hasLabel={false} placeholder='Password' value={passwordValue} invalid={passwordInvalid && showPasswordError} showPassword={showPassword} togglePassword={() => {
-                                                                        togglePassword()
-                                                                    }} onChange={(v) => { handlePasswordInputChange(v) }} />
-                                                                    <div className={setClass(styles.signup_password_error)}>
-                                                                        <p className={setClass(styles.signup_password_error_text, "text-xs mt-2 text-gray-500")}>{!passwordInvalid ?
-                                                                            "Password with 6 or more characters" : null}</p>
-                                                                        <p className={setClass(styles.signup_password_error_text, "text-red-500 mt-2 text-xs")}>{passwordErrorMessage}</p>
-                                                                    </div>
                                                                 </div>
-                                                                <div className="mt-4">
-                                                                    {
-                                                                        spinner ?
-
-                                                                            <PrimaryButton width={"w-full py-3"} disabled={disabled} textColor="white">
-                                                                                <Spinner color='white' width={'20'} />
-                                                                            </PrimaryButton>
-                                                                            :
-
-                                                                            <PrimaryButton text="Sign Up" width={"w-full py-3"} disabled={usn_pst_disabled} textColor="white" action={() => {
-                                                                                handleSignup()
-                                                                            }} />
-                                                                    }
-                                                                </div>
-                                                            </form>
-                                                            <div className={setClass(styles.side_right_bottom)}>
-                                                                <div className={setClass("signup_legal")}>
-                                                                    <p className={setClass("text-sm mt-5 w-9/12 text-center m-auto")}>By signing up, you agree to the <span className={setClass("text-primary underline")}><Link href="/legal/terms">Terms of Service</Link></span> and <span className={setClass("text-primary underline")}><Link href="/legal/privacy">Privacy Policy</Link></span>.</p>
-                                                                </div>
-                                                                <div className={setClass(styles.alr_login)}>
-                                                                    <p className={setClass("text-sm mt-5 w-8/12 text-center m-auto")}>Already have an account? <span className={setClass("text-primary underline")}><Link href="/auth/login">Log in</Link></span></p>
+                                                                <Input id="password_signup" styleToRender='password' type="password" hasLabel={false} placeholder='Password' value={passwordValue} invalid={passwordInvalid && showPasswordError} showPassword={showPassword} togglePassword={() => {
+                                                                    togglePassword()
+                                                                }} onChange={(v) => { handlePasswordInputChange(v) }} />
+                                                                <div className={setClass(styles.signup_password_error)}>
+                                                                    <p className={setClass(styles.signup_password_error_text, "text-xs mt-2 text-gray-500")}>{!passwordInvalid ?
+                                                                        "Password with 6 or more characters" : null}</p>
+                                                                    <p className={setClass(styles.signup_password_error_text, "text-red-500 mt-2 text-xs")}>{passwordErrorMessage}</p>
                                                                 </div>
                                                             </div>
+                                                            <div className="mt-4">
+                                                                {
+                                                                    spinner ?
+
+                                                                        <PrimaryButton width={"w-full py-3"} disabled={disabled} textColor="white">
+                                                                            <Spinner color='white' width={'20'} />
+                                                                        </PrimaryButton>
+                                                                        :
+
+                                                                        <PrimaryButton text="Sign Up" width={"w-full py-3"} disabled={usn_pst_disabled} textColor="white" action={() => {
+                                                                            handleSignup()
+                                                                        }} />
+                                                                }
+                                                            </div>
+                                                        </form>
+                                                        <div className={setClass(styles.side_right_bottom)}>
+                                                            <div className={setClass("signup_legal")}>
+                                                                <p className={setClass("text-sm mt-5 w-9/12 text-center m-auto")}>By signing up, you agree to the <span className={setClass("text-primary underline")}><Link href="/legal/terms">Terms of Service</Link></span> and <span className={setClass("text-primary underline")}><Link href="/legal/privacy">Privacy Policy</Link></span>.</p>
+                                                            </div>
+                                                            <div className={setClass(styles.alr_login)}>
+                                                                <p className={setClass("text-sm mt-5 w-8/12 text-center m-auto")}>Already have an account? <span className={setClass("text-primary underline")}><Link href="/auth/login">Log in</Link></span></p>
+                                                            </div>
                                                         </div>
-                                                    }
-                                                    {/* <Input id="username_signup" styleToRender='default' type="text" hasLabel={false} placeholder='Username' styles={'dark:border-gray-50 dark:border-opacity-20"'} value={usernameValue} invalid={usernameInvalid} onChange={(v) => { handleUsernameChange(v) }} />
+                                                    </div>
+                                                }
+                                                {/* <Input id="username_signup" styleToRender='default' type="text" hasLabel={false} placeholder='Username' styles={'dark:border-gray-50 dark:border-opacity-20"'} value={usernameValue} invalid={usernameInvalid} onChange={(v) => { handleUsernameChange(v) }} />
                                             < div className={setClass(styles.signup_email_error)}>
                                                 <p className={setClass(styles.signup_email_error_text, "text-red-500 mt-2 text-xs")}>{usernameErrorMessage}</p>
                                             </div> */}
 
-                                                    {/* <Input id="password_signup" styleToRender='default' type="password" hasLabel={false} placeholder='Password' value={passwordValue} invalid={passwordInvalid && showPasswordError} showPassword={showPassword} togglePassword={togglePassword} onChange={(v) => { handlePasswordInputChange(v) }} />
+                                                {/* <Input id="password_signup" styleToRender='default' type="password" hasLabel={false} placeholder='Password' value={passwordValue} invalid={passwordInvalid && showPasswordError} showPassword={showPassword} togglePassword={togglePassword} onChange={(v) => { handlePasswordInputChange(v) }} />
                                             <div className={setClass(styles.signup_email_error)}>
                                                 <p className={setClass(styles.signup_email_error_text, "text-xs mt-2 text-gray-500")}>{!passwordInvalid ?
                                                     "Password with 6 or more characters" : null}</p>
                                                 <p className={setClass(styles.signup_email_error_text, "text-red-500 mt-2 text-xs")}>{passwordErrorMessage}</p>
                                             </div> */}
-                                                </div>
                                             </div>
-                                        
+                                        </div>
+
                                         {/* <div className={setClass(styles.signup_form_main_bottom)}>
                                         <div className={setClass(styles.signup_form_button, "mt-4")}>
                                             {
@@ -597,7 +609,7 @@ const Signup: NextPage = () => {
                                             </div>
                                         </div>
                                         <div className="error_button w-[85%] m-auto">
-                                            <SecondaryButton text="Ok" action={() => { redirectOnClose() }} styles={setClass('w-full text-white p-2 mt-4 dark:bg-white dark:text-black hover:dark:bg-white/90')} />
+                                            <SecondaryButton text="Ok" action={() => { redirectOnError() }} styles={setClass('w-full text-white p-2 mt-4 dark:bg-white dark:text-black hover:dark:bg-white/90')} />
                                         </div>
                                     </div>
                                 </div>

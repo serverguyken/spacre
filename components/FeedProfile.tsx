@@ -20,6 +20,7 @@ import store from '../store'
 import Tooltip from './Tooltip'
 import PollCard from './PollCard'
 import MetaCard from './MetaCard'
+import { ToJSX } from '../utils/render'
 
 
 
@@ -30,12 +31,7 @@ import MetaCard from './MetaCard'
 const FeedProfile = () => {
     const { user, signOutUser, getUser, getSpaces } = useUserContext()
     const [spaces, setSpaces] = useState<Space[]>([])
-    const getSpaceUser = (id: string, cb: (user: User) => void) => {
-        getUser(id, (user: User) => {
-            cb(user)
-        })
-
-    }
+    
     useEffect(() => {
         getSpaces(user.uid, 6, (spaces) => {
             setSpaces(spaces)
@@ -46,7 +42,7 @@ const FeedProfile = () => {
         // })
         // return () => { unsubscribe() }
     }, [])
-    console.log(spaces);
+    console.log(user, spaces);
     // useEffect(() => {
     //     getUsers(space.uid)
     // }, [getUsers, space.uid])
@@ -212,7 +208,7 @@ const FeedProfile = () => {
         profileImage: 'https://pngpart.com/images/bt/gatsby-2.png',
         isVerified: true,
         isFollowing: true,
-        bio: 'Gatsby is a static site generator. It is a framework for building blazing fast websites and apps. visit https://gatsbyjs.com dd',
+        bio: 'Gatsby is a static site generator. It is a framework for building blazing fast websites and apps. visit https://gatsbyjs.com',
         followersCount: countSet(3865027, true, 2).num_fixed,
         followingCount: countSet(52, true, 2).num_fixed,
         spacesCount: countSet(2, true, 2).num_fixed,
@@ -299,23 +295,17 @@ const FeedProfile = () => {
                                     spaces.map((space: Space) => {
 
                                         return (
-                                            <div key={space.userName} id={`${space.userName}_profile_feed_view`} className="bg-white dark:bg-darkMode hover:bg-gray-50 dark:hover:bg-darkModeBg/20 cursor-pointer whitespace-pre-wrap feed_post_contents_card pt-3 pb-2 p-2  border-b border-gray-100  dark:border-borderDarkMode"
-                                                onClick={() => viewUserPost(space.userName)}
+                                            <div key={space.user.userName} id={`${space.user.userName}_profile_feed_view`} className="bg-white dark:bg-darkMode hover:bg-gray-50 dark:hover:bg-darkModeBg/20 cursor-pointer whitespace-pre-wrap feed_post_contents_card pt-3 pb-2 p-2  border-b border-gray-100  dark:border-borderDarkMode"
+                                                onClick={() => viewUserPost(space.user.userName)}
                                             >
                                                 <div>
-                                                    
-                                                    {
-                                                        getUser(space.userId, (user: User) => {
-                                                            return <span> {user.userName} </span>
-                                                        })
-                                                    }
                                                 </div>
-                                                {/* <div className="flex justify-between">
+                                                <div className="flex justify-between">
                                                         <div className='flex space-x-2 w-full'>
                                                             <div className="profile_image mt-1">
                                                                 <Link href={`/${space.userName}`}>
                                                                     <a>
-                                                                        <ProfileImage user={space} />
+                                                                        <ProfileImage user={space.user} />
                                                                     </a>
                                                                 </Link>
                                                             </div>
@@ -349,39 +339,39 @@ const FeedProfile = () => {
                                                                                         // }}
                                                                                     >
 
-                                                                                        <Link href={`/${space.userName}`}>
-                                                                                            <a className="font-semibold feed_user_profile_name">{space.displayName}</a>
+                                                                                        <Link href={`/${space.user.userName}`}>
+                                                                                            <a className="font-semibold feed_user_profile_name">{space.user.displayName}</a>
                                                                                         </Link>
                                                                                     </div>
                                                                                     {
-                                                                                        space.isVerified && <div className='mt-1'>
+                                                                                        space.user.verified && <div className='mt-1'>
                                                                                             <Icon type="verified" />
                                                                                         </div>
                                                                                     }
                                                                                 </div>
-                                                                                <div id={`${space.userName}_profile_hover_card`} className="profile_hover_card absolute pt-2 z-40 top-6 -left-14 w-auto hidden invisible opacity-0">
-                                                                                    <ProfileCardHover user={space} />
+                                                                                <div id={`${space.user.userName}_profile_hover_card`} className="profile_hover_card absolute pt-2 z-40 top-6 -left-14 w-auto hidden invisible opacity-0">
+                                                                                    <ProfileCardHover user={space.user} />
                                                                                 </div>
                                                                             </div>
                                                                             <div className="profile_username_post_timestamp flex items-center">
                                                                                 <div className="profile_username whitespace-nowrap max-w-[16rem] text-ellipsis overflow-hidden">
-                                                                                    <Link href={`/${space.userName}`}>
-                                                                                        <a className="text-sm text-dimGray dark:text-darkText">@{space.userName}</a>
+                                                                                    <Link href={`/${space.user.userName}`}>
+                                                                                        <a className="text-sm text-dimGray dark:text-darkText">@{space.user.userName}</a>
                                                                                     </Link>
                                                                                 </div>
                                                                                 <p className="before:content-['•'] before:text-[12px] before:ml-[4px] before:mr-[4px] -mt-1 before:dark:text-gray-50 before:dark:text-opacity-30"></p>
                                                                                 <Tooltip
-                                                                                    title={formatDate('2022-04-23T09:29:00.001Z').format('MMMM Do YYYY, h:mm:ss a')}
+                                                                                    title={formatDate(space.createdAt).format('MMMM Do YYYY, h:mm:ss a')}
                                                                                     placement="center"
                                                                                     position='bottom'
                                                                                     transition='fade'
                                                                                     transitionDuration={200}
                                                                                     classNames={{
-                                                                                        body: setClass('tooltip_comp -mt-1 bg-gray-500 dark:bg-darkModeBg dark:text-white text-[0.65rem] ml-1', `${formatDate('2022-04-23T09:29:00.001Z').format('MMMM Do YYYY, h:mm:ss a') == "" ? 'hidden' : ''}`),
+                                                                                        body: setClass('tooltip_comp -mt-1 bg-gray-500 dark:bg-darkModeBg dark:text-white text-[0.65rem] ml-1', `${formatDate(space.createdAt).format('MMMM Do YYYY, h:mm:ss a') == "" ? 'hidden' : ''}`),
                                                                                     }}
                                                                                     color='gray'
                                                                                 >
-                                                                                    <p className='text-sm text-dimGray hover:underline'>{formatDate('2022-04-23T09:29:00.001Z').startOf('h')}</p>
+                                                                                    <p className='text-sm text-dimGray hover:underline'>{formatDate(space.createdAt).startOf('h')}</p>
                                                                                 </Tooltip>
                                                                             </div>
                                                                         </div>
@@ -405,38 +395,7 @@ const FeedProfile = () => {
                                                                 </div>
                                                                 <div className="post_feed_contents mt-2 leading-[19px]">
                                                                     <div className="post_contents w-full">
-                                                                        {
-                                                                            space.postContentHeader && <h2 className="text-black dark:text-white font-semibold">{space.postContentHeader}</h2>
-                                                                        }
-                                                                        {
-                                                                            space.postContent && <div className='break-words whitespace-pre-wrap'>
-                                                                                <span className="text-[15px] leading-6 text-black dark:text-white">{space.postContent}</span>
-                                                                            </div>
-                                                                        }
-                                                                        {
-                                                                            space.postContentTagText && <p className="mt-2 text-[15px] leading-6 text-black dark:text-white">{space.postContentTagText}</p>
-                                                                        }
-                                                                        {
-                                                                            space.postVideo && <div className="mt-4 w-full">
-                                                                                <Video id={`${space.userName}_${space.id}`} src={space.postVideo} isAd={false} videoViews={space.postVideoViews} />
-                                                                            </div>
-                                                                        }
-                                                                        {
-                                                                            space.postImage && <div className="mt-4 w-4/5 max-w-[80%] h-4/5">
-                                                                                <img className="w-full h-full rounded-xl" src={space.postImage} alt="post" />
-                                                                            </div>
-                                                                        }
-                                                                        {
-                                                                        space.postLink && <div className="mt-4 w-full"
-                                                                            onClick={(e: any) => {
-                                                                                stopPropagation(e);
-                                                                            }}
-                                                                        >
-                                                                                <a href={space.postLink} target="_blank" rel="noopener noreferrer" className='text-link'>
-                                                                                    {space.postLink}
-                                                                                </a>
-                                                                            </div>
-                                                                        }
+                                                                        <ToJSX text={space.text} /> 
                                                                         {
                                                                             space.hasPoll && <div className="mt-5">
                                                                             <PollCard poll={space.poll}
@@ -461,31 +420,31 @@ const FeedProfile = () => {
                                                                     </div>
                                                                     <div className="post_user_actions mt-3 pb-1 max-w-[80%]">
                                                                         <div className="flex justify-between items-center">
-                                                                            <div className={setClass("post_action post_user_like_action relative select-none flex like_animation items-center space-x-2 cursor-pointer p-1 rounded-sm hover:bg-salmon hover:bg-opacity-10 hover:text-salmon dark:hover:text-salmon", space.postLiked ? "text-salmon dark:text-salmon" : 'text-gray-500  dark:text-darkText')}
+                                                                            <div className={setClass("post_action post_user_like_action relative select-none flex like_animation items-center space-x-2 cursor-pointer p-1 rounded-sm hover:bg-salmon hover:bg-opacity-10 hover:text-salmon dark:hover:text-salmon", space.liked ? "text-salmon dark:text-salmon" : 'text-gray-500  dark:text-darkText')}
                                                                             onClick={(e: any) => {
-                                                                                console.log(space.postLiked)
+                                                                                console.log(space.liked)
                                                                                     stopPropagation(e)
                                                                                 }}
                                                                             >
                                                                                 {
-                                                                                    space.postLiked ?
+                                                                                    space.liked ?
                                                                                         <HeartIconSolid className={'text-salmon'} width={16} />
                                                                                         :
                                                                                         <HeartIcon width={16} />
                                                                                 }
-                                                                                <p className="text-xs">{space.likesCount}</p>
+                                                                                <p className="text-xs">{space.likes}</p>
 
                                                                                 <div className="post_action_tooltip post_like_tooltip invisible opacity-0 absolute top-7 right-1 z-20 bg-gray-500 dark:bg-darkModeBg dark:text-white w-12 p-1 text-center text-xs text-white rounded shadow-sm">
                                                                                     <div className="like_tooltip_content">
                                                                                         {
-                                                                                            space.postLiked ? <span>Unlike</span> : <span>Like</span>
+                                                                                            space.liked ? <span>Unlike</span> : <span>Like</span>
                                                                                         }
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
                                                                             <div className="post_action post_user_comment_action relative select-none flex text-gray-500 dark:text-darkText items-center space-x-2 cursor-pointer p-1 rounded-sm hover:bg-green-600 hover:bg-opacity-10 hover:text-green-600 dark:hover:text-green-600">
                                                                                 <AnnotationIcon width={16} />
-                                                                                <p className="text-xs">{space.commentsCount}</p>
+                                                                                <p className="text-xs">{space.comments}</p>
                                                                                 <div className="post_action_tooltip post_comment_tooltip invisible opacity-0 absolute top-7 right-0 z-20 bg-gray-500 dark:bg-darkModeBg dark:text-white w-12 p-1 text-center text-xs text-white rounded shadow-sm">
                                                                                     <div className="comment_tooltip_content">
                                                                                         <span>Reply</span>
@@ -494,7 +453,7 @@ const FeedProfile = () => {
                                                                             </div>
                                                                             <div className="post_action post_user_share_action relative select-none flex text-gray-500 dark:text-darkText items-center space-x-2 cursor-pointer p-1 rounded-sm hover:bg-primary hover:bg-opacity-10 hover:text-primary dark:hover:text-primary">
                                                                                 <UploadIcon width={16} />
-                                                                                <p className="text-xs">{space.sharesCount}</p>
+                                                                                <p className="text-xs">{space.shares}</p>
                                                                                 <div className="post_action_tooltip post_share_tooltip invisible opacity-0 absolute top-7 -right-1 z-20 bg-gray-500 dark:bg-darkModeBg dark:text-white w-12 p-1 text-center text-xs text-white rounded shadow-sm">
                                                                                     <div className="share_tooltip_content">
                                                                                         <span>Share</span>
@@ -507,7 +466,7 @@ const FeedProfile = () => {
                                                                                 }
                                                                             }}  >
                                                                                 {
-                                                                                    space.postSaved ?
+                                                                                    space.saved ?
                                                                                         <BookmarkIconSolid className={'text-primary'} width={16} />
                                                                                         :
                                                                                         <BookmarkIcon width={16} />
@@ -515,7 +474,7 @@ const FeedProfile = () => {
                                                                                 <div className="post_action_tooltip post_save_tooltip invisible opacity-0 absolute top-7 -right-3 z-20 bg-gray-500 dark:bg-darkModeBg dark:text-white w-12  p-1 text-center text-xs text-white rounded shadow-sm">
                                                                                     <div className="save_tooltip_content">
                                                                                         {
-                                                                                            space.postSaved ? <span>Saved</span> : <span>Save</span>
+                                                                                            space.saved ? <span>Saved</span> : <span>Save</span>
                                                                                         }
                                                                                     </div>
                                                                                 </div>
@@ -525,7 +484,7 @@ const FeedProfile = () => {
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div> */}
+                                                    </div>
                                             </div>
                                         )
                                     })

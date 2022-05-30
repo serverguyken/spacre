@@ -24,7 +24,7 @@ import {
 } from "../config/auth/user";
 import { AuthUser, Space, User, UserContext } from "../interface/User";
 
-import {createDate, isBrowser, print} from "../utils";
+import { createDate, isBrowser, print } from "../utils";
 
 const userContext = createContext({} as UserContext<User>);
 
@@ -76,7 +76,7 @@ export const UserProvider = ({ children }: any) => {
         return getCurrentUser((uuser: any) => {
             if (uuser) {
                 const Uuser: AuthUser = {
-                    isAuthenticated: !!uuser, 
+                    isAuthenticated: !!uuser,
                     uid: uuser.uid,
                     email: uuser.email,
                     displayName: uuser.displayName,
@@ -89,9 +89,9 @@ export const UserProvider = ({ children }: any) => {
                 }
                 setAuthUser(Uuser);
                 const userDoc = u_getUser(uuser.uid);
-                userDoc.then((doc: any) => {
-                    if (doc.exists && doc.data() !== undefined) {
-                        const data = doc.data();
+                userDoc.then((result: any) => {
+                    const data = result.data.user;
+                    if (data) {
                         const user: User = {
                             uid: uuser.uid,
                             email: data.email,
@@ -112,32 +112,31 @@ export const UserProvider = ({ children }: any) => {
                             updatedAt: data.updatedAt,
                         }
                         setUser(user);
-                    } else {
-                        const user: User = {
-                            uid: uuser.uid,
-                            email: uuser.email,
-                            displayName: uuser.displayName,
-                            userName: uuser.displayName,
-                            profileImage: uuser.photoURL,
-                            blocked: false,
-                            premium: false,
-                            verified: false,
-                            bio: null,
-                            followers: [],
-                            following: [],
-                            spaces: [],
-                            followersCount: 0,
-                            followingsCount: 0,
-                            spacesCount: 0,
-                            createdAt: '',
-                            updatedAt: '',
-                        }
-                        setUser(user);
                     }
+                    // const user: User = {
+                    //     uid: uuser.uid,
+                    //     email: uuser.email,
+                    //     displayName: uuser.displayName,
+                    //     userName: uuser.displayName,
+                    //     profileImage: uuser.photoURL,
+                    //     blocked: false,
+                    //     premium: false,
+                    //     verified: false,
+                    //     bio: null,
+                    //     followers: [],
+                    //     following: [],
+                    //     spaces: [],
+                    //     followersCount: 0,
+                    //     followingsCount: 0,
+                    //     spacesCount: 0,
+                    //     createdAt: '',
+                    //     updatedAt: '',
+                    // }
+                    // setUser(user);
                 });
             } else {
                 const Uuser: AuthUser = {
-                    isAuthenticated: false, 
+                    isAuthenticated: false,
                     uid: "",
                     email: "",
                     displayName: "",
@@ -150,10 +149,10 @@ export const UserProvider = ({ children }: any) => {
                 }
                 setAuthUser(Uuser);
             }
-           
+
         });
     }, []);
-    
+
     const signUpUser = (email: string, password: string, data: User, action: {
         onSuccess: () => void,
         onError: (error: any) => void
@@ -182,12 +181,12 @@ export const UserProvider = ({ children }: any) => {
                         createdAt: setCreatedAt(),
                         updatedAt: setCreatedAt(),
                     });
-                    u_addUserName(data.userName);
+                    u_addUserName(data.userName, data.email);
                     setLoading(false);
                     setError("");
                     setHasError(false);
                     action.onSuccess();
-                        
+
                 }
                 catch (error: any) {
                     setLoading(false);
@@ -204,7 +203,7 @@ export const UserProvider = ({ children }: any) => {
                 action.onError(error.code);
             });
     };
-    
+
     const signInUser = (email: string, password: string, action: {
         onSuccess: () => void,
         onError: (error: any) => void
@@ -214,7 +213,7 @@ export const UserProvider = ({ children }: any) => {
             .then((result) => {
                 action.onSuccess();
             })
-            .catch((error) => { 
+            .catch((error) => {
                 setError(error.code);
                 setHasError(true);
                 setLoading(false);
@@ -279,10 +278,10 @@ export const UserProvider = ({ children }: any) => {
                 action.onError(error.code);
             });
     };
-    
-    const addUserName = (username: string) => {
+
+    const addUserName = (username: string, email: string) => {
         try {
-            return u_addUserName(username);
+            return u_addUserName(username, email);
         } catch (error: any) {
             setError("unable to add user name");
             setHasError(true);
@@ -307,16 +306,16 @@ export const UserProvider = ({ children }: any) => {
         }
     };
 
-    const getUserNames = () => {
+    const getUserNames = async () => {
         try {
             let usernames: any = [];
-            return u_getUserNames().then((snapshot: any) => {
-                snapshot.docs.forEach((doc: any) => {
-                    usernames.push(doc.data());
+            return u_getUserNames().then((result: any) => {
+                const usernamesData = result.data.usernames
+                usernamesData.forEach((username: any) => {
+                    usernames.push(username);
                 });
-            }).then(() => {
-                return usernames;
-            });
+                return usernames
+            })
         } catch (error: any) {
             setError("unable to get user names");
             setHasError(true);
@@ -330,10 +329,10 @@ export const UserProvider = ({ children }: any) => {
             setError("unable to add user");
             setHasError(true);
         }
-        
+
     };
 
-    const getUser = (id: string, cb:(user: User) => void) => {
+    const getUser = (id: string, cb: (user: User) => void) => {
         try {
             u_getUser(id).then((result: any) => {
                 if (result) {
@@ -348,8 +347,6 @@ export const UserProvider = ({ children }: any) => {
             setHasError(true);
         }
     };
-
-    
 
     const updateUser = (user: User, data: any) => {
         try {
@@ -393,15 +390,17 @@ export const UserProvider = ({ children }: any) => {
             setHasError(true);
         }
     };
-    const addSpace = (uid: string, post: Space, cb: (message: any) => void) => {
+
+    const addSpace = (uid: string, post: Space, cbs: {
+        onSuccess: (message: any) => void, onError: (message: any) => void
+    }) => {
         try {
             u_addSpace(uid, post).then((result: any) => {
-                if (result) {
-                    cb(result);
-                }
+                cbs.onSuccess(result);
             }).catch((error: any) => {
                 setError("An error occured");
                 setHasError(true);
+                cbs.onError(error)
             });
         } catch (error: any) {
             setError("An error occured");
