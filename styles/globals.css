@@ -399,8 +399,8 @@ body {
   .layout_contents_main {
     display: block !important;
     left: 0px !important;
-    max-width: auto !important;
-    width: auto !important;
+    max-width: 100% !important;
+    width: 100% !important;
     height: 100%;
   }
 

@@ -27,7 +27,7 @@ const people_to_follow = [
     {
         id: 3,
         name: "Vercel",
-        image: "https://sfsfiles.spacre.com/images/72e55085-af9c-48c8-8c97-996df7f52101_logo-vercel.png",
+        image: "",
         username: "cjanderson",
         job: "Software",
     },

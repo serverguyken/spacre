@@ -90,6 +90,7 @@ export const UserProvider = ({ children }: any) => {
                 setAuthUser(Uuser);
                 const userDoc = u_getUser(uuser.uid);
                 userDoc.then((result: any) => {
+                    console.log(result, 're');
                     const data = result.data.user;
                     if (data) {
                         const user: User = {

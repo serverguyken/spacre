@@ -76,12 +76,13 @@ export const u_addUser = (id: any, data: {}) => {
     return SetDoc(usersCollectionRef, data);
 };
 
-export const u_getUser =  async (id: any) => {
+export const u_getUser = (id: any) => {
     const response = API.get(`${api_url}/get/user?id=${id}`, {
         headers: {
             'Authorization': `Bearer ${id}`
         }
     })
+    console.log(response);
     return response;
 };
 

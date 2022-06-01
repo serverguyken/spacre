@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { HASHTAG_REGEX, Linky, MENTION_REGEX, print, URLShortener } from '.';
 import Icon from '../components/Icon';
 import Tooltip from '../components/Tooltip';
+import { meta_scraper_api } from '../config';
 import API from '../config/api';
 import { Meta } from '../interface/Meta';
 import store from '../store';
@@ -74,7 +75,7 @@ export const ToJSX = ({ text }: {
     )
 }
 
-const meta_lookup_api = 'http://10.0.0.138:3002/api/v1/meta/lookup'
+const meta_lookup_api = meta_scraper_api
 export const RenderLinkCard = ({ url, fetchMeta, onClose, metaData }: {
     url: string;
     fetchMeta: boolean;

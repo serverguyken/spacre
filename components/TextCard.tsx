@@ -246,6 +246,7 @@ const TextCard = () => {
 
     const handlePost = async () => {
         const spaceData: Space = {
+            user: user,
             spaceId: user.uid,
             userId: user.uid,
             userName: user.userName,
