@@ -21,6 +21,7 @@ import {
     getCurrentUser,
     u_addSpace,
     u_getSpaces,
+    u_getUserDB,
 } from "../config/auth/user";
 import { AuthUser, Space, User, UserContext } from "../interface/User";
 
@@ -348,7 +349,8 @@ export const UserProvider = ({ children }: any) => {
             setHasError(true);
         }
     };
-
+    
+    
     const updateUser = (user: User, data: any) => {
         try {
             return u_updateUser(user.uid, data);
@@ -367,20 +369,28 @@ export const UserProvider = ({ children }: any) => {
         }
     };
 
-    const getUsers = (id: any) => {
+    const getUsers = (id: any, cb: (users: any) => void) => {
         try {
-            return u_getUsers(id);
+            u_getUsers(id).then((res: any) => {
+                if (res) {
+                    cb(res.data.users);
+                } else {
+                    cb([])
+                }
+            }) 
         } catch (error: any) {
             setError("unable to get users");
             setHasError(true);
         }
     };
 
-    const getSpaces = (uid: string, limit: number, cb: (message: any) => void) => {
+    const getSpaces = (uid: string, limit: number, cb: (spaces: Space[]) => void) => {
         try {
             u_getSpaces(uid, limit).then((result: any) => {
                 if (result) {
                     cb(result.data.spaces);
+                } else {
+                    cb([])
                 }
             }).catch((error: any) => {
                 setError("An error occured");

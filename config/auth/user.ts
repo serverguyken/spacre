@@ -48,9 +48,8 @@ export const u_addUserName = (user_name: string, email: string) => {
 };
 
 export const u_getUserName = (id: string) => {
-    // const response = API.get(`${api_url}/get/usernames`)
-    // console.log(response);
-    // return response;
+    const response = API.get(`${api_url}/get/username`)
+    return response;
 };
 
 export const u_getUserNames = () => {
@@ -82,15 +81,23 @@ export const u_getUser = (id: any) => {
             'Authorization': `Bearer ${id}`
         }
     })
-    console.log(response);
     return response;
+};
+export const u_getUserDB = (id: any) => {
+    const ref: any = docRef('users', id);
+    return GetDoc(ref)
 };
 
 
 
 
 export const u_getUsers = (id: any) => {
-    return store.content.data.getUsers(id)
+    const response = API.get(`${api_url}/get/users`, {
+        headers: {
+            'Authorization': `Bearer ${id}`
+        }
+    })
+    return response;
 };
 
 
@@ -107,6 +114,7 @@ export const u_deleteUser = (id: any) => {
 export const u_addSpace = (id: any, data: {}) => { 
     const response = API.post(`${api_url}/create/space`, data, {
         headers: {
+            'Content-type': 'application/json',
             'Authorization': `Bearer ${id}`
         }
     })

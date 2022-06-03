@@ -2,7 +2,7 @@ import { CodeIcon, PhotographIcon, EmojiHappyIcon, PlusIcon, ChartSquareBarIcon 
 import { PrimaryButton } from "./Buttons"
 import { XIcon } from "@heroicons/react/outline"
 import { useState, useEffect } from "react"
-import { setClass, isBrowser, generateLoadingTime, TimeOut, print, StorageEvent, toHTML, getTypeByTrigger, Strategy, Linky, createDate } from "../utils"
+import { setClass, isBrowser, generateLoadingTime, TimeOut, print, StorageEvent, toHTML, getTypeByTrigger, Strategy, Linky, createDate, generateID } from "../utils"
 import { CompositeDecorator, ContentBlock, ContentState, DefaultDraftInlineStyle, EditorState, Modifier, SelectionState } from "draft-js"
 import Editor, { EditorPlugin } from '@draft-js-plugins/editor'
 import createMentionPlugin, { defaultSuggestionsFilter } from '@draft-js-plugins/mention'
@@ -238,8 +238,7 @@ const MobileTextCard = () => {
 
     const handlePost = async () => {
         const spaceData: Space = {
-            user: user,
-            spaceId: user.uid,
+            spaceId: generateID(),
             userId: user.uid,
             userName: user.userName,
             displayName: user.displayName,
@@ -295,15 +294,14 @@ const MobileTextCard = () => {
                 setTimeout(() => {
                     setSpaceCreated(false)
                 }, 2000)
-
             },
             onError: () => { 
-                // setPopUp(true, 'An error occurred')
-                // setPopUpTimeout(5000)
+                setPopUp(true, 'An error occurred')
+                setPopUpTimeout(5000)
             }
         });
         if (hasError) {
-            setPopUp(true, error)
+            setPopUp(true, "An error occurred")
             setPopUpTimeout(5000)
         }
     };
