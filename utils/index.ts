@@ -4,7 +4,7 @@ import linkify, { LinkifyIt } from 'linkify-it';
 import tlds from 'tlds';
 export const MENTION_REGEX = /(^|\s)(@[a-zA-Z0-9_]+)/g
 export const HASHTAG_REGEX = /(^|\s)(#[a-zA-Z0-9_]+)/g
-
+export const URL_REGEX = /(^|\s)((https?:\/\/)?[a-zA-Z0-9_]+\.[a-zA-Z0-9_]+[a-zA-Z0-9_]+)/g
 export const generateID = () => {
   return uuidv4();
 };

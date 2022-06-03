@@ -28,6 +28,7 @@ const HashtagComp = ({ text }: { text: string }) => {
 }
 
 const LinkComp = ({ text, url }: { text: string, url: string }) => {
+    const split_text = text.split('\n');
     return (
         <span className='text-link'>
             <a href={url} className='text-link'
@@ -58,7 +59,7 @@ export const ToJSX = ({ text }: {
                     return <HashtagComp key={index} text={item} />
                 }
                 else if (Linky.match(item)) {
-                    const text: any = Linky.match(item) !== null || Linky.match(item) !== undefined ? Linky.match(item)?.text : item
+                    const link = item.split('\n')
                     const url: any = Linky.match(item) !== null || Linky.match(item) !== undefined ? Linky.match(item)?.url : item
                     return <LinkComp key={index} text={item} url={url} />
                 }

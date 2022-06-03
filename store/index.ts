@@ -1,9 +1,29 @@
 import API from "../config/api";
-import { User, GetUsers } from "../interface/User";
+import { User, Space } from "../interface/User";
 import useUserContext from "../provider/userProvider";
 import VALTIO, { InitialObject } from "./valtio";
 import { api_url } from "../config";
 import { Meta } from "../interface/Meta";
+import { u_getSpaces } from "../config/auth/user";
+
+export const getSpaces = (uid: string, limit: number, cbs: {
+    onSuccess: (spaces: Space[]) => void,
+    onError: (error: any) => void
+}) => {
+    try {
+        u_getSpaces(uid, limit).then((result: any) => {
+            if (result) {
+                cbs.onSuccess(result.data.spaces);
+            } else {
+                cbs.onSuccess([])
+            }
+        }).catch((error: any) => {
+            cbs.onError("An error occured");
+        });
+    } catch (error: any) {
+        cbs.onError("An error occured");
+    }
+};
 export interface STORE {
     widget_rendered: boolean;
     signup_step: {
@@ -15,6 +35,8 @@ export interface STORE {
     postTextareaShown: boolean;
     searchList: any[];
     renderNoSearch: boolean;
+    spaces: Space[];
+    users: User[];
     fetchUsers: {
         users: User[];
         status: Object;
@@ -48,6 +70,9 @@ const store: {
             postTextareaShown: false,
             searchList: [],
             renderNoSearch: false,
+            spaces: [],
+            users: [],
+            
             fetchUsers: {
                 users: [],
                 status: {}

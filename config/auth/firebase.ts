@@ -1,6 +1,6 @@
 import { initializeApp, getApp, getApps } from 'firebase/app';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { getFirestore, doc, getDoc, updateDoc, deleteDoc, onSnapshot, orderBy, query, collection, setDoc, getDocs, addDoc } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, updateDoc, deleteDoc, onSnapshot, orderBy, query, limit, startAfter, collection, setDoc, getDocs, addDoc, } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 interface FirebaseConfig {
     apiKey: string | undefined;
@@ -48,3 +48,10 @@ export const createCollectionRef = (name: string) => {
 }
 
 export const OnSnapshot = onSnapshot
+export const Query = (ref: any, orderByQ: {field: string, order: 'asc' | 'desc'}, limitQ: any, lastDocQ?: any) => {
+if (lastDocQ) {
+    return query(ref, orderBy(orderByQ.field, orderByQ.order), limit(limitQ),  startAfter(lastDocQ))
+} else {
+    return query(ref, orderBy(orderByQ.field, orderByQ.order), limit(limitQ))
+}
+}

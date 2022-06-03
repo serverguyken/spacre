@@ -44,11 +44,19 @@ import Tooltip from "./Tooltip";
 import PollCard from "./PollCard";
 import MetaCard from "./MetaCard";
 import { ToJSX } from "../utils/render";
+import { createCollectionRef, GetDocs, OnSnapshot, Query } from "../config/auth/firebase";
 
 const FeedProfile = () => {
   const { user, signOutUser, getUsers, getSpaces } = useUserContext();
+  const router = useRouter();
+  const [rendered, setRendered] = useState(false);
+  const [refreshed, setRefreshed] = useState(true);
+  const [fecthed, setFetched] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [lastDoc, setLastDoc] = useState<any>();
   const [users, setUsers] = useState<User[]>([]);
   const [spaces, setSpaces] = useState<Space[]>([]);
+
   //console.log(user, spaces);
   // signOutUser({
   //     onSuccess: () => {},
@@ -61,23 +69,52 @@ const FeedProfile = () => {
 	});
   }, []);
 
-  useEffect(() => {
-	getSpaces(user.uid, 6, (spaces: Space[]) => {
-	  setSpaces(spaces);
-	});
-	// const ref = createCollectionRef(`spaces`)
-	// const unsubscribe = OnSnapshot(ref, snapshot => {
-	//     setSpaces(snapshot.docs.map((docs: any) => docs.data()))
-	// })
-	// return () => { unsubscribe() }
-  }, []);
+  // feedprofile_container
 
-  const [rendered, setRendered] = useState(false);
-  //const users = store.get('fetchUsers').users
-  // const _status = store.get('fetchUsers').status
-  const [isUsers, setIsUsers] = useState(false);
-  //console.log(users, _status)
-  const [refreshed, setRefreshed] = useState(true);
+  
+
+  useEffect(() => {
+	const ref = createCollectionRef('spaces');
+	const query = Query(ref, {field: "createdAt",order: "desc"}, 10);
+	const unsubscribe = OnSnapshot(query, snapshot => {
+	    setSpaces(snapshot.docs.map((docs: any) => docs.data()))
+		const lastDoc = snapshot.docs[snapshot.docs.length - 1];
+		setLastDoc(lastDoc);
+	})
+	return () => { unsubscribe() }
+  }, []);
+  
+  useEffect(() => {
+	  console.log(spaces);
+  }, [spaces]);
+	  
+
+	useEffect(() => {
+		if (fecthed) {
+			setFetched(false);
+			const ref = createCollectionRef('spaces');
+			const query = Query(ref, {field: "createdAt",order: "desc"}, 10, lastDoc);
+			GetDocs(query).then((snapshot: any) => {
+				const newSpaces = snapshot.docs.map((docs: any) => docs.data());
+				setSpaces([...spaces, ...newSpaces]);
+				const lastDoc = snapshot.docs[snapshot.docs.length - 1];
+				setLastDoc(lastDoc);
+			})
+		}
+		
+	} , [fecthed])
+  useEffect(() => {
+	if (isBrowser()) {
+		// check if ending of window scroll
+		window.addEventListener("scroll", () => {
+			if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+				setFetched(true);
+			}
+		});
+	  }
+  }, []);
+  
+  
   const [dummyUsers, setDummyUsers] = useState([
 	{
 	  id: 1,
@@ -270,11 +307,7 @@ const FeedProfile = () => {
 	  },
 	},
   ]);
-  const [profileHoverCard, setProfileHoverCard] = useState(false);
-  const [profileHoverCardPosition, setProfileHoverCardPosition] =
-	useState(null);
-  const router = useRouter();
-
+  
   if (isBrowser()) {
 	TimeOut(() => {
 	  setRendered(true);
@@ -292,7 +325,7 @@ const FeedProfile = () => {
   };
 
   return (
-	<div className="relative mt-2">
+	<div className="feedprofile_container relative mt-2" id='feed_main_container'>
 	  <div>
 		<TextCard />
 	  </div>
@@ -324,7 +357,7 @@ const FeedProfile = () => {
 			</div>
 		  }
 		>
-		  <div className="screen-sm:pt-16 mb-5 pb-16 screen-sm:pb-10 overflow-hidden">
+		  <div className="screen-sm:pt-16 pb-2 overflow-hidden">
 			{refreshed ? (
 			  spaces.map((space: Space, index: number) => {
 				return (
@@ -361,18 +394,18 @@ const FeedProfile = () => {
 									<div
 									  className="whitespace-nowrap max-w-[16rem] text-ellipsis overflow-hidden hover:underline"
 									  onMouseOver={() => {
+											// change position of the hover card based on view height
 										const profile_feed_view = document.getElementById(`${space.spaceId}_profile_feed_view` ) as HTMLDivElement;
-										const profile_hover_card = document.getElementById(`${users.filter((u) => u.uid === space.userId
-											)[0].userName}_profile_hover_card`) as HTMLDivElement;
+										const profile_hover_card = document.getElementById(`${space.spaceId}_profile_hover_card`) as HTMLDivElement;
 										const windowHeight = window.innerHeight;
-										// change the position of the hover card based on the height of the window
-										// if the window is less than the height of the profile feed view, then the hover card will be above the profile feed view and vice versa
-										console.log(windowHeight, profile_feed_view.offsetHeight);
-										
-										if (windowHeight > profile_feed_view.clientHeight) {
-												console.log("window height is greater than profile feed view");
+										const profileFeedViewHeight = windowHeight - profile_feed_view.getBoundingClientRect().top;
+										const top_bottom_position = profileFeedViewHeight > 300 ? 'bottom' : 'top';
+										if (top_bottom_position === 'bottom') {
+											profile_hover_card.classList.remove('bottom-6');
+											profile_hover_card.classList.add('top-6');
 										} else {
-											console.log("window height is less than profile feed view");
+											profile_hover_card.classList.remove('top-6');
+											profile_hover_card.classList.add('bottom-6');
 										}
 									  }}
 
@@ -402,12 +435,8 @@ const FeedProfile = () => {
 									)}
 								  </div>
 								  <div
-									id={`${
-									  users.filter(
-										(u) => u.uid === space.userId
-									  )[0].userName
-									}_profile_hover_card`}
-									className="profile_hover_card absolute pt-2 z-40 top-6 -left-14 w-auto hidden invisible opacity-0"
+									id={`${space.spaceId}_profile_hover_card`}
+									className="profile_hover_card absolute pt-2 z-40  -left-14 w-auto hidden invisible opacity-0"
 								  >
 									<ProfileCardHover
 									  user={

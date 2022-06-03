@@ -18,7 +18,7 @@ import mentions from "../utils/mentions"
 import MentionEntry from "./MentionEntry"
 import HashtagEntry from "./HashtagEntry"
 import VALTIO, { SUBSCRIBE } from "../store/valtio"
-import store from "../store"
+import store, { getSpaces } from "../store"
 import { RenderLinkCard } from "../utils/render"
 import Tooltip from "./Tooltip"
 import MediaHandler from "./MediaHandler"
@@ -313,6 +313,7 @@ const TextCard = () => {
             setPopUp(true, 'An error occurred')
             setPopUpTimeout(5000)
         }
+        store.set("spaces", []);
     };
 
     const onMediaChange = (e: any) => {
