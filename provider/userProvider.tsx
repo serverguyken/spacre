@@ -22,6 +22,7 @@ import {
     u_addSpace,
     u_getSpaces,
     u_getUserDB,
+    u_updateSpace,
 } from "../config/auth/user";
 import { AuthUser, Space, User, UserContext } from "../interface/User";
 
@@ -417,7 +418,25 @@ export const UserProvider = ({ children }: any) => {
             setHasError(true);
         }
     };
-
+    
+    const updateSpace = (spaceId: string, post: Space, cbs: {
+        onSuccess: (message: any) => void, onError: (message: any) => void
+    }) => {
+        try {
+            u_updateSpace(spaceId, post).then((result: any) => {
+                console.log(result);
+                
+                cbs.onSuccess(result);
+            }).catch((error: any) => {
+                setError("An error occured");
+                setHasError(true);
+                cbs.onError(error)
+            });
+        } catch (error: any) {
+            setError("An error occured");
+            setHasError(true);
+        }
+    }
     const context: UserContext<any> | any = {
         authUser,
         user,
@@ -439,6 +458,7 @@ export const UserProvider = ({ children }: any) => {
         getUsers,
         addSpace,
         getSpaces,
+        updateSpace,
     };
 
     return <userContext.Provider value={context} >{children}</userContext.Provider>;

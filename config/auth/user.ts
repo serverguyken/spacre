@@ -1,7 +1,7 @@
-import { auth, OnAuthStateChanged, collectionRef, docRef, AddDoc, SetDoc, UpdateDoc, DeleteDoc, GetDoc, GetDocs } from './firebase';
+import { auth, OnAuthStateChanged, collectionRef, docRef, AddDoc, SetDoc, UpdateDoc, DeleteDoc, GetDoc, GetDocs, createDocRef } from './firebase';
 import { useEffect, useState } from 'react';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, signInWithPopup, GithubAuthProvider, getRedirectResult } from 'firebase/auth';
-import { User } from '../../interface/User';
+import { Space, User } from '../../interface/User';
 import API from '../api';
 import store from '../../store';
 import { api_url } from '..';
@@ -128,7 +128,10 @@ export const u_getSpaces = (id: any, limit: number) => {
     })
     return response;
 };
-
+export const u_updateSpace = (id: any, data: Space) => {
+    const spacesDocumentnRef: any = createDocRef('spaces', id);
+    return SetDoc(spacesDocumentnRef, data, true);    
+}
 export function u_getRedirectResult(auth: any) {
     return getRedirectResult(auth);
 }

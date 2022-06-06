@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import moment from 'moment';
 import linkify, { LinkifyIt } from 'linkify-it';
 import tlds from 'tlds';
+import { User } from 'firebase/auth';
 export const MENTION_REGEX = /(^|\s)(@[a-zA-Z0-9_]+)/g
 export const HASHTAG_REGEX = /(^|\s)(#[a-zA-Z0-9_]+)/g
 export const URL_REGEX = /(^|\s)((https?:\/\/)?[a-zA-Z0-9_]+\.[a-zA-Z0-9_]+[a-zA-Z0-9_]+)/g
@@ -480,3 +481,13 @@ export function dateFromISOString(date: string) {
   const newDate = moment(date).format('YYYY-MM-DD HH:mm:ss');
   return newDate
 }
+
+
+export const isFollowing = (followers: User[], user: User) => {
+  const found =  followers.find((follower) => follower.uid === user.uid);
+  if (found) {
+    return true
+  } else {
+    return false
+  }
+};

@@ -12,8 +12,8 @@ export interface Space {
     text: string;
     hasPoll: boolean;
     poll: Poll;
-    likes: Array<string>;
-    comments: Array<string>;
+    likes: User[];
+    comments: Array<any>;
     boosts: Array<string>;
     shares: Array<string>;
     tags: Array<string>;
@@ -150,6 +150,15 @@ export interface UserContext<User> {
     deleteUser: () => Promise<void>;
     getUsers: (id: any, callback: (users: User[]) => void) => Promise<User[]>;
     addSpace: (id: any, Space: Space,  cbs: {
+        onSuccess: (result: any) => void, onError: (result: any) => void
+    }) => Promise<void>;
+    updateSpace: (id: any, Space: Space, cbs: {
+        onSuccess: (result: any) => void, onError: (result: any) => void
+    }) => Promise<void>;
+    deleteSpace: (id: any, cbs: {
+        onSuccess: (result: any) => void, onError: (result: any) => void
+    }) => Promise<void>;
+    getSpace: (id: any, cbs: {
         onSuccess: (result: any) => void, onError: (result: any) => void
     }) => Promise<void>;
     getSpaces: (id: any, limit: number, callback: (spaces: Space[]) => void) => Promise<void>;

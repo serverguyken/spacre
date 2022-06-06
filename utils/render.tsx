@@ -49,8 +49,8 @@ export const ToJSX = ({ text }: {
     const setComp = () => {
         if (text === null) return ''
         const REGEX = '_R$1E$2G$3E$4X^$02^%24*x$#~@' // this is a unique string that will not be found in the text
-        const modifiedText = text.replace(/ /g, REGEX + ' ')
-        const arr = modifiedText.split(REGEX) // split the text into an array of strings
+        const modifiedText = text.replace(/ /g, REGEX + ' ').replace(/\n/g, REGEX + '\n').replace(/\r/g, REGEX + '\r').replace(/\t/g, REGEX + '\t')
+        const arr = modifiedText.split(REGEX ) // split the text into an array of strings
         return arr.map((item, index) => {
             if (item !== undefined) {
                 if (item.match(MENTION_REGEX)) {

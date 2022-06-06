@@ -731,3 +731,18 @@ body {
   }
 }
 
+.like_count_animation {
+  animation: like_count_animation .2s;
+}
+
+@keyframes like_count_animation {
+  0% {
+    opacity: 0;
+    transform: translateY(0px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(-100%);
+  }
+}

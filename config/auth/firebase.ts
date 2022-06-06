@@ -36,7 +36,15 @@ export const collectionRef = (name: string) => collection(db, name);
 export const docRef = (name: string, id: string) => doc(db, name, id);
 export const GetDocs = async (collection: any) => await getDocs(collection);
 export const GetDoc = async (collection: any) => await getDoc(collection);
-export const SetDoc = async (collection: any, data: any) => await setDoc(collection, data);
+export const SetDoc = async (collection: any, data: any, merge?: boolean) => {
+    if (merge) {
+        return await updateDoc(collection, data, {
+            merge: true,
+        });
+    } else {
+        return await setDoc(collection, data);
+    }
+};
 export const AddDoc = async (collection: any, data: any) => await addDoc(collection, data);
 export const UpdateDoc = async (collection: any, data: any) => await updateDoc(collection, data);
 export const DeleteDoc = async (collection: any) => await deleteDoc(collection);
