@@ -250,7 +250,7 @@ const MobileTextCard = () => {
             hasPoll: pollValid,
             poll: poll,
             likes: [],
-            comments: [],
+            replies: [],
             boosts: [],
             shares: [],
             tags: [],

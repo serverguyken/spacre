@@ -83,9 +83,11 @@ export const u_getUser = (id: any) => {
     })
     return response;
 };
+
+
 export const u_getUserDB = (id: any) => {
-    const ref: any = docRef('users', id);
-    return GetDoc(ref)
+    const spacesDocumentnRef: any = createDocRef('users', id);
+    return GetDoc(spacesDocumentnRef);
 };
 
 
@@ -102,8 +104,8 @@ export const u_getUsers = (id: any) => {
 
 
 export const u_updateUser = (id: any, data: {}) => {
-    const usersCollectionRef: any = docRef('users', id);
-    return UpdateDoc(usersCollectionRef, data);
+    const usersDocumentnRef: any = createDocRef('users', id);
+    return SetDoc(usersDocumentnRef, data, true);  
 };
 
 export const u_deleteUser = (id: any) => {
@@ -131,6 +133,11 @@ export const u_getSpaces = (id: any, limit: number) => {
 export const u_updateSpace = (id: any, data: Space) => {
     const spacesDocumentnRef: any = createDocRef('spaces', id);
     return SetDoc(spacesDocumentnRef, data, true);    
+}
+
+export const u_getSpace = (id: any) => {
+    const spacesDocumentnRef: any = createDocRef('spaces', id);
+    return GetDoc(spacesDocumentnRef);
 }
 export function u_getRedirectResult(auth: any) {
     return getRedirectResult(auth);

@@ -13,7 +13,7 @@ export interface Space {
     hasPoll: boolean;
     poll: Poll;
     likes: User[];
-    comments: Array<any>;
+    replies: Array<any>;
     boosts: Array<string>;
     shares: Array<string>;
     tags: Array<string>;
@@ -43,7 +43,9 @@ export interface PollOption {
     option: string;
     votes: number;
 }
-export interface Reply extends Space {
+// extend Space but without spaceId
+export interface Reply extends Omit<Space, "spaceId"> {
+    // chenge spaceId to replyId
     replyId: string;
 }
 
@@ -145,21 +147,27 @@ export interface UserContext<User> {
     deleteUserName: () => Promise<void>;
     getUserNames: () => Promise<void>;
     addUser: (user: User) => Promise<void>;
-    getUser: (id: string, cb:(user: User) => void) => User;
-    updateUser: (user: User) => Promise<void>;
+    getUser: (id: any, cbs: {
+        onSuccess: (result: any) => void, onError: (result: any) => void
+    }) => void;
+    updateUser: (id: any, user: User, cbs: {
+        onSuccess: (result: any) => void, onError: (result: any) => void
+    }) => void;
     deleteUser: () => Promise<void>;
-    getUsers: (id: any, callback: (users: User[]) => void) => Promise<User[]>;
+    getUsers: (id: any, cbs: {
+        onSuccess: (result: any) => void, onError: (result: any) => void
+    }) => void;
     addSpace: (id: any, Space: Space,  cbs: {
         onSuccess: (result: any) => void, onError: (result: any) => void
     }) => Promise<void>;
     updateSpace: (id: any, Space: Space, cbs: {
         onSuccess: (result: any) => void, onError: (result: any) => void
-    }) => Promise<void>;
+    }) => void;
     deleteSpace: (id: any, cbs: {
         onSuccess: (result: any) => void, onError: (result: any) => void
     }) => Promise<void>;
     getSpace: (id: any, cbs: {
         onSuccess: (result: any) => void, onError: (result: any) => void
-    }) => Promise<void>;
-    getSpaces: (id: any, limit: number, callback: (spaces: Space[]) => void) => Promise<void>;
+    }) => void;
+    getSpaces: (id: any, limit: number, callback: (spaces: Space[]) => void) => void;
 }

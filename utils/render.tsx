@@ -42,7 +42,7 @@ const LinkComp = ({ text, url }: { text: string, url: string }) => {
 
 
 export const ToJSX = ({ text }: {
-    text: string
+    text: string | null
 }) => {
     // string regex to match mentions, hashtags and links in the text
    

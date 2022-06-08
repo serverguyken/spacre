@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import moment from 'moment';
 import linkify, { LinkifyIt } from 'linkify-it';
 import tlds from 'tlds';
-import { User } from 'firebase/auth';
+import { User } from '../interface/User';
 export const MENTION_REGEX = /(^|\s)(@[a-zA-Z0-9_]+)/g
 export const HASHTAG_REGEX = /(^|\s)(#[a-zA-Z0-9_]+)/g
 export const URL_REGEX = /(^|\s)((https?:\/\/)?[a-zA-Z0-9_]+\.[a-zA-Z0-9_]+[a-zA-Z0-9_]+)/g
@@ -491,3 +491,8 @@ export const isFollowing = (followers: User[], user: User) => {
     return false
   }
 };
+
+export const isLiked = (likes: User[], user: User) => {
+  const liked = likes.filter((l) => l.uid === user.uid)[0] ? true : false;
+  return liked;
+}

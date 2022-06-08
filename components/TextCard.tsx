@@ -258,7 +258,7 @@ const TextCard = () => {
             hasPoll: pollValid,
             poll: poll,
             likes: [],
-            comments: [],
+            replies: [],
             boosts: [],
             shares: [],
             tags: [],
@@ -305,8 +305,8 @@ const TextCard = () => {
 
             },
             onError: () => { 
-                // setPopUp(true, 'An error occurred')
-                // setPopUpTimeout(5000)
+                setPopUp(true, 'An error occurred')
+                setPopUpTimeout(5000)
             }
         });
         if (hasError) {
@@ -634,7 +634,7 @@ const TextCard = () => {
                                 }
                             </div>
                             <div className="text_action_btn">
-                                <PrimaryButton textColor="white" styles={'py-1 px-10 screen-md:py-1 screen-md:px-6 text-white text-sm'}
+                                <PrimaryButton textColor="white" styles={'py-2 px-10 screen-md:py-1 screen-md:px-6 text-white text-sm'}
                                     textStyle={'screen-md:text-xs'}
                                     disabled={disabled} disabledColor="bg-primary bg-opacity-60"
                                     action={() => {

@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { auth } from "../config/auth/firebase";
+import { auth, createDocRef, OnSnapshot } from "../config/auth/firebase";
 import {
     u_signInWithEmailAndPassword,
     u_createUserWithEmailAndPassword,
@@ -23,8 +23,10 @@ import {
     u_getSpaces,
     u_getUserDB,
     u_updateSpace,
+    u_getSpace,
 } from "../config/auth/user";
 import { AuthUser, Space, User, UserContext } from "../interface/User";
+import store from "../store";
 
 import { createDate, isBrowser, print } from "../utils";
 
@@ -90,9 +92,9 @@ export const UserProvider = ({ children }: any) => {
                     },
                 }
                 setAuthUser(Uuser);
-                const userDoc = u_getUser(uuser.uid);
-                userDoc.then((result: any) => {
-                    const data = result.data.user;
+                const userDoc = createDocRef('users', uuser.uid);
+                OnSnapshot(userDoc, (doc: any) => {
+                    const data = doc.data();
                     if (data) {
                         const user: User = {
                             uid: uuser.uid,
@@ -114,28 +116,9 @@ export const UserProvider = ({ children }: any) => {
                             updatedAt: data.updatedAt,
                         }
                         setUser(user);
+                        store.set('user', user);
                     }
-                    // const user: User = {
-                    //     uid: uuser.uid,
-                    //     email: uuser.email,
-                    //     displayName: uuser.displayName,
-                    //     userName: uuser.displayName,
-                    //     profileImage: uuser.photoURL,
-                    //     blocked: false,
-                    //     premium: false,
-                    //     verified: false,
-                    //     bio: null,
-                    //     followers: [],
-                    //     following: [],
-                    //     spaces: [],
-                    //     followersCount: 0,
-                    //     followingsCount: 0,
-                    //     spacesCount: 0,
-                    //     createdAt: '',
-                    //     updatedAt: '',
-                    // }
-                    // setUser(user);
-                });
+                })
             } else {
                 const Uuser: AuthUser = {
                     isAuthenticated: false,
@@ -334,31 +317,44 @@ export const UserProvider = ({ children }: any) => {
 
     };
 
-    const getUser = (id: string, cb: (user: User) => void) => {
+    const getUser = (id: string, cbs: {
+        onSuccess: (message: any) => void, onError: (message: any) => void }) => {
         try {
             u_getUser(id).then((result: any) => {
                 if (result) {
-                    cb(result.data.user);
-                };
+                    cbs.onSuccess(result.data.user);
+                } else {
+                    cbs.onError({})
+                }
             }).catch((error: any) => {
                 setError("An error occured");
                 setHasError(true);
+                cbs.onError(error)
             });
         } catch (error: any) {
-            setError("unable to get user");
+            setError("An error occured");
             setHasError(true);
+            cbs.onError(error)
         }
     };
     
-    
-    const updateUser = (user: User, data: any) => {
+    const updateUser = (userId: string, data: User, cbs: {
+        onSuccess: (message: any) => void, onError: (message: any) => void
+    }) => {
         try {
-            return u_updateUser(user.uid, data);
+            u_updateUser(userId, data).then((result: any) => {
+                cbs.onSuccess(result);
+            }).catch((error: any) => {
+                setError("An error occured");
+                setHasError(true);
+                cbs.onError(error)
+            });
         } catch (error: any) {
-            setError("unable to update user");
+            setError("An error occured");
             setHasError(true);
+            cbs.onError(error)
         }
-    };
+    }
 
     const deleteUser = (user: User) => {
         try {
@@ -369,18 +365,20 @@ export const UserProvider = ({ children }: any) => {
         }
     };
 
-    const getUsers = (id: any, cb: (users: any) => void) => {
+    const getUsers = (id: any, cbs: {
+        onSuccess: (message: any) => void, onError: (message: any) => void }) => {
         try {
             u_getUsers(id).then((res: any) => {
                 if (res) {
-                    cb(res.data.users);
+                    cbs.onSuccess(res.data.users);
                 } else {
-                    cb([])
+                    cbs.onSuccess([])
                 }
             }) 
         } catch (error: any) {
             setError("unable to get users");
             setHasError(true);
+            cbs.onError(error)
         }
     };
 
@@ -424,8 +422,6 @@ export const UserProvider = ({ children }: any) => {
     }) => {
         try {
             u_updateSpace(spaceId, post).then((result: any) => {
-                console.log(result);
-                
                 cbs.onSuccess(result);
             }).catch((error: any) => {
                 setError("An error occured");
@@ -435,8 +431,22 @@ export const UserProvider = ({ children }: any) => {
         } catch (error: any) {
             setError("An error occured");
             setHasError(true);
+            cbs.onError(error)
         }
     }
+
+    const getSpace = (spaceId: string, cbs: {
+        onSuccess: (message: any) => void, onError: (message: any) => void
+    }) => {
+        try {
+            cbs.onSuccess(u_getSpace(spaceId));
+        } catch (error: any) {
+            setError("An error occured");
+            setHasError(true);
+            cbs.onError(error)
+        }
+    }
+        
     const context: UserContext<any> | any = {
         authUser,
         user,
@@ -459,6 +469,7 @@ export const UserProvider = ({ children }: any) => {
         addSpace,
         getSpaces,
         updateSpace,
+        getSpace
     };
 
     return <userContext.Provider value={context} >{children}</userContext.Provider>;

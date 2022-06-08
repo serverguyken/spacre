@@ -12,6 +12,8 @@ import {
   countSet,
   formatDate,
   stopPropagation,
+  isLiked,
+  isFollowing,
 } from "../utils/";
 import { useRouter } from "next/router";
 import React, { ReactElement, useEffect, useState } from "react";
@@ -54,7 +56,7 @@ import { Spinner } from "../utils/loader";
 import RenderMoreAction from "./RenderMoreAction";
 
 const FeedProfile = () => {
-  const { user, signOutUser, getUsers, updateSpace } = useUserContext();
+  const { user, signOutUser, getUsers, updateSpace, updateUser } = useUserContext();
   const router = useRouter();
   const [rendered, setRendered] = useState(false);
   const [refreshed, setRefreshed] = useState(true);
@@ -72,20 +74,22 @@ const FeedProfile = () => {
   // })
 
   useEffect(() => {
-    getUsers(user.uid, (users: User[]) => {
-      setUsers(users);
-    });
+    getUsers(user.uid, {
+		onSuccess: (data: User[]) => {
+			setUsers(data);
+		},
+		onError: (error: any) => {
+			return null;
+		}
+	});
   }, []);
 
-  // feedprofile_container
+  
   const likeHandler = (id: string) => {
 	const like_count = document.getElementById(`${id}_like_count`);
 	
-    const likeSpace = spaces.filter((s) => s.spaceId === id)[0];
-    const isLiked = likeSpace.likes.filter((l) => l.uid === user.uid)[0]
-      ? true
-      : false;
-    if (isLiked) {
+    const likeSpace = spaces.filter((s) => s.spaceId === id)[0]; 
+    if (isLiked(likeSpace.likes, user)) {
       // remove like
       const newSpace = {
         ...likeSpace,
@@ -129,11 +133,71 @@ const FeedProfile = () => {
       });
     }
   };
-  const isLiked = (likes: User[]) => {
-	  // check if user already liked the space
-	  const isLiked = likes.filter((l) => l.uid === user.uid)[0] ? true : false;
-	  return isLiked;
+
+  
+
+  
+  const replyHandler = (userName: string, spaceId: string) => {
+	  router.push(`/${userName}/space/${spaceId}`);
   }
+
+
+  const onFollow = (spaceUser: User) => {
+    const forUser = {
+		...spaceUser,
+		followers: [...spaceUser.followers, user],
+		followersCount: spaceUser.followersCount + 1,
+	  };
+	  const forCurrentUser = {
+		...user,
+		following: [...user.following, spaceUser],
+		followingsCount: user.followingsCount + 1,
+	  };
+	  // if current user is following the space user
+	  if (isFollowing(user.following, spaceUser)) {
+		return;
+	  } else {
+		updateUser(spaceUser.uid, forUser, {
+		  onSuccess: () => {
+			  updateUser(user.uid, forCurrentUser, {
+				  onSuccess: () => {
+				  },
+				  onError: (err: any) => {
+				  },
+			  });
+		  },
+		  onError: (err: any) => {
+		  },
+		});
+	  }
+  };
+  const onUnFollow = (spaceUser: User) => {
+	const forUser = {
+		...spaceUser,
+		followers: spaceUser.followers.filter((f) => f.uid !== user.uid),
+		followersCount: spaceUser.followersCount - 1,
+	  };
+	  const forCurrentUser = {
+		...user,
+		following: user.following.filter((f) => f.uid !== spaceUser.uid),
+		followingsCount: user.followingsCount - 1,
+	  };
+	  if (isFollowing(user.following, spaceUser)) {
+		updateUser(spaceUser.uid, forUser, {
+		  onSuccess: () => {
+			  updateUser(user.uid, forCurrentUser, {
+				  onSuccess: () => {
+				  },
+				  onError: (err: any) => {
+				  },
+			  });
+		  },
+		  onError: (err: any) => {
+		  },
+		});
+	  }
+  };
+
   const fetchSpaces = (ref: any) => {
     if (isEmpty) {
     } else {
@@ -256,11 +320,9 @@ const FeedProfile = () => {
                   key={space.spaceId}
                   id={`${space.spaceId}_profile_feed_view`}
                   className="bg-white dark:bg-darkMode hover:bg-gray-50 dark:hover:bg-darkModeBg/20 cursor-pointer whitespace-pre-wrap feed_post_contents_card pt-3 h-auto p-2  border-b border-gray-100  dark:border-borderDarkMode"
-                  onClick={() =>
-                    viewUserPost(
-                      users.filter((u) => u.uid === space.userId)[0].userName
-                    )
-                  }
+                  onClick={() =>{
+					replyHandler(space.userName, space.spaceId);
+				  }}
                 >
                   <div></div>
                   <div className="flex justify-between">
@@ -349,11 +411,13 @@ const FeedProfile = () => {
                                   className="profile_hover_card absolute pt-2 z-40  -left-14 w-auto hidden invisible opacity-0"
                                 >
                                   <ProfileCardHover
-                                    user={
-                                      users.filter(
-                                        (u) => u.uid === space.userId
-                                      )[0]
-                                    }
+								  	currentUser={user}
+								  	users={users}
+                                    user={users.filter((u) => u.uid === space.userId)[0]}
+									space={space}
+									renderType="space"
+									onFollow={onFollow}
+									onUnFollow={onUnFollow}
                                   />
                                 </div>
                               </div>
@@ -414,7 +478,6 @@ const FeedProfile = () => {
                                     `${space.spaceId}_post_more_actions`
                                   ) as HTMLDivElement;
                                 post_more_actions.classList.toggle("hidden");
-                                // don't show other more actions if one is already shown
                                 const other_post_more_actions =
                                   document.querySelectorAll(
                                     ".post_more_actions"
@@ -458,6 +521,7 @@ const FeedProfile = () => {
                                   user={user}
                                   users={users}
                                   space={space}
+								  renderType="space"
                                 />
                               </div>
                             </div>
@@ -517,7 +581,7 @@ const FeedProfile = () => {
                           <div className="post_user_actions mt-3 pb-1 max-w-[80%]">
                             <div className="flex justify-between items-center">
                               <Tooltip
-                                title={`${isLiked(space.likes) ? "Unlike" : "Like"}`}
+                                title={`${isLiked(space.likes, user) ? "Unlike" : "Like"}`}
                                 placement="center"
                                 position="bottom"
                                 transition="fade"
@@ -530,16 +594,16 @@ const FeedProfile = () => {
                                 <div
                                   className={setClass(
                                     "post_action post_user_like_action relative select-none flex like_animation items-center space-x-2 cursor-pointer p-1 rounded-sm hover:bg-salmon hover:bg-opacity-10 hover:text-salmon dark:hover:text-salmon",
-                                    isLiked(space.likes)
+                                    isLiked(space.likes, user)
                                       ? "text-salmon dark:text-salmon"
                                       : "text-gray-500  dark:text-darkText"
                                   )}
                                   onClick={(e: any) => {
-                                    likeHandler(space.spaceId);
                                     stopPropagation(e);
+                                    likeHandler(space.spaceId);
                                   }}
                                 >
-                                  {isLiked(space.likes) ? (
+                                  {isLiked(space.likes, user) ? (
                                     <HeartIconSolid
                                       className={"text-salmon"}
                                       width={16}
@@ -568,19 +632,20 @@ const FeedProfile = () => {
                                 }}
                                 color="gray"
                               >
-                                <div className="post_action post_user_comment_action relative select-none flex text-gray-500 dark:text-darkText items-center space-x-2 cursor-pointer p-1 rounded-sm hover:bg-green-600 hover:bg-opacity-10 hover:text-green-600 dark:hover:text-green-600">
+                                <div className="post_action post_user_comment_action relative select-none flex text-gray-500 dark:text-darkText items-center space-x-2 cursor-pointer p-1 rounded-sm hover:bg-green-600 hover:bg-opacity-10 hover:text-green-600 dark:hover:text-green-600"
+									onClick={(e: any) => {
+										stopPropagation(e);
+										replyHandler(space.userName, space.spaceId);
+									  }}
+								>
                                   <AnnotationIcon width={16} />
                                   <p className="text-sm">
                                     {
-                                      countSet(space.comments.length, true, 2)
+                                      countSet(space.replies.length, true, 2)
                                         .value
                                     }
                                   </p>
-                                  <div className="post_action_tooltip post_comment_tooltip invisible opacity-0 absolute top-7 right-0 z-20 bg-gray-500 dark:bg-darkModeBg dark:text-white w-12 p-1 text-center text-xs text-white rounded shadow-sm">
-                                    <div className="comment_tooltip_content">
-                                      <span>Reply</span>
-                                    </div>
-                                  </div>
+                                  
                                 </div>
                               </Tooltip>
                               <Tooltip

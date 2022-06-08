@@ -1,5 +1,5 @@
 import { GithubIcon, LogoIcon, AtIcon, EyeOnIcon, EyeOffIcon, VerifiedIcon } from "./Iconsvg"
-import { ArrowLeftIcon, ArrowRightIcon, AtSymbolIcon, XIcon, ChevronDownIcon, PlusIcon, PencilAltIcon, MinusCircleIcon as BlockIcon, UserAddIcon as FollowIcon, UserRemoveIcon as UnfollowIcon, TrashIcon as DeleteIcon} from "@heroicons/react/outline"
+import { ArrowLeftIcon, ArrowRightIcon, AtSymbolIcon, XIcon, ChevronDownIcon, PlusIcon, PencilAltIcon, MinusCircleIcon as BlockIcon, UserAddIcon as FollowIcon, UserRemoveIcon as UnfollowIcon, TrashIcon as DeleteIcon, ArrowSmLeftIcon} from "@heroicons/react/outline"
 import { Flag as ReportIcon } from "tabler-icons-react"
 
 export default function Icon({ type, color, width, height, styles }: { type: string, color?: string | any, width?: string, height?: string, styles?: string }) {
@@ -38,6 +38,8 @@ export default function Icon({ type, color, width, height, styles }: { type: str
             return <UnfollowIcon width={width} height={height} color={color} className={styles} />
         case 'delete':
             return <DeleteIcon width={width} height={height} color={color} className={styles} />
+        case 'back':
+            return <ArrowSmLeftIcon width={width} height={height} color={color} className={styles} />
         default:
             return null
     }

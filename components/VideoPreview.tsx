@@ -37,7 +37,7 @@ function VideoPreview({ file, onClose }: {
                                 }}
                             />
                         </div>
-                        <div className='video_preview_close absolute bg-gray-800 dark:bg-dimGray top-4 left-4 cursor-pointer absolute  min-w-[28px] min-h-[28px]  z-[24] flex justify-center items-center rounded-full' onClick={onClose}>
+                        <div className='video_preview_close absolute bg-gray-800 dark:bg-dimGray top-4 left-4 cursor-pointer   min-w-[28px] min-h-[28px]  z-[24] flex justify-center items-center rounded-full' onClick={onClose}>
                             <Tooltip
                                 title="Close
                     "
