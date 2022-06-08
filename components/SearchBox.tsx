@@ -6,6 +6,8 @@ import { Spinner } from '../utils/loader'
 import { BadgeCheckIcon, SearchIcon } from '@heroicons/react/outline'
 import { NextLink } from '@mantine/next'
 import store from '../store'
+import Profile from '../pages/[profileID]'
+import ProfileImage from './ProfileImage'
 
 
 
@@ -48,7 +50,7 @@ const SearchBox = ({ isSearch, searchTerm, searchList, renderNoSearch }: {
                     <div key={item.id} className="pt-2 pb-2">
                         {
                             emptySearch ? <div>
-                                <NextLink  href={item.link} className='flex items-center p-3 border-gray-200 hover:bg-gray-100 dark:border-none dark:hover:bg-darkModeBg dark:hover:bg-opacity-20'
+                                <NextLink href={item.link} className='flex items-center p-3 border-gray-200 hover:bg-gray-100 dark:border-none dark:hover:bg-darkModeBg dark:hover:bg-opacity-20'
 
                                     onMouseDown={(event: any) => {
                                         event.preventDefault()
@@ -66,7 +68,7 @@ const SearchBox = ({ isSearch, searchTerm, searchList, renderNoSearch }: {
                                     </div>
                                 </NextLink>
                                 {
-                                    !isHashtag(searchTerm) && <NextLink  href={`/${searchTerm}`} className=' flex items-center p-3 border-gray-200 hover:bg-gray-100 dark:border-none dark:hover:bg-darkModeBg dark:hover:bg-opacity-20'
+                                    !isHashtag(searchTerm) && <NextLink href={`/${searchTerm}`} className=' flex items-center p-3 border-gray-200 hover:bg-gray-100 dark:border-none dark:hover:bg-darkModeBg dark:hover:bg-opacity-20'
 
                                         onMouseDown={(event: any) => {
                                             event.preventDefault()
@@ -85,21 +87,19 @@ const SearchBox = ({ isSearch, searchTerm, searchList, renderNoSearch }: {
                             </div>
                                 :
 
-                                <NextLink  href={item.link} className='flex items-center p-3  border-gray-200 hover:bg-gray-100 dark:border-none dark:hover:bg-darkModeBg dark:hover:bg-opacity-20'
+                                <NextLink href={item.link} className='flex items-center p-3  border-gray-200 hover:bg-gray-100 dark:border-none dark:hover:bg-darkModeBg dark:hover:bg-opacity-20'
 
                                     onMouseDown={(event: any) => {
                                         event.preventDefault()
                                     }}
-                                // onClick={(event: any) => {
-                                //     event.preventDefault()
-                                // }}
                                 >
                                     <div className='flex items-center'>
                                         {
                                             item.type === 'user' && <div className='mr-2'>
-                                                <img src={item.image} width={'32px'} height={'32px'} alt={item.content} className="rounded-full" />
+                                                <ProfileImage user={item} />
                                             </div>
                                         }
+
                                         {
                                             item.type === 'hashtag' && <div className='mr-2'>
                                                 <SearchIcon className="w-8 h-8" />
@@ -108,16 +108,66 @@ const SearchBox = ({ isSearch, searchTerm, searchList, renderNoSearch }: {
                                         < div className='flex'>
 
                                             {
-                                                item.isVerified
+                                                item.verified
                                                     ?
                                                     <div className=''>
                                                         <div className='flex'>
-                                                            <h2 className='font-bold text-sm'>{item.content}</h2>
+                                                            <h2 className='font-bold text-sm dark:text-light'>{item.content}</h2>
                                                             <div className=' w-5 h-5 flex justify-center items-center rounded-full ml-1'><BadgeCheckIcon width={'26'} height={'26'} stroke='white' fill='#4595d0' /></div>
+                                                        </div>
+                                                        <div className="mt-[0.10rem]">
+                                                        <div>
+                                                            {
+                                                                item.type === 'user' && <div className='mr-2'>
+                                                                    {
+                                                                        item.userName && <div className='text-sm font-medium text-gray-500 whitespace-nowrap max-w-[16rem] text-ellipsis overflow-hidden'>
+                                                                            @{item.userName}
+                                                                        </div>
+                                                                    }
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                        <div>
+                                                            {
+                                                                item.type === 'user' && <div className='mr-2'>
+                                                                    {
+                                                                        item.bio && <div className='text-sm font-medium text-gray-500 whitespace-nowrap max-w-[16rem] text-ellipsis overflow-hidden'>
+                                                                            {item.bio}
+                                                                        </div>
+                                                                    }
+                                                                </div>
+                                                            }
+                                                        </div>
                                                         </div>
                                                     </div>
                                                     :
-                                                    <div className='font-bold text-sm'>{item.content}</div>
+                                                    <div className=''>
+                                                        <h2 className='font-bold text-sm dark:text-light'>{item.content}</h2>
+                                                        <div className="mt-[0.10rem]">
+                                                        <div>
+                                                            {
+                                                                item.type === 'user' && <div className='mr-2'>
+                                                                    {
+                                                                        item.userName && <div className='text-sm font-medium text-gray-500 whitespace-nowrap max-w-[16rem] text-ellipsis overflow-hidden'>
+                                                                            @{item.userName}
+                                                                        </div>
+                                                                    }
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                        <div>
+                                                            {
+                                                                item.type === 'user' && <div className='mr-2'>
+                                                                    {
+                                                                        item.bio && <div className='text-sm font-medium text-gray-500 whitespace-nowrap max-w-[16rem] text-ellipsis overflow-hidden'>
+                                                                            {item.bio}
+                                                                        </div>
+                                                                    }
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                        </div>
+                                                    </div>
                                             }
                                         </div>
 

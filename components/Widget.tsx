@@ -4,41 +4,15 @@ import NextLink from "next/link"
 import Footer from "./Footer"
 import Icon from "./Icon"
 import { useState, useEffect } from 'react'
-import { isBrowser, generateLoadingTime, TimeOut } from '../utils'
+import { isBrowser, generateLoadingTime, TimeOut, isFollowing } from '../utils'
 import { Spinner } from '../utils/loader'
 import Video from './Video'
 import WidgetFooter from "./WidgetFooter"
+import useUserContext from "../provider/userProvider"
+import { Constructor, User } from "../interface/User"
+import ProfileImage from "./ProfileImage"
 
-const people_to_follow = [
-    {
-        id: 1,
-        name: "David Smith",
-        image: "https://images.generated.photos/5HGhYJoqWS8vFzATP8o2juowwh0_wccXe_PR0Uvax0I/rs:fit:256:256/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LnBob3Rvcy92M18w/NDMxNDA0LmpwZw.jpg",
-        username: "davidsmith",
-        job: "Software Engineer",
-    },
-    {
-        id: 2,
-        name: "Sara Brown",
-        image: "https://images.generated.photos/iqF3ZDIcJm8xKHHhheQx3gS243Ag9Kss40L9BqaxJTc/rs:fit:256:256/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LnBob3Rvcy92M18w/NjYzNzgxLmpwZw.jpg",
-        username: "sarabrown",
-        job: "Web Designer",
-    },
-    {
-        id: 3,
-        name: "Vercel",
-        image: "",
-        username: "cjanderson",
-        job: "Software",
-    },
-    {
-        id: 4,
-        name: "Sanjay G.",
-        image: "https://images.generated.photos/DJ_Qk9bqmkh5tAd2-sEDpp1D2OemitCsJAIRuJyFM1o/rs:fit:256:256/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LnBob3Rvcy92M18w/MjIxNzIzLmpwZw.jpg",
-        username: "sanjayg",
-        job: "Data Scientist",
-    }
-]
+
 const jobs = [
     {
         id: 1,
@@ -106,7 +80,21 @@ const footer_links = [
     },
 ]
 const Widget = () => {
+    const { user:currentUser, getUsers, updateUser } = useUserContext()
     const [rendered, setRendered] = useState(false)
+    const [suggestedFollowers, setSuggestedFollowers] = useState<User[]>([])
+    useEffect(() => {
+        getUsers(currentUser.uid, {
+            onSuccess: (data: User[]) => {
+                const fetchedSuggestedFollowers = data.filter((user: User) => !isFollowing(currentUser.following, user))
+                const filteredSuggestedFolloers = fetchedSuggestedFollowers.filter((user: User) => user.uid !== currentUser.uid)
+                setSuggestedFollowers(filteredSuggestedFolloers)
+            },
+            onError: (error: any) => {
+                return null;
+            }
+        });
+    }, [currentUser]);
     const setRender = () => {
         TimeOut(() => {
             setRendered(true)
@@ -117,6 +105,33 @@ const Widget = () => {
             setRender()
         }
     }, [])
+    const followUser = (userToFollow: User) => {
+        const forUser = {
+            ...userToFollow,
+            followers: [...userToFollow.followers, {userId: currentUser.uid}],
+            followersCount: userToFollow.followersCount + 1,
+          };
+          const forCurrentUser = {
+            ...currentUser,
+            following: [...currentUser.following, {userId: userToFollow.uid}],
+            followingsCount: currentUser.followingsCount + 1,
+          };
+          updateUser(userToFollow.uid, forUser, {
+            onSuccess: () => {
+                updateUser(currentUser.uid, forCurrentUser, {
+                    onSuccess: () => {
+                        const fetchedSuggestedFollowers = suggestedFollowers.filter((user: User) => user.uid !== userToFollow.uid)
+                        setSuggestedFollowers(fetchedSuggestedFollowers)
+                    },
+                    onError: (err: any) => {
+                    },
+                });
+            },
+            onError: (err: any) => {
+            },
+          });
+    }
+
     return (
         <div className='widget_main self-start w-full pt-4 sticky top-0 pb-6'>
             <div className="mb-2">
@@ -177,26 +192,22 @@ const Widget = () => {
                             <h1 className="text-lg font-bold p-2">People to follow</h1>
                             <div className="ptf_list">
                                 {
-                                    people_to_follow.map(person => {
+                                    suggestedFollowers.map((person: User) => {
                                         return (
-                                            <div key={person.id} className="ptf_list_item flex items-center space-x-3 p-2 cursor-pointer">
+                                            <div key={person.uid} className="ptf_list_item flex items-center space-x-3 p-2 mb-3 cursor-pointer">
                                                 <div className="ptf_list_item_image">
-                                                    <img
-                                                        src={person.image}
-                                                        width={40}
-                                                        height={40}
-                                                        alt={person.name}
-                                                        loading="lazy"
-                                                        className="rounded-full"
-                                                    />
+                                                <ProfileImage user={person}  />
                                                 </div>
                                                 <div className="flex justify-between items-center w-full">
                                                     <div className="ptf_list_item_name">
-                                                        <h3 className="text-sm font-bold">{person.name}</h3>
-                                                        <p className="text-xs dark:text-gray-50 dark:text-opacity-50">{person.job}</p>
+                                                        <h3 className="text-sm font-bold">{person.displayName}</h3>
+                                                        <p className="text-xs dark:text-gray-50 dark:text-opacity-50">@{person.userName}</p>
                                                     </div>
                                                     <div className="follow_btn">
-                                                        <SecondaryButton text="Follow" textColor="white" styles={'py-1 px-5 bg-black text-white dark:bg-white dark:text-black  rounded-full'} />
+                                                        <SecondaryButton text="Follow" textColor="white" styles={'py-1 px-5 bg-black text-white dark:bg-white dark:text-black  rounded-full'} 
+                                                        action={() => {
+                                                            followUser(person)
+                                                        }} />
                                                     </div>
                                                 </div>
                                             </div>

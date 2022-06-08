@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import moment from 'moment';
 import linkify, { LinkifyIt } from 'linkify-it';
 import tlds from 'tlds';
-import { User } from '../interface/User';
+import { Constructor, Likes, User } from '../interface/User';
 export const MENTION_REGEX = /(^|\s)(@[a-zA-Z0-9_]+)/g
 export const HASHTAG_REGEX = /(^|\s)(#[a-zA-Z0-9_]+)/g
 export const URL_REGEX = /(^|\s)((https?:\/\/)?[a-zA-Z0-9_]+\.[a-zA-Z0-9_]+[a-zA-Z0-9_]+)/g
@@ -483,16 +483,17 @@ export function dateFromISOString(date: string) {
 }
 
 
-export const isFollowing = (followers: User[], user: User) => {
-  const found =  followers.find((follower) => follower.uid === user.uid);
-  if (found) {
-    return true
-  } else {
-    return false
-  }
+export const isFollowing = (followers: Constructor[], user: User) => {
+  const found = followers.find(follower => follower.userId === user.uid) ? true : false;
+  return found;
 };
 
-export const isLiked = (likes: User[], user: User) => {
-  const liked = likes.filter((l) => l.uid === user.uid)[0] ? true : false;
+export const isLiked = (likes: Likes[], user: User) => {
+  const liked = likes.find((like) => like.userId === user.uid) !== undefined ? true : false;
   return liked;
+}
+
+export const isSaved = (id: string, user: User) => {
+  const saved_ = user.saves.find((save) => save.spaceId === id) !== undefined ? true : false;
+  return saved_;
 }

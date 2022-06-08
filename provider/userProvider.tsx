@@ -72,6 +72,7 @@ export const UserProvider = ({ children }: any) => {
         spacesCount: 0,
         createdAt: "",
         updatedAt: "",
+        saves: [],
     } as User);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
@@ -114,6 +115,7 @@ export const UserProvider = ({ children }: any) => {
                             spacesCount: data.spacesCount,
                             createdAt: data.createdAt,
                             updatedAt: data.updatedAt,
+                            saves: data.saves,
                         }
                         setUser(user);
                         store.set('user', user);

@@ -13,7 +13,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { createDocRef, OnSnapshot } from "../config/auth/firebase";
-import { Poll, Reply, Space, User } from "../interface/User";
+import { Constructor, Likes, Poll, Reply, Space, User } from "../interface/User";
 import useUserContext from "../provider/userProvider";
 import store from "../store";
 import {
@@ -22,6 +22,7 @@ import {
   isBrowser,
   isFollowing,
   isLiked,
+  isSaved,
   setClass,
   stopPropagation,
   TimeOut,
@@ -50,7 +51,7 @@ const SpaceView = ({
   const { authUser, updateSpace, updateUser } = useUserContext();
   const [openReplyEditor, setOpenReplyEditor] = useState(false);
   const router = useRouter();
-  useEffect(() => {}, [authUser]);
+  useEffect(() => { }, [authUser]);
 
   const [space, setSpace] = useState<Space | any>({});
   const [replies, setReplies] = useState<Reply[]>([]);
@@ -76,7 +77,7 @@ const SpaceView = ({
       // remove like
       const newSpace = {
         ...space,
-        likes: space.likes.filter((l: User) => l.uid !== currentUser.uid),
+        likes: space.likes.filter((l: Constructor) => l.userId !== currentUser.uid),
       };
       updateSpace(space.spaceId, newSpace, {
         onSuccess: () => {
@@ -91,13 +92,13 @@ const SpaceView = ({
             }
           }, 1000);
         },
-        onError: (err: any) => {},
+        onError: (err: any) => { },
       });
     } else {
       // update space
       const newSpace = {
         ...space,
-        likes: [...space.likes, currentUser],
+        likes: [...space.likes, { userId: currentUser.uid }],
       };
       updateSpace(space.spaceId, newSpace, {
         onSuccess: () => {
@@ -112,7 +113,7 @@ const SpaceView = ({
             }
           }, 1000);
         },
-        onError: (err: any) => {},
+        onError: (err: any) => { },
       });
     }
   };
@@ -127,7 +128,7 @@ const SpaceView = ({
           ...space,
           replies: space.replies.map((r: Reply) => {
             if (r.replyId === id) {
-              r.likes = r.likes.filter((l: User) => l.uid !== currentUser.uid);
+              r.likes = r.likes.filter((l: Likes) => l.userId !== currentUser.uid);
             }
             return r;
           }),
@@ -145,7 +146,7 @@ const SpaceView = ({
               }
             }, 1000);
           },
-          onError: (err: any) => {},
+          onError: (err: any) => { },
         });
       } else {
         // update space
@@ -153,7 +154,7 @@ const SpaceView = ({
           ...space,
           replies: space.replies.map((r: Reply) => {
             if (r.replyId === id) {
-                r.likes = [...r.likes, currentUser];
+              r.likes = [...r.likes, { userId: currentUser.uid }];
             }
             return r;
           }),
@@ -171,21 +172,45 @@ const SpaceView = ({
               }
             }, 1000);
           },
-          onError: (err: any) => {},
+          onError: (err: any) => { },
         });
       }
     }
   };
-
+  const saveHandler = (space: Space) => {
+     if (isSaved(space.spaceId, currentUser)) {
+       // remove saved space
+        const newUser = {
+          ...currentUser,
+          saves: currentUser.saves.filter((s) => s.spaceId !== space.spaceId),
+        };
+        updateUser(currentUser.uid, newUser, {
+          onSuccess: () => {
+          },
+          onError: (err: any) => {},
+        });
+     } else {
+        // add saved space
+          const newUser = {
+            ...currentUser,
+            saves: [...currentUser.saves, { spaceId: space.spaceId }],
+          };
+          updateUser(currentUser.uid, newUser, {
+            onSuccess: () => {
+            },
+            onError: (err: any) => {},
+          });
+      }
+  }
   const onFollow = (user: User) => {
     const forUser = {
       ...user,
-      followers: [...user.followers, currentUser],
+      followers: [...user.followers, { userId: currentUser.uid }],
       followersCount: user.followersCount + 1,
     };
     const forCurrentUser = {
       ...currentUser,
-      following: [...currentUser.following, user],
+      following: [...currentUser.following, { userId: user.uid }],
       followingsCount: currentUser.followingsCount + 1,
     };
     // if current user is following the user
@@ -197,22 +222,22 @@ const SpaceView = ({
           updateUser(currentUser.uid, forCurrentUser, {
             onSuccess: () => {
             },
-            onError: (err: any) => {},
+            onError: (err: any) => { },
           });
         },
-        onError: (err: any) => {},
+        onError: (err: any) => { },
       });
     }
   };
   const onUnFollow = (user: User) => {
     const forUser = {
       ...user,
-      followers: user.followers.filter((f: User) => f.uid !== currentUser.uid),
+      followers: user.followers.filter((f: Constructor) => f.userId !== currentUser.uid),
       followersCount: user.followersCount - 1,
     };
     const forCurrentUser = {
       ...currentUser,
-      following: currentUser.following.filter((f: User) => f.uid !== user.uid),
+      following: currentUser.following.filter((f: Constructor) => f.userId !== user.uid),
       followingsCount: currentUser.followingsCount - 1,
     };
     if (!isFollowing(currentUser.following, user)) {
@@ -221,11 +246,11 @@ const SpaceView = ({
       updateUser(user.uid, forUser, {
         onSuccess: () => {
           updateUser(currentUser.uid, forCurrentUser, {
-            onSuccess: () => {},
-            onError: (err: any) => {},
+            onSuccess: () => { },
+            onError: (err: any) => { },
           });
         },
-        onError: (err: any) => {},
+        onError: (err: any) => { },
       });
     }
   };
@@ -379,12 +404,11 @@ const SpaceView = ({
                             classNames={{
                               body: setClass(
                                 "tooltip_comp -mt-1 bg-gray-500 dark:bg-darkModeBg dark:text-white text-[0.65rem] ml-1",
-                                `${
-                                  formatDate(space.createdAt).format(
-                                    "MMMM Do YYYY, h:mm:ss a"
-                                  ) == ""
-                                    ? "hidden"
-                                    : ""
+                                `${formatDate(space.createdAt).format(
+                                  "MMMM Do YYYY, h:mm:ss a"
+                                ) == ""
+                                  ? "hidden"
+                                  : ""
                                 }`
                               ),
                             }}
@@ -397,7 +421,7 @@ const SpaceView = ({
                         </div>
                       </div>
                       <div
-                        className="post_more_action relative"
+                        className="post_more_action relative cursor-pointer"
                         onClick={(e: any) => {
                           stopPropagation(e);
                           const post_more_actions = document.getElementById(
@@ -464,7 +488,7 @@ const SpaceView = ({
                                 key={space.spaceId}
                                 src={url}
                                 alt="A post image"
-                                className="rounded-lg"
+                                className="rounded-lg max-w-[400px] max-h-[300px] object-cover object-center"
                               />
                             );
                           })}
@@ -507,9 +531,8 @@ const SpaceView = ({
                     <div className="post_user_actions mt-3 pb-1 max-w-[80%]">
                       <div className="flex justify-between items-center">
                         <Tooltip
-                          title={`${
-                            isLiked(space.likes, currentUser) ? "Unlike" : "Like"
-                          }`}
+                          title={`${isLiked(space.likes, currentUser) ? "Unlike" : "Like"
+                            }`}
                           placement="center"
                           position="bottom"
                           transition="fade"
@@ -602,13 +625,12 @@ const SpaceView = ({
                         >
                           <div
                             className="post_action post_user_save_action relative select-none flex text-gray-500 dark:text-darkText items-center space-x-2 cursor-pointer p-1 rounded-sm hover:bg-primary hover:bg-opacity-10 hover:text-primary dark:hover:text-primary"
-                            onClick={() => {
-                              if (isBrowser()) {
-                                alert("saved post2");
-                              }
+                            onClick={(e: any) => {
+                              stopPropagation(e);
+                              saveHandler(space);
                             }}
                           >
-                            {space.saved ? (
+                            {isSaved(space.spaceId, currentUser) ? (
                               <SaveIconSolid
                                 className={"text-primary"}
                                 width={16}
@@ -624,13 +646,11 @@ const SpaceView = ({
                 </div>
               </div>
             </div>
-            
+
           </div>
-          <ReplyEditor spaceUser={user} user={currentUser} onReply={onReply} />  
-          
-          <div className="reply-line-direction ">
-              <div className="reply-line-direction-inner ml-4 mt-2 h-16 w-1 rounded-full bg-gray-200 dark:bg-darkModeBg"></div>
-            </div>            
+          <ReplyEditor spaceUser={user} user={currentUser} onReply={onReply} />
+
+
           {replies.map((reply: Reply, index: number) => {
             return (
               <div
@@ -651,8 +671,17 @@ const SpaceView = ({
                           />
                         </a>
                       </Link>
+                      {/* {
+                        replies.length > 0 && (
+                          <div className="reply-line-direction ">
+                            <div className="reply-line-direction-inner ml-4 mt-2 h-16 w-1 rounded-full bg-gray-200 dark:bg-darkModeBg"></div>
+                          </div>
+                        )
+                      } */}
                     </div>
+
                     <div className="profile_name_post_feed w-full -mt-1 pl-[10px] pr-[10px]">
+
                       <div className="profile_name w-full">
                         <div className="flex justify-between">
                           <div className="profile_names_content w-full">
@@ -695,11 +724,10 @@ const SpaceView = ({
                                   }}
                                 >
                                   <Link
-                                    href={`/${
-                                      users.filter(
-                                        (u) => u.uid === reply.userId
-                                      )[0].userName
-                                    }`}
+                                    href={`/${users.filter(
+                                      (u) => u.uid === reply.userId
+                                    )[0].userName
+                                      }`}
                                   >
                                     <a className="font-semibold feed_user_profile_name">
                                       {
@@ -712,10 +740,10 @@ const SpaceView = ({
                                 </div>
                                 {users.filter((u) => u.uid === reply.userId)[0]
                                   .verified && (
-                                  <div className="mt-1">
-                                    <Icon type="verified" />
-                                  </div>
-                                )}
+                                    <div className="mt-1">
+                                      <Icon type="verified" />
+                                    </div>
+                                  )}
                               </div>
                               <div
                                 id={`${reply.replyId}_profile_hover_card`}
@@ -739,11 +767,10 @@ const SpaceView = ({
                             <div className="profile_username_post_timestamp flex items-center">
                               <div className="profile_username whitespace-nowrap max-w-[16rem] text-ellipsis overflow-hidden">
                                 <Link
-                                  href={`/${
-                                    users.filter(
-                                      (u) => u.uid === reply.userId
-                                    )[0].userName
-                                  }`}
+                                  href={`/${users.filter(
+                                    (u) => u.uid === reply.userId
+                                  )[0].userName
+                                    }`}
                                 >
                                   <a className="text-sm text-dimGray dark:text-darkText">
                                     @
@@ -767,12 +794,11 @@ const SpaceView = ({
                                 classNames={{
                                   body: setClass(
                                     "tooltip_comp -mt-1 bg-gray-500 dark:bg-darkModeBg dark:text-white text-[0.65rem] ml-1",
-                                    `${
-                                      formatDate(reply.createdAt).format(
-                                        "MMMM Do YYYY, h:mm:ss a"
-                                      ) == ""
-                                        ? "hidden"
-                                        : ""
+                                    `${formatDate(reply.createdAt).format(
+                                      "MMMM Do YYYY, h:mm:ss a"
+                                    ) == ""
+                                      ? "hidden"
+                                      : ""
                                     }`
                                   ),
                                 }}
@@ -785,7 +811,7 @@ const SpaceView = ({
                             </div>
                           </div>
                           <div
-                            className="post_more_action relative"
+                            className="post_more_action relative cursor-pointer"
                             onClick={(e: any) => {
                               stopPropagation(e);
                               const post_more_actions = document.getElementById(
@@ -841,6 +867,7 @@ const SpaceView = ({
                           </div>
                         </div>
                       </div>
+
                       <div className="post_feed_contents mt-2 leading-[19px]">
                         <div className="post_contents w-full">
                           <ToJSX text={reply.text} />
@@ -895,9 +922,8 @@ const SpaceView = ({
                         <div className="post_user_actions mt-3 pb-1 max-w-[80%]">
                           <div className="flex justify-between items-center">
                             <Tooltip
-                              title={`${
-                                isLiked(reply.likes, currentUser) ? "Unlike" : "Like"
-                              }`}
+                              title={`${isLiked(reply.likes, currentUser) ? "Unlike" : "Like"
+                                }`}
                               placement="center"
                               position="bottom"
                               transition="fade"
@@ -1023,7 +1049,7 @@ const SpaceView = ({
           })}
         </div>
       )}
-      
+
       {replySent && (
         <div className="relative">
           <LineLoader width="100%" position="absolute" />

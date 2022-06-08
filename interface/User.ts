@@ -1,5 +1,11 @@
 import { Meta } from "./Meta";
 
+export type Constructor = {
+    userId: string;
+}
+export interface Likes {
+    userId: Constructor["userId"];
+}
 export interface Space {
     spaceId: string;
     userId: string;
@@ -12,8 +18,8 @@ export interface Space {
     text: string;
     hasPoll: boolean;
     poll: Poll;
-    likes: User[];
-    replies: Array<any>;
+    likes: Array<Likes>;
+    replies: Reply[];
     boosts: Array<string>;
     shares: Array<string>;
     tags: Array<string>;
@@ -72,14 +78,17 @@ export interface User {
     premium: boolean;
     verified: boolean;
     bio: string | null;
-    followers: Array<any>;
-    following: Array<any>;
+    followers: Array<Constructor>;
+    following: Array<Constructor>;
     spaces: Array<any>;
     followersCount: number;
     followingsCount: number;
     spacesCount: number;
     createdAt: string | null;
     updatedAt: string | null;
+    saves: Array<{
+        spaceId: string;
+    }>;
 }
 export interface UserData {
     uid: string;
@@ -116,7 +125,6 @@ export interface DBUsers {
         [SpaceId: string]: Space;
     };
 }
-
 
 
 

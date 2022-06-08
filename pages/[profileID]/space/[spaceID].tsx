@@ -111,7 +111,7 @@ function Space() {
                         <BackButtton onClick={() => {
                             router.push("/" + profileID);
                         }} />
-                        <span className="text-[1.3rem] text-gray-700 font-bold">
+                        <span className="text-[1.3rem] text-gray-700 font-bold dark:text-gray-100">
                           Space
                         </span>
                       </div>

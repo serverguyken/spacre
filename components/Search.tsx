@@ -4,18 +4,27 @@ import Input from './Input'
 import SearchBox from './SearchBox'
 import { print, generateLoadingTime } from '../utils'
 import { isBrowser } from '../utils'
-import { api_url } from '../config'
+import { api_url, dev_api_url } from '../config'
 import API from '../config/api'
 import store from '../store'
+import useUserContext from '../provider/userProvider'
 
 const Search: NextPage = ({}) => {
+    const {user } = useUserContext()
     const [searchBoxRendered, setSearchBoxRendered] = useState(false)
     const [isSearch, setIsSearch] = useState(false)
     const [searchTerm, setSearchTerm] = useState('')
     const [searchList, setSearchList] = useState([])
     const [noSerach, setNoSearch] = useState(false)
     const getSerachList = async () => {
-        const data = await API.get(`${api_url}/get/search`).then(res => res.data)
+        const data = await API.get(`${api_url}/get/search`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${user.uid}`
+            },
+        }).then(res => res.data)
+        console.log(data);
+        
         return data
     }
     const renderSearch = () => {

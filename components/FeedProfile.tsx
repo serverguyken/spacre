@@ -1,5 +1,5 @@
 import TextCard from "./TextCard";
-import { Poll, Space, User } from "../interface/User";
+import { Constructor, Poll, Space, User } from "../interface/User";
 import {
   setClass,
   isBrowser,
@@ -14,6 +14,7 @@ import {
   stopPropagation,
   isLiked,
   isFollowing,
+  isSaved,
 } from "../utils/";
 import { useRouter } from "next/router";
 import React, { ReactElement, useEffect, useState } from "react";
@@ -87,13 +88,12 @@ const FeedProfile = () => {
   
   const likeHandler = (id: string) => {
 	const like_count = document.getElementById(`${id}_like_count`);
-	
     const likeSpace = spaces.filter((s) => s.spaceId === id)[0]; 
     if (isLiked(likeSpace.likes, user)) {
       // remove like
       const newSpace = {
         ...likeSpace,
-        likes: likeSpace.likes.filter((l) => l.uid !== user.uid),
+        likes: likeSpace.likes.filter((l: Constructor) => l.userId !== user.uid),
       };
       updateSpace(likeSpace.spaceId, newSpace, {
         onSuccess: () => {
@@ -114,7 +114,7 @@ const FeedProfile = () => {
       // update space
       const newSpace = {
         ...likeSpace,
-        likes: [...likeSpace.likes, user],
+        likes: [...likeSpace.likes, { userId: user.uid }],
       };
       updateSpace(likeSpace.spaceId, newSpace, {
         onSuccess: () => {
@@ -134,23 +134,52 @@ const FeedProfile = () => {
     }
   };
 
-  
+  const saveHandler = (space: Space) => {
+    // current user is saving this space, we need to add the spaceId to the user's saved spaces and we need to update the user's saved spaces
+     // check if the user is already saved this space
+     
+     
+     if (isSaved(space.spaceId, user)) {
+       // remove saved space
+        const newUser = {
+          ...user,
+          saves: user.saves.filter((s) => s.spaceId !== space.spaceId),
+        };
+        updateUser(user.uid, newUser, {
+          onSuccess: () => {
+          },
+          onError: (err: any) => {},
+        });
+     } else {
+        // add saved space
+          const newUser = {
+            ...user,
+            saves: [...user.saves, { spaceId: space.spaceId }],
+          };
+          updateUser(user.uid, newUser, {
+            onSuccess: () => {
+            },
+            onError: (err: any) => {},
+          });
+      }
+  }
 
   
   const replyHandler = (userName: string, spaceId: string) => {
 	  router.push(`/${userName}/space/${spaceId}`);
   }
 
+  
 
   const onFollow = (spaceUser: User) => {
     const forUser = {
 		...spaceUser,
-		followers: [...spaceUser.followers, user],
+		followers: [...spaceUser.followers, { userId: user.uid }],
 		followersCount: spaceUser.followersCount + 1,
 	  };
 	  const forCurrentUser = {
 		...user,
-		following: [...user.following, spaceUser],
+		following: [...user.following, { userId: spaceUser.uid }],
 		followingsCount: user.followingsCount + 1,
 	  };
 	  // if current user is following the space user
@@ -174,12 +203,12 @@ const FeedProfile = () => {
   const onUnFollow = (spaceUser: User) => {
 	const forUser = {
 		...spaceUser,
-		followers: spaceUser.followers.filter((f) => f.uid !== user.uid),
+		followers: spaceUser.followers.filter((f: Constructor) => f.userId !== user.uid),
 		followersCount: spaceUser.followersCount - 1,
 	  };
 	  const forCurrentUser = {
 		...user,
-		following: user.following.filter((f) => f.uid !== spaceUser.uid),
+		following: user.following.filter((f: Constructor) => f.userId !== spaceUser.uid),
 		followingsCount: user.followingsCount - 1,
 	  };
 	  if (isFollowing(user.following, spaceUser)) {
@@ -277,6 +306,9 @@ const FeedProfile = () => {
   };
 
   return (
+    <>
+    {
+      users.length > 0 && spaces.length > 0 ?
     <div
       className="feedprofile_container relative mt-2"
       id="feed_main_container"
@@ -289,9 +321,9 @@ const FeedProfile = () => {
           <div className="opacity-0">
             <Skeleton type="feed" />
           </div>
-          <div className="flex absolute top-60 left-1/2  justify-center">
+          {/* <div className="flex absolute top-60 left-1/2  justify-center">
             <MainLoader />
-          </div>
+          </div> */}
         </div>
       ) : (
         // <PullToRefresh
@@ -470,7 +502,7 @@ const FeedProfile = () => {
                               </div>
                             </div>
                             <div
-                              className="post_more_action relative"
+                              className="post_more_action relative cursor-pointer"
                               onClick={(e: any) => {
                                 stopPropagation(e);
                                 const post_more_actions =
@@ -538,7 +570,7 @@ const FeedProfile = () => {
                                       key={space.spaceId}
                                       src={url}
                                       alt="A post image"
-                                      className="rounded-lg"
+                                      className="rounded-lg max-w-[400px] max-h-[300px] object-cover object-center"
                                     />
                                   );
                                 })}
@@ -682,13 +714,12 @@ const FeedProfile = () => {
                               >
                                 <div
                                   className="post_action post_user_save_action relative select-none flex text-gray-500 dark:text-darkText items-center space-x-2 cursor-pointer p-1 rounded-sm hover:bg-primary hover:bg-opacity-10 hover:text-primary dark:hover:text-primary"
-                                  onClick={() => {
-                                    if (isBrowser()) {
-                                      alert("saved post2");
-                                    }
+                                  onClick={(e: any) => {
+                                    stopPropagation(e);
+                                    saveHandler(space);
                                   }}
                                 >
-                                  {space.saved ? (
+                                  {isSaved(space.spaceId, user) ? (
                                     <SaveIconSolid
                                       className={"text-primary"}
                                       width={16}
@@ -724,6 +755,19 @@ const FeedProfile = () => {
         // </PullToRefresh>
       )}
     </div>
+    :
+    <div className="flex flex-col items-center justify-center relative">
+      <div className="text-center mt-10 mb-10">
+        <h1>
+        <div className="flex absolute top-60 left-1/2  justify-center">
+            <MainLoader />
+          </div>
+        </h1>
+      </div>
+    </div>
+  }
+  
+  </>
   );
 };
 

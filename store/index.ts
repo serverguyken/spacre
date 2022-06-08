@@ -85,6 +85,7 @@ const store: {
         spacesCount: 0,
         createdAt: "",
         updatedAt: "",
+        saves: [],
       },
       widget_rendered: false,
       signup_step: {

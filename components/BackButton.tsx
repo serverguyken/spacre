@@ -29,7 +29,7 @@ const BackButtton = ({
         }}
         color="gray"
       >
-        <Icon type="back" width="26" height="26" styles="text-gray-500 mt-1" />
+        <Icon type="back" width="26" height="26" styles="text-gray-500 mt-1 dark:text-gray-100" />
       </Tooltip>
     </div>
   );
