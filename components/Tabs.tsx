@@ -52,7 +52,7 @@ const Tabs = ({
             {
                 tabs.map((item: Tab, index) => {
                     return (
-                        <div key={index} className="mt-3">
+                        <div key={index} className="">
                             {
                                 item.component && activeTab === item.id && (
                                     <>

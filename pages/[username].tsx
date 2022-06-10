@@ -24,9 +24,12 @@ import Tabs from '../components/Tabs'
 import UserSpaces from '../components/UserSpaces'
 import UserMedia from '../components/UserMedias'
 import UserMedias from '../components/UserMedias'
+import Image from 'next/image'
 const UserProfile = ({ username, user, currentUser }: { username: User['userName'], user: User | null, currentUser: User | null }) => {
     const [showImageModal, setShowImageModal] = useState(false)
     const ifUserisCurrentUser = currentUser && currentUser.userName === username
+    console.log();
+    
     const tabs = [ {
             id: 0,
             name: 'Spaces',
@@ -38,7 +41,6 @@ const UserProfile = ({ username, user, currentUser }: { username: User['userName
             component: <UserMedias />
         },
     ];
-    
     return (
         <div className='user_profile_view'>
             {user && (
@@ -57,13 +59,7 @@ const UserProfile = ({ username, user, currentUser }: { username: User['userName
                                             height: 'inherit',
                                         }}
                                     >
-                                        <img src={user.bannerImage} alt="banner" className='opacity-0'
-                                            style={{
-                                                width: '100%',
-                                                height: 'inherit',
-                                            }}
-                                        />
-
+                                        <Image src={user.bannerImage} alt="banner" className='opacity-0' width={100} height={100} />
                                     </div>
                                 )
                                     : (

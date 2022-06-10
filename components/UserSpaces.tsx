@@ -247,7 +247,7 @@ const UserSpaces = ({ spaceUsername }: { spaceUsername: string }) => {
                 10,
                 lastDoc
             );
-            OnSnapshot(query, (snapshot) => {
+            OnSnapshot(ref, (snapshot: any) => {
                 if (snapshot.size === 0) {
                     setLoading(false);
                     setFetched(false);
@@ -261,16 +261,14 @@ const UserSpaces = ({ spaceUsername }: { spaceUsername: string }) => {
                             setLoading(true);
                         }
                     }
-                    setTimeout(() => {
-                        const newSpaces = snapshot.docs.map((docs: any) => docs.data());
-                        const userSpace = newSpaces.filter((s: Space) => s.userName === spaceUsername);
-                        setSpaces([...spaces, ...userSpace]);
-                        const lastDoc = snapshot.docs[snapshot.docs.length - 1];
-                        setLastDoc(lastDoc);
-                        setLoading(false);
-                        setFetched(false);
-                        setIsEmpty(false);
-                    }, 1000);
+                    const newSpaces = snapshot.docs.map((docs: any) => docs.data());
+                    const userSpace = newSpaces.filter((s: Space) => s.userName === spaceUsername);
+                    setSpaces([...spaces, ...userSpace]);
+                    const lastDoc = snapshot.docs[snapshot.docs.length - 1];
+                    setLastDoc(lastDoc);
+                    setLoading(false);
+                    setFetched(false);
+                    setIsEmpty(false);
                 }
             });
         }
@@ -279,15 +277,15 @@ const UserSpaces = ({ spaceUsername }: { spaceUsername: string }) => {
     useEffect(() => {
         const ref = createCollectionRef("spaces");
         fetchSpaces(ref);
-    }, []);
+    }, [spaceUsername]);
 
-    useEffect(() => {
-        if (fecthed) {
-            setFetched(false);
-            const ref = createCollectionRef("spaces");
-            fetchSpaces(ref);
-        }
-    }, [fecthed]);
+    // useEffect(() => {
+    //     if (fecthed) {
+    //         setFetched(false);
+    //         const ref = createCollectionRef("spaces");
+    //         fetchSpaces(ref);
+    //     }
+    // }, [fecthed]);
 
     useEffect(() => {
         if (isBrowser()) {
@@ -322,7 +320,7 @@ const UserSpaces = ({ spaceUsername }: { spaceUsername: string }) => {
             {
                 users.length > 0 && spaces.length > 0 ?
                     <div
-                        className="feedprofile_container relative mt-2"
+                        className="feedprofile_container relative"
                         id="feed_main_container"
                     >
                         {!rendered ? (
