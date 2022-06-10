@@ -807,7 +807,7 @@ const UserSpaces = ({ spaceUsername }: { spaceUsername: string }) => {
                                     fetchError ? (
                                         <div className="mt-6 text-center">
                                             <span>
-                                                <span>Can't fetch spaces</span>
+                                                <span>Can&apos;t fetch spaces</span>
                                             </span>
                                         </div>
                                     ) : (

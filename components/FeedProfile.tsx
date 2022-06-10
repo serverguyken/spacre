@@ -313,43 +313,7 @@ const FeedProfile = () => {
   const viewUserPost = (username: string) => {
     router.push(`/${username}`);
   };
-  const setNoUserLoadingState = () => {
-    const [loading, setLoading] = useState(true);
-    const [fetched, setFetched] = useState(false);
-    useEffect(() => {
-        if (loading) {
-            setTimeout(() => {
-                setLoading(false);
-                setFetched(true);
-            }, 1000);
-        }
-    }, [loading]);
-    return (
-        <>
-            {loading && !fetched && (
-                <div className="flex flex-col items-center justify-center relative">
-                    <div className="text-center mt-10 mb-10">
-                        <h1>
-                            <div className="flex absolute top-60 left-1/2  justify-center">
-                                <MainLoader />
-                            </div>
-
-                        </h1>
-                    </div>
-                </div>
-            )}
-            {
-                !loading && fetched && (
-                    <div className="mt-6 text-center">
-                        <span>
-                            <span>Can't fetch spaces</span>
-                        </span>
-                    </div>
-                )
-            }
-        </>
-    )
-}
+  
   return (
     <>
       {
@@ -843,7 +807,7 @@ const FeedProfile = () => {
                       fetchError ? (
                           <div className="mt-6 text-center">
                               <span>
-                                  <span>Can't fetch spaces</span>
+                                  <span>Can&apos;t fetch spaces</span>
                               </span>
                           </div>
                       ) : (
