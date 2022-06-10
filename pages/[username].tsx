@@ -238,7 +238,7 @@ const ProfileView: NextPage = () => {
                 setLoading(false)
             }
         })
-    }, [])
+    }, [username])
 
 
 
