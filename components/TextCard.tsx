@@ -115,7 +115,7 @@ const TextCard = () => {
     const [isPollLimit, setIsPollLimit] = useState(false)
     const [fetchMeta, setFetchMeta] = useState(true)
     const [spaceCreated, setSpaceCreated] = useState(false)
-    const testContent = "Hello @serverguyken, this is a test post. I hope you like it :) #test. Visit https://www.web.com for more info."
+   
 
     useEffect(() => {
         if (user && user.uid) {

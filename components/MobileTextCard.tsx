@@ -106,7 +106,6 @@ const MobileTextCard = () => {
     const [isPollLimit, setIsPollLimit] = useState(false)
     const [fetchMeta, setFetchMeta] = useState(true)
     const [spaceCreated, setSpaceCreated] = useState(false)
-    const testContent = "Hello @serverguyken, this is a test post. I hope you like it :) #test. Visit https://www.web.com for more info."
 
 
     useEffect(() => {
@@ -140,7 +139,7 @@ const MobileTextCard = () => {
         }
         
     }, [user])
-    
+
     useEffect(() => {
         VALTIO.watch((get) => {
             setPostTextBoxShown(get(store.content.data).postTextareaShown)

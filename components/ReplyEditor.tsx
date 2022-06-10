@@ -14,7 +14,6 @@ import '@draft-js-plugins/hashtag/lib/plugin.css'
 import '@draft-js-plugins/mention/lib/plugin.css'
 import '@draft-js-plugins/linkify/lib/plugin.css'
 import hastags from "../utils/hastags"
-import mentions from "../utils/mentions"
 import MentionEntry from "./MentionEntry"
 import HashtagEntry from "./HashtagEntry"
 import VALTIO, { SUBSCRIBE } from "../store/valtio"
@@ -29,7 +28,7 @@ import PollCreate from "./PollCreate"
 import { Meta } from "../interface/Meta"
 import useUserContext from "../provider/userProvider"
 import { Poll, Reply, Space, User } from "../interface/User"
-import { upload_api_url } from "../config"
+import { api_url, upload_api_url } from "../config"
 import API from "../config/api"
 import { LineLoader } from "../utils/loader"
 
@@ -82,6 +81,12 @@ const ReplyEditor = ({ spaceUser, user, onReply }: {
     const [postTextBoxShown, setPostTextBoxShown] = useState(false)
     const [editorState, setEditorState] = useState(EditorState.createEmpty())
     const [mentionSuggestions, setMentionSuggestions] = useState([] as any)
+    const [mentions, setMentions] = useState([] as {
+        id: string,
+        name: string,
+        displayName: string,
+        avatar: string | null,
+    }[])
     const [hashtagSuggestions, setHashtagSuggestions] = useState([] as any)
     const [mentionOpen, setMentionOpen] = useState(false)
     const [hashtagOpen, setHashtagOpen] = useState(false)
@@ -116,8 +121,38 @@ const ReplyEditor = ({ spaceUser, user, onReply }: {
     const [isPollLimit, setIsPollLimit] = useState(false)
     const [fetchMeta, setFetchMeta] = useState(true)
     const [spaceCreated, setSpaceCreated] = useState(false)
-    const testContent = "Hello @serverguyken, this is a test post. I hope you like it :) #test. Visit https://www.web.com for more info."
 
+    useEffect(() => {
+        if (user && user.uid) {
+            API.get(`${api_url}/get/users`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.uid}`
+                },
+            }).then((response) => {
+                if (response.data.users) {
+                    const users = response.data.users
+                    const newMentions: {
+                        id: string,
+                        name: string,
+                        displayName: string,
+                        avatar: string | null,
+                    }[] = []
+                    // create new properties for all users
+                    users.forEach((user: User) => {
+                        newMentions.push({
+                            id: user.uid,
+                            name: user.userName,
+                            displayName: user.displayName,
+                            avatar: user.profileImage,
+                        })
+                    })
+                    setMentions(newMentions)
+                }
+            })
+        }
+        
+    }, [user])
     useEffect(() => {
         VALTIO.watch((get) => {
             setPostTextBoxShown(get(store.content.data).postTextareaShown)
@@ -191,7 +226,7 @@ const ReplyEditor = ({ spaceUser, user, onReply }: {
     }
 
     const onMentionSearchChange = ({ value }: any) => {
-        setMentionSuggestions(defaultSuggestionsFilter(value, mentions(value) as any))
+        setMentionSuggestions(defaultSuggestionsFilter(value, mentions as any))
     }
 
     const onHashtagSearchChange = ({ value }: any) => {
@@ -445,14 +480,12 @@ const ReplyEditor = ({ spaceUser, user, onReply }: {
                 <MobileTextCard />
             }
 
-            <div className={setClass("post_textarea relative", 'bg-white dark:bg-darkMode relative screen-sm:hidden')}>
-                {spaceCreated && <div className="relative">
-                    <LineLoader width="100%" position='absolute' />
-                </div>}
+            <div className={setClass("replytext_area mt-4 relative", 'bg-white dark:bg-darkMode relative')}>
+                
                 <div className={setClass("border-b border-gray-100 dark:border-borderDarkMode p-2 pb-3 screen-sm:dark:border-b-gray-50 screen-sm:dark:border-opacity-5", postTextBoxShown ? 'screen-sm:p-4 screen-sm:pb-1' : '')}>
                     
-                    <h1 className="mb-2 text-link">Replying to @{spaceUser.userName}</h1>
-                    <div className={setClass("w-auto screen-sm:mt-3")}>
+                    <h1 className="mb-2 text-link ml-2">Replying to @{spaceUser.userName}</h1>
+                    <div className={setClass("w-auto ml-2")}>
                         <Editor
                             editorState={editorState}
                             onChange={handleChange}

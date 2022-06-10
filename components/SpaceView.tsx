@@ -302,11 +302,11 @@ const SpaceView = ({
   return (
     <div>
       {isDataLoaded() && (
-        <div>
+        <div className="screen-sm:pt-14">
           <div
             key={space.spaceId}
             id={`${space.spaceId}_profile_feed_view`}
-            className="bg-white dark:bg-darkMode relative h-full  whitespace-pre-wrap feed_post_contents_card pt-3  p-2  border-b border-gray-100  dark:border-borderDarkMode"
+            className="bg-white dark:bg-darkMode relative h-full  whitespace-pre-wrap feed_post_contents_card pt-3 p-2  border-b border-gray-100  dark:border-borderDarkMode"
           >
             <div className="flex justify-between">
               <div className="flex space-x-2 w-full">
@@ -679,7 +679,7 @@ const SpaceView = ({
           </div>
           <ReplyEditor spaceUser={user} user={currentUser} onReply={onReply} />
 
-
+                              
           {replies.map((reply: Reply, index: number) => {
             return (
               <div
