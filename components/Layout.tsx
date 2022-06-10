@@ -71,7 +71,7 @@ const Layout = ({ path, content_one, content_two }: any) => {
                         width: 'calc(100% - 210px)'
                     }}>
                     <div className='layout_flex flex justify-between space-x-4 screen-sm:block screen-sm:space-x-0'>
-                        <div className='layout_contents_one w-[75%] h-[screen] bg-white dark:bg-darkMode   border border-gray-100  dark:border-borderDarkMode screen-sm:w-full'>
+                        <div className='layout_contents_one w-[75%]'>
                             <div className=''>
                                 {content_one}
                             </div>

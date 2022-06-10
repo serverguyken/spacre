@@ -24,6 +24,7 @@ import {
     u_getUserDB,
     u_updateSpace,
     u_getSpace,
+    u_getUsersFromClient,
 } from "../config/auth/user";
 import { AuthUser, Space, User, UserContext } from "../interface/User";
 import store from "../store";
@@ -60,6 +61,7 @@ export const UserProvider = ({ children }: any) => {
         displayName: "",
         userName: "",
         profileImage: null,
+        bannerImage: null,
         blocked: false,
         premium: false,
         verified: false,
@@ -103,6 +105,7 @@ export const UserProvider = ({ children }: any) => {
                             displayName: data.displayName,
                             userName: data.userName,
                             profileImage: data.profileImage,
+                            bannerImage: data.bannerImage,
                             blocked: data.blocked,
                             premium: data.premium,
                             verified: data.verified,
@@ -367,6 +370,24 @@ export const UserProvider = ({ children }: any) => {
         }
     };
 
+    const getUsersFomClient = (id: any, cbs: {
+        onSuccess: (message: any) => void, onError: (message: any) => void }) => {
+        try {
+            u_getUsersFromClient(id).then((res: any) => {
+                if (res) {
+                    console.log(res.doc);
+                    
+                } else {
+                    cbs.onSuccess([])
+                }
+            }) 
+        } catch (error: any) {
+            setError("unable to get users");
+            setHasError(true);
+            cbs.onError(error)
+        }
+    };
+
     const getUsers = (id: any, cbs: {
         onSuccess: (message: any) => void, onError: (message: any) => void }) => {
         try {
@@ -468,6 +489,7 @@ export const UserProvider = ({ children }: any) => {
         updateUser,
         deleteUser,
         getUsers,
+        getUsersFomClient,
         addSpace,
         getSpaces,
         updateSpace,

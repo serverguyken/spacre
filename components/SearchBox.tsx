@@ -6,7 +6,7 @@ import { Spinner } from '../utils/loader'
 import { BadgeCheckIcon, SearchIcon } from '@heroicons/react/outline'
 import { NextLink } from '@mantine/next'
 import store from '../store'
-import Profile from '../pages/[profileID]'
+import Profile from '../pages/[username]'
 import ProfileImage from './ProfileImage'
 
 

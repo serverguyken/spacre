@@ -43,7 +43,19 @@ const RenderMoreAction = ({
     <>
       {loaded && usersDB.filter((u) => u.uid === space.userId)[0]  !== undefined && (
     
-        <div className="w-[18rem] max-w-[20rem] bg-white rounded shadow-sm border border-gray-100 border-opacity-80">
+        <div className="w-[18rem] max-w-[20rem] bg-white dark:bg-darkMode rounded shadow-sm border border-gray-100 border-opacity-80 dark:border-borderDarkMode animation_moreaction_height">
+          <div className="fixed top-0 left-0 cursor-default z-[-1] w-full h-screen" 
+            onClick={(e) => {
+              const rendered_post_more_actions = document.querySelector(
+                '.animation_moreaction_height'
+              ) as HTMLDivElement;
+              if (rendered_post_more_actions) {
+                console.log(rendered_post_more_actions);
+                
+                rendered_post_more_actions.style.maxHeight = '0px';
+              }
+            }}
+          ></div>
           <ul>
             {usersDB.filter((u) => u.uid === space.userId)[0].uid !== user.uid && (
               <>
@@ -51,7 +63,11 @@ const RenderMoreAction = ({
                   usersDB.filter((u) => u.uid === space.userId)[0].followers,
                   userDB
                 ) ? (
-                  <li className="p-4 hover:bg-gray-100 hover:bg-opacity-50  cursor-pointer">
+                  <li className="p-4 hover:bg-gray-100 hover:bg-opacity-50 dark:hover:bg-darkModeBg/20 cursor-pointer"
+                  onClick={(e) => {
+                    console.log("unfollow");
+                  }}
+                  >
                     <div className="flex items-center space-x-2">
                       <Icon
                         type="unfollow"
@@ -59,14 +75,14 @@ const RenderMoreAction = ({
                         height="24"
                         styles="text-gray-400"
                       />
-                      <span className="text-gray-700">
-                        Unfollow @
-                        {usersDB.filter((u) => u.uid === space.userId)[0].userName}
-                      </span>
+                      <p className="text-gray-700 dark:text-white ">
+                      Unfollow 
+                      </p>
+                      <p className="whitespace-nowrap max-w-[10rem] text-ellipsis overflow-hidden dark:text-white ">@{usersDB.filter((u) => u.uid === space.userId)[0].userName}</p>
                     </div>
                   </li>
                 ) : (
-                  <li className="p-4 hover:bg-gray-100 hover:bg-opacity-50 cursor-pointer">
+                  <li className="p-4 hover:bg-gray-100 hover:bg-opacity-50 dark:hover:bg-darkModeBg/20 cursor-pointer">
                     <div className="flex items-center space-x-2">
                       <Icon
                         type="follow"
@@ -74,10 +90,10 @@ const RenderMoreAction = ({
                         height="24"
                         styles="text-gray-500"
                       />
-                      <p className="text-gray-700">
+                      <p className="text-gray-700 dark:text-white ">
                         Follow 
                       </p>
-                      <p className="whitespace-nowrap max-w-[10rem] text-ellipsis overflow-hidden">@{usersDB.filter((u) => u.uid === space.userId)[0].userName}</p>
+                      <p className="whitespace-nowrap max-w-[10rem] text-ellipsis overflow-hidden dark:text-white ">@{usersDB.filter((u) => u.uid === space.userId)[0].userName}</p>
                     </div>
                   </li>
                 )}
@@ -88,7 +104,7 @@ const RenderMoreAction = ({
               <>
                 {usersDB.filter((u) => u.uid === space.userId)[0].uid ===
                   userDB.uid && (
-                  <li className="p-4 hover:bg-gray-100 hover:bg-opacity-50  cursor-pointer">
+                  <li className="p-4 hover:bg-gray-100 hover:bg-opacity-50 dark:hover:bg-darkModeBg/20 cursor-pointer">
                     <div className="flex items-center space-x-2">
                       <Icon
                         type="edit"
@@ -96,28 +112,28 @@ const RenderMoreAction = ({
                         height="24"
                         styles="text-gray-500"
                       />
-                      <span className="text-gray-700">Edit</span>
+                      <span className="text-gray-700 dark:text-white">Edit</span>
                     </div>
                   </li>
                 )}
               </>
             )}
             {usersDB.filter((u) => u.uid === space.userId)[0].uid === userDB.uid && (
-              <li className="p-4 hover:bg-gray-100 hover:bg-opacity-50  cursor-pointer">
+              <li className="p-4 hover:bg-gray-100 hover:bg-opacity-50 dark:hover:bg-darkModeBg/20 cursor-pointer">
                 <div className="flex items-center space-x-2">
                   <Icon
                     type="delete"
                     width="24"
                     height="24"
-                    styles="text-red-500"
+                    styles="text-red-500 dark:text-red-500"
                   />
-                  <span className="text-red-700">Delete</span>
+                  <span className="text-red-700 dark:text-red-500">Delete</span>
                 </div>
               </li>
             )}
             {usersDB.filter((u) => u.uid === space.userId)[0].uid !== userDB.uid && (
               <>
-                <li className="p-4 hover:bg-gray-100 hover:bg-opacity-50  cursor-pointer">
+                <li className="p-4 hover:bg-gray-100 hover:bg-opacity-50 dark:hover:bg-darkModeBg/20 cursor-pointer">
                   <div className="flex items-center space-x-2">
                     <Icon
                       type="block"
@@ -125,14 +141,14 @@ const RenderMoreAction = ({
                       height="24"
                       styles="text-gray-500"
                     />
-                    <span className="text-gray-700">Block</span>
+                    <span className="text-gray-700 dark:text-white">Block</span>
                   </div>
                 </li>
               </>
             )}
             {usersDB.filter((u) => u.uid === space.userId)[0].uid !== userDB.uid && (
               <>
-                <li className="p-4 hover:bg-gray-100 hover:bg-opacity-50  cursor-pointer">
+                <li className="p-4 hover:bg-gray-100 hover:bg-opacity-50 dark:hover:bg-darkModeBg/20 cursor-pointer">
                   <div className="flex items-center space-x-2">
                     <Icon
                       type="report"
@@ -140,7 +156,7 @@ const RenderMoreAction = ({
                       height="24"
                       styles="text-gray-500"
                     />
-                    <span className="text-gray-700">Report</span>
+                    <span className="text-gray-700 dark:text-white">Report</span>
                   </div>
                 </li>
               </>

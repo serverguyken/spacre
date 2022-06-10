@@ -36,6 +36,7 @@ import ProfileCardHover from "./ProfileCardHover";
 import ProfileImage from "./ProfileImage";
 import RenderMoreAction from "./RenderMoreAction";
 import ReplyEditor from "./ReplyEditor";
+import SpaceImageModal from "./SpaceImageModal";
 import Tooltip from "./Tooltip";
 import Transition from "./Transition";
 const SpaceView = ({
@@ -305,7 +306,7 @@ const SpaceView = ({
           <div
             key={space.spaceId}
             id={`${space.spaceId}_profile_feed_view`}
-            className="bg-white dark:bg-darkMode relative  whitespace-pre-wrap feed_post_contents_card pt-3 h-auto p-2  border-b border-gray-100  dark:border-borderDarkMode"
+            className="bg-white dark:bg-darkMode relative h-full  whitespace-pre-wrap feed_post_contents_card pt-3  p-2  border-b border-gray-100  dark:border-borderDarkMode"
           >
             <div className="flex justify-between">
               <div className="flex space-x-2 w-full">
@@ -448,7 +449,7 @@ const SpaceView = ({
                           }
                         }}
                       >
-                        <div className="text-gray-500 dark:text-darkText hover:bg-primary hover:bg-opacity-10 hover:text-primary rounded-full w-8 h-8 flex justify-center items-center">
+                        <div className="text-gray-500 hover:bg-primary  dark:bg-opacity-40  dark:text-opacity- hover:bg-opacity-10 hover:text-primary rounded-full w-8 h-8 flex justify-center items-center">
                           <Tooltip
                             title="More"
                             placement="center"
@@ -479,21 +480,49 @@ const SpaceView = ({
                   </div>
                   <div className="post_feed_contents mt-2 leading-[19px]">
                     <div className="post_contents w-full">
-                      <ToJSX text={space.text} />
+                      <div className="post_text">
+                        <ToJSX text={space.text} />
+                      </div>
+                      
                       {space.images && (
-                        <div className="mt-4 max-w-[400px]">
-                          {space.images.map((url: string) => {
-                            return (
-                              <img
-                                key={space.spaceId}
-                                src={url}
-                                alt="A post image"
-                                className="rounded-lg max-w-[400px] max-h-[300px] object-cover object-center"
-                              />
-                            );
-                          })}
-                        </div>
-                      )}
+                                    <>
+                                    {
+                                      space.images.map((url: string, index: number) => {
+                                        return (
+                                          <div className="mt-4 max-w-[400px]"
+                                            key={index}
+                                            id={`${space.spaceId}_post_image_${index}`}
+                                            onClick={(e: any) => {
+                                              stopPropagation(e);
+                                              // render the modal for the image
+                                              const modal = document.getElementById(`${space.spaceId}_post_image_${index}_modal`) as HTMLDivElement;
+                                              modal.classList.toggle("hidden");
+                                              const other_modal = document.querySelectorAll(".post_image_modal") as NodeListOf<HTMLDivElement>;
+                                              for (let i = 0; i < other_modal.length; i++) {
+                                                if (other_modal[i].id !== `${space.spaceId}_post_image_${index}_modal`) {
+                                                  other_modal[i].classList.add("hidden");
+                                                }
+                                              }
+                                            }}
+                                          >
+                                            <img
+                                              key={space.spaceId}
+                                              src={url}
+                                              alt="A post image"
+                                              className="rounded-lg max-w-[400px] max-h-[300px] object-cover object-center"
+                                            />
+                                            
+                                            <div className="hidden"
+                                              id={`${space.spaceId}_post_image_${index}_modal`}
+                                            >
+                                                <SpaceImageModal space={space} image={url} renderType="space" />
+                                            </div>
+                                          </div>
+                                        );
+                                      })
+                                    }
+                                    </>
+                                  )}
                       {space.hasPoll && (
                         <div className="mt-5">
                           <PollCard
@@ -838,7 +867,7 @@ const SpaceView = ({
                               }
                             }}
                           >
-                            <div className="text-gray-500 dark:text-darkText hover:bg-primary hover:bg-opacity-10 hover:text-primary rounded-full w-8 h-8 flex justify-center items-center">
+                            <div className="text-gray-500 hover:bg-primary  dark:bg-opacity-40  dark:text-opacity- hover:bg-opacity-10 hover:text-primary rounded-full w-8 h-8 flex justify-center items-center">
                               <Tooltip
                                 title="More"
                                 placement="center"
@@ -870,21 +899,49 @@ const SpaceView = ({
 
                       <div className="post_feed_contents mt-2 leading-[19px]">
                         <div className="post_contents w-full">
-                          <ToJSX text={reply.text} />
+                          <div className="post_text">
+                            <ToJSX text={reply.text} />
+                          </div>
+                          
                           {reply.images && (
-                            <div className="mt-4 max-w-[400px]">
-                              {reply.images.map((url: string) => {
-                                return (
-                                  <img
-                                    key={reply.replyId}
-                                    src={url}
-                                    alt={`${reply.replyId}_image`}
-                                    className="rounded-lg"
-                                  />
-                                );
-                              })}
-                            </div>
-                          )}
+                                    <>
+                                    {
+                                      reply.images.map((url: string, index: number) => {
+                                        return (
+                                          <div className="mt-4 max-w-[400px]"
+                                            key={index}
+                                            id={`${reply.replyId}_post_image_${index}`}
+                                            onClick={(e: any) => {
+                                              stopPropagation(e);
+                                              // render the modal for the image
+                                              const modal = document.getElementById(`${reply.replyId}_post_image_${index}_modal`) as HTMLDivElement;
+                                              modal.classList.toggle("hidden");
+                                              const other_modal = document.querySelectorAll(".post_image_modal") as NodeListOf<HTMLDivElement>;
+                                              for (let i = 0; i < other_modal.length; i++) {
+                                                if (other_modal[i].id !== `${reply.replyId}_post_image_${index}_modal`) {
+                                                  other_modal[i].classList.add("hidden");
+                                                }
+                                              }
+                                            }}
+                                          >
+                                            <img
+                                              key={reply.replyId}
+                                              src={url}
+                                              alt="A post image"
+                                              className="rounded-lg max-w-[400px] max-h-[300px] object-cover object-center"
+                                            />
+                                            
+                                            <div className="hidden"
+                                              id={`${space.spaceId}_post_image_${index}_modal`}
+                                            >
+                                                <SpaceImageModal space={reply} image={url} renderType="reply" />
+                                            </div>
+                                          </div>
+                                        );
+                                      })
+                                    }
+                                    </>
+                                  )}
                           {reply.hasPoll && (
                             <div className="mt-5">
                               <PollCard

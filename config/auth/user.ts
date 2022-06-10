@@ -1,4 +1,4 @@
-import { auth, OnAuthStateChanged, collectionRef, docRef, AddDoc, SetDoc, UpdateDoc, DeleteDoc, GetDoc, GetDocs, createDocRef } from './firebase';
+import { auth, OnAuthStateChanged, collectionRef, docRef, AddDoc, SetDoc, UpdateDoc, DeleteDoc, GetDoc, GetDocs, createDocRef, createCollectionRef } from './firebase';
 import { useEffect, useState } from 'react';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, signInWithPopup, GithubAuthProvider, getRedirectResult } from 'firebase/auth';
 import { Space, User } from '../../interface/User';
@@ -100,6 +100,10 @@ export const u_getUsers = (id: any) => {
         }
     })
     return response;
+};
+export const u_getUsersFromClient = (id: any) => {
+    const ref = createCollectionRef('users');
+    return GetDocs(ref);
 };
 
 

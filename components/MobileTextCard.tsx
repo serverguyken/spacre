@@ -14,7 +14,6 @@ import '@draft-js-plugins/hashtag/lib/plugin.css'
 import '@draft-js-plugins/mention/lib/plugin.css'
 import '@draft-js-plugins/linkify/lib/plugin.css'
 import hastags from "../utils/hastags"
-import mentions from "../utils/mentions"
 import MentionEntry from "./MentionEntry"
 import HashtagEntry from "./HashtagEntry"
 import VALTIO, { SUBSCRIBE } from "../store/valtio"
@@ -25,9 +24,9 @@ import MediaHandler from "./MediaHandler"
 import Transition from "./Transition"
 import Modal from "./Modal"
 import PollCreate from "./PollCreate"
-import { Poll, Space } from "../interface/User"
+import { Poll, Space, User } from "../interface/User"
 import useUserContext from "../provider/userProvider"
-import { upload_api_url } from "../config"
+import { api_url, upload_api_url } from "../config"
 import API from "../config/api"
 import { LineLoader } from "../utils/loader"
 
@@ -73,6 +72,7 @@ const MobileTextCard = () => {
     const [postTextBoxShown, setPostTextBoxShown] = useState(false)
     const [editorState, setEditorState] = useState(EditorState.createEmpty())
     const [mentionSuggestions, setMentionSuggestions] = useState([] as any)
+    const [mentions, setMentions] = useState([] as any)
     const [hashtagSuggestions, setHashtagSuggestions] = useState([] as any)
     const [mentionOpen, setMentionOpen] = useState(false)
     const [hashtagOpen, setHashtagOpen] = useState(false)
@@ -108,6 +108,39 @@ const MobileTextCard = () => {
     const [spaceCreated, setSpaceCreated] = useState(false)
     const testContent = "Hello @serverguyken, this is a test post. I hope you like it :) #test. Visit https://www.web.com for more info."
 
+
+    useEffect(() => {
+        if (user && user.uid) {
+            API.get(`${api_url}/get/users`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.uid}`
+                },
+            }).then((response) => {
+                if (response.data.users) {
+                    const users = response.data.users
+                    const newMentions: {
+                        id: string,
+                        name: string,
+                        displayName: string,
+                        avatar: string | null,
+                    }[] = []
+                    // create new properties for all users
+                    users.forEach((user: User) => {
+                        newMentions.push({
+                            id: user.uid,
+                            name: user.userName,
+                            displayName: user.displayName,
+                            avatar: user.profileImage,
+                        })
+                    })
+                    setMentions(newMentions)
+                }
+            })
+        }
+        
+    }, [user])
+    
     useEffect(() => {
         VALTIO.watch((get) => {
             setPostTextBoxShown(get(store.content.data).postTextareaShown)
@@ -176,7 +209,7 @@ const MobileTextCard = () => {
     }
 
     const onMentionSearchChange = ({ value }: any) => {
-        setMentionSuggestions(defaultSuggestionsFilter(value, mentions(value) as any))
+        setMentionSuggestions(defaultSuggestionsFilter(value, mentions))
     }
 
     const onHashtagSearchChange = ({ value }: any) => {

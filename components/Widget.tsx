@@ -79,21 +79,23 @@ const footer_links = [
         to: '/legal/cookies',
     },
 ]
-const Widget = () => {
+const Widget = ({}) => {
     const { user:currentUser, getUsers, updateUser } = useUserContext()
     const [rendered, setRendered] = useState(false)
     const [suggestedFollowers, setSuggestedFollowers] = useState<User[]>([])
     useEffect(() => {
-        getUsers(currentUser.uid, {
-            onSuccess: (data: User[]) => {
-                const fetchedSuggestedFollowers = data.filter((user: User) => !isFollowing(currentUser.following, user))
-                const filteredSuggestedFolloers = fetchedSuggestedFollowers.filter((user: User) => user.uid !== currentUser.uid)
-                setSuggestedFollowers(filteredSuggestedFolloers)
-            },
-            onError: (error: any) => {
-                return null;
-            }
-        });
+        if (currentUser && currentUser.uid) {
+            getUsers(currentUser.uid, {
+                onSuccess: (data: User[]) => {
+                    const fetchedSuggestedFollowers = data.filter((user: User) => !isFollowing(currentUser.following, user))
+                    const filteredSuggestedFolloers = fetchedSuggestedFollowers.filter((user: User) => user.uid !== currentUser.uid)
+                    setSuggestedFollowers(filteredSuggestedFolloers)
+                },
+                onError: (error: any) => {
+                    return null;
+                }
+            });
+        }
     }, [currentUser]);
     const setRender = () => {
         TimeOut(() => {
@@ -144,7 +146,7 @@ const Widget = () => {
                 <div className="jobs_list_container mb-5">
                     {
                         rendered ?
-                            <div className="jobs_list_header bg-light dark:bg-primary dark:bg-opacity-5 rounded-lg p-2 mt-5 mb-5">
+                            <div className="jobs_list_header bg-gray-100 dark:bg-primary dark:bg-opacity-5 rounded-lg p-2 mt-5 mb-5">
                                 <h1 className="text-lg font-bold p-2">Jobs</h1>
                                 <div className="jobs_list_header_list ">
                                     {
@@ -184,7 +186,7 @@ const Widget = () => {
                 </div>
             </div>
 
-            <div className="people_to_follow bg-white dark:bg-darkMode rounded-lg p-2 mb-5">
+            <div className="people_to_follow bg-gray-100 dark:bg-darkMode rounded-lg p-2 mb-5">
                 {
                     rendered
                         ?

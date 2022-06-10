@@ -29,7 +29,7 @@ const ProfileCardHover = ({
 }) => {
   const [unfollowHovered, setUnfollowHovered] = useState(false);
   const [usersDB, setUsersDB] = useState<User[]>([]);
-  const [loaded , setLoaded] = useState(false);
+  const [loaded, setLoaded] = useState(false);
   const [userDB, setUserDB] = useState<User>({} as User);
   useEffect(() => {
     const ref = createCollectionRef("users");
@@ -39,21 +39,23 @@ const ProfileCardHover = ({
     });
   }, []);
   useEffect(() => {
-    const ref = createDocRef("users", user.uid);
-    OnSnapshot(ref, (snapshot) => {
-      const fetchedUsers = snapshot.data() as User;
-      setUserDB(fetchedUsers);
-    });
+    if (user && user.uid) {
+      const ref = createDocRef("users", user.uid);
+      OnSnapshot(ref, (snapshot) => {
+        const fetchedUser = snapshot.data() as User;
+        setUserDB(fetchedUser);
+      });
+    }
   }, []);
   useEffect(() => {
     if (usersDB !== undefined && userDB !== undefined) {
       setLoaded(true);
     } else {
-        setLoaded(false);
+      setLoaded(false);
     }
   }, [usersDB]);
-  
-  
+
+
   return (
     <>
       {loaded && (
@@ -91,80 +93,83 @@ const ProfileCardHover = ({
                 </div>
               </div>
               {
-              usersDB.filter((u) => u.uid === space.userId)[0]  !== undefined && (
-                <>
-                  { usersDB.filter((u) => u.uid === space.userId)[0].uid !== currentUser.uid && (
-                    
-                    <div className={pocStyle("profile_follow")}>
-                  <div className={pocStyle("profile_follow_btn")}>
-                    {isFollowing(
-                      usersDB.filter((u) => u.uid === space.userId)[0]
-                        .followers,
-                      currentUser
-                    ) ? (
-                      <div>
-                        {unfollowHovered ? (
-                          <button
-                            id={`${userDB.userName}_poc_fw_btn_hdn`}
-                            className={setClass(
-                              " bg-primary bg-opacity-10 text-blue-500 border border-primary border-radius-main py-1 px-[1.14rem]"
-                            )}
-                            onMouseOver={() => {
-                              setUnfollowHovered(true);
-                            }}
-                            onMouseLeave={() => {
-                              setUnfollowHovered(false);
-                            }}
-                            onClick={(e: any) => {
-                              stopPropagation(e);
-                              onUnFollow(userDB);
-                            }}
-                          >
-                            <span className="font-medium text-sm text-center">
-                              Unfollow
-                            </span>
-                          </button>
-                        ) : (
-                          <button
-                            id={`${userDB.userName}_poc_fw_btn_shw`}
-                            className={setClass(
-                              "bg-white dark:bg-darkMode dark:border-white dark:border-opacity-20 dark:text-white text-black border border-gray-300 border-radius-main py-1 px-4"
-                            )}
-                            onMouseOver={() => {
-                              setUnfollowHovered(true);
-                            }}
-                            onMouseLeave={() => {
-                              setUnfollowHovered(false);
-                            }}
-                          >
-                            <span className="font-medium text-sm text-center">
-                              Following
-                            </span>
-                          </button>
-                        )}
+                usersDB.filter((u) => u.uid === space.userId)[0] !== undefined && (
+                  <>
+                    {usersDB.filter((u) => u.uid === space.userId)[0].uid !== currentUser.uid && (
+
+                      <div className={pocStyle("profile_follow")}>
+                        <div className={pocStyle("profile_follow_btn")}>
+                          {isFollowing(
+                            usersDB.filter((u) => u.uid === space.userId)[0]
+                              .followers,
+                            currentUser
+                          ) ? (
+                            <div>
+                              {unfollowHovered ? (
+                                <button
+                                  id={`${userDB.userName}_poc_fw_btn_hdn`}
+                                  className={setClass(
+                                    " bg-primary bg-opacity-10 text-blue-500 border border-primary border-radius-main py-1 px-[1.14rem]"
+                                  )}
+                                  onMouseOver={() => {
+                                    setUnfollowHovered(true);
+                                  }}
+                                  onMouseLeave={() => {
+                                    setUnfollowHovered(false);
+                                  }}
+                                  onClick={(e: any) => {
+                                    stopPropagation(e);
+                                    onUnFollow(userDB);
+                                  }}
+                                >
+                                  <span className="font-medium text-sm text-center">
+                                    Unfollow
+                                  </span>
+                                </button>
+                              ) : (
+                                <button
+                                  id={`${userDB.userName}_poc_fw_btn_shw`}
+                                  className={setClass(
+                                    "bg-white dark:bg-darkMode dark:border-white dark:border-opacity-20 dark:text-white text-black border border-gray-300 border-radius-main py-1 px-4"
+                                  )}
+                                  onMouseOver={() => {
+                                    setUnfollowHovered(true);
+                                  }}
+                                  onMouseLeave={() => {
+                                    setUnfollowHovered(false);
+                                  }}
+                                >
+                                  <span className="font-medium text-sm text-center">
+                                    Following
+                                  </span>
+                                </button>
+                              )}
+                            </div>
+                          ) : (
+                            <DefaultButton
+                              text="Follow"
+                              styles={setClass(
+                                "poc_fl_btn bg-black black_bg_transition border-radius-main dark:bg-white dark:text-black dark:hover:bg-gray-200 text-white py-[0.36rem] px-4"
+                              )}
+                              action={(e: any) => {
+                                stopPropagation(e);
+                                onFollow(userDB);
+                              }}
+                            />
+                          )}
+                        </div>
                       </div>
-                    ) : (
-                      <DefaultButton
-                        text="Follow"
-                        styles={setClass(
-                          "poc_fl_btn bg-black black_bg_transition border-radius-main dark:bg-white dark:text-black dark:hover:bg-gray-200 text-white py-[0.36rem] px-4"
-                        )}
-                        action={(e: any) => {
-                          stopPropagation(e);
-                          onFollow(userDB);
-                        }}
-                      />
                     )}
-                  </div>
-                    </div>
-                  )} 
-                </>
-              )}
+                  </>
+                )}
             </div>
             <div
               className={pocStyle(
                 "profile_bio mt-[0.50rem] mb-2 text-[0.90rem] max-w-[26rem]"
               )}
+              onClick={(e: any) => {
+                stopPropagation(e);
+              }}
             >
               <ToJSX text={userDB.bio === null || userDB.bio === undefined ? "" : userDB.bio} />
             </div>
@@ -187,7 +192,7 @@ const ProfileCardHover = ({
                     "profile_fl_count text-sm hover:underline cursor-pointer"
                   )}
                 >
-                  <Link href={`/${userDB.userName}`}>
+                  <Link href={`/${userDB.userName}/following`}>
                     <a>
                       <span className="font-bold">
                         {countSet(userDB.followingsCount, true, 2).value}

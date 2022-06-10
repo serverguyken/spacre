@@ -6,6 +6,7 @@
 
 html,
 body {
+  height: 100%;
   padding: 0;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
@@ -478,6 +479,16 @@ body {
   50% {
     opacity: 0;
   }
+}
+
+
+
+.animation_moreaction_height {
+  max-height: 0px;
+  overflow: hidden;
+  transition: max-height 1s;
+  animation: more_actions_animation 1s ease-in-out;
+  -webkit-animation: more_actions_animation 1s ease-in-out;
 }
 
 .animationHover:hover {

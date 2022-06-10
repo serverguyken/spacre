@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { HASHTAG_REGEX, Linky, MENTION_REGEX, print, URLShortener } from '.';
+import { HASHTAG_REGEX, Linky, MENTION_REGEX, print, stopPropagation, URLShortener } from '.';
 import Icon from '../components/Icon';
 import Tooltip from '../components/Tooltip';
 import { meta_scraper_api } from '../config';
@@ -9,7 +9,10 @@ import { Meta } from '../interface/Meta';
 import store from '../store';
 const MentionComp = ({ text }: { text: string }) => {
     return (
-        <span className='text-link'>
+        <span className='text-link'
+            onClick={(e: any) => {
+                stopPropagation(e);
+            }}>
             <Link href={`/${text.replace('@', '')}`}>
                 <a>{text}</a>
             </Link>
@@ -19,7 +22,10 @@ const MentionComp = ({ text }: { text: string }) => {
 
 const HashtagComp = ({ text }: { text: string }) => {
     return (
-        <span className='text-link'>
+        <span className='text-link'
+            onClick={(e: any) => {
+                stopPropagation(e);
+            }}>
             <Link href={`/search?q=${text.replace('#', '')}&click=hashtag`}>
                 <a>{text}</a>
             </Link>
@@ -30,7 +36,11 @@ const HashtagComp = ({ text }: { text: string }) => {
 const LinkComp = ({ text, url }: { text: string, url: string }) => {
     const split_text = text.split('\n');
     return (
-        <span className='text-link'>
+        <span className='text-link'
+            onClick={(e: any) => {
+                stopPropagation(e);
+            }}
+        >
             <a href={url} className='text-link'
                 rel="noopener noreferrer"
                 target='_blank'
@@ -45,12 +55,12 @@ export const ToJSX = ({ text }: {
     text: string | null
 }) => {
     // string regex to match mentions, hashtags and links in the text
-   
+
     const setComp = () => {
         if (text === null) return ''
         const REGEX = '_R$1E$2G$3E$4X^$02^%24*x$#~@' // this is a unique string that will not be found in the text
         const modifiedText = text.replace(/ /g, REGEX + ' ').replace(/\n/g, REGEX + '\n').replace(/\r/g, REGEX + '\r').replace(/\t/g, REGEX + '\t')
-        const arr = modifiedText.split(REGEX ) // split the text into an array of strings
+        const arr = modifiedText.split(REGEX) // split the text into an array of strings
         return arr.map((item, index) => {
             if (item !== undefined) {
                 if (item.match(MENTION_REGEX)) {
@@ -91,7 +101,7 @@ export const RenderLinkCard = ({ url, fetchMeta, onClose, metaData }: {
         title: '',
         description: '',
         image: '',
-        card: '', 
+        card: '',
         url: '',
         short_url: '',
         site_name: '',
@@ -101,7 +111,7 @@ export const RenderLinkCard = ({ url, fetchMeta, onClose, metaData }: {
 
     const [status, setStatus] = useState('')
     const [loading, setLoading] = useState(false)
-    const isRequiredProperties = (meta: Meta) => { 
+    const isRequiredProperties = (meta: Meta) => {
         if (meta.title === '' || meta.title === null || meta.title === undefined) {
             return false
         } else if (meta.description === '' || meta.description === null || meta.description === undefined) {
@@ -111,7 +121,7 @@ export const RenderLinkCard = ({ url, fetchMeta, onClose, metaData }: {
         }
         return true
     }
-    const setMetaProps = (meta: Meta) => { 
+    const setMetaProps = (meta: Meta) => {
         const meta_props = {
             title: meta.title,
             description: meta.description,
@@ -199,7 +209,7 @@ export const RenderLinkCard = ({ url, fetchMeta, onClose, metaData }: {
         }
         metaData(null)
         return (<></>)
-        
+
     }
 
     useEffect(() => {

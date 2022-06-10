@@ -30,12 +30,7 @@ function LineLoader({ width, position }: {
     position?: string | any
 }) {
     return (
-        <div className={setClass(styles.loader, styles.gradient)}
-            style={{
-                width: width,
-                position: position
-            }}
-        >
+        <div className={setClass(styles.loader, styles.gradient, width ? `w-[${width}]` : 'w-full', position ? position : 'fixed', 'dark:after:bg-darkMode')}>
         </div>
     );
 }

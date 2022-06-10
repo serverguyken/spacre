@@ -1,15 +1,23 @@
 import { User } from '../interface/User'
 import { setClass, generateFirstWord } from '../utils'
 import { UserIcon, UserCircleIcon } from '@heroicons/react/solid'
-const ProfileImage = ({ user, width, height }: {
+const ProfileImage = ({ user, width, height, styles }: {
     user: User | any;
     width?: string;
     height?: string;
+    styles?: {
+        imgRoot?: string;
+        img?: {
+            width?: string;
+            height?: string;
+            border?: string;
+        };
+    };
 }) => { 
     if (user.profileImage) {
         return (
-            <div className={setClass('rounded-full select-none', width ? width : 'w-9', height ? height : 'h-9')}>
-                <img className={setClass('rounded-full', width ? width : 'w-9', height ? height : 'h-9')} src={user.profileImage} alt={user.userName} />
+            <div className={setClass('rounded-full select-none ', width ? width : 'w-9', height ? height : 'h-9')}>
+                <img className={setClass('rounded-full', width ? width : 'w-9', height ? height : 'h-9', styles?.img?.border ? styles.img.border : '')} src={user.profileImage} alt={user.userName} />
             </div>
         )
     } else {

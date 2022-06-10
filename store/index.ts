@@ -73,6 +73,7 @@ const store: {
         displayName: "",
         userName: "",
         profileImage: null,
+        bannerImage: null,
         blocked: false,
         premium: false,
         verified: false,

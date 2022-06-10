@@ -23,8 +23,6 @@ const Search: NextPage = ({}) => {
                 'Authorization': `Bearer ${user.uid}`
             },
         }).then(res => res.data)
-        console.log(data);
-        
         return data
     }
     const renderSearch = () => {
@@ -88,7 +86,7 @@ const Search: NextPage = ({}) => {
     }
     return (
         <div>
-            <div className='search_spacre_main w-full relative p-2'>
+            <div className='search_spacre_main w-full relative p-3'>
                 <Input id='search_spacre' type='text' styles={'screen-sm:pt-[0.5rem] screen-sm:pb-[0.5rem]'} placeholder='Search Spacre' styleToRender='search' value={searchTerm} hasLabel={false} autoComplete={'off'} onChange={(val: string) => {
                     setSearch(true, val)
                     searchHandler(val)

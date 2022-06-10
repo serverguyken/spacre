@@ -37,6 +37,7 @@ function Space() {
           setSpaceRef(spaceRef);
         }
       });
+      
     }
   }, [spaceID]);
   useEffect(() => {
@@ -47,6 +48,7 @@ function Space() {
         },
         onError: (error: any) => {},
       });
+      setTitle(`${space.displayName}'s on Spacre: "${space.text}"`);
     }
   }, [space]);
   useEffect(() => {
@@ -79,19 +81,21 @@ function Space() {
     onAuthSuccess: (user: AuthUser) => {
       return (
         <div>
-          {Object.keys(space).length === 0 &&
-          Object.keys(spaceUser).length === 0 &&
-          Object.keys(users).length === 0 ? (
+          {!space && !spaceUser && !users ? (
             <div>
               <Head>
-                <title>Page not found</title>
+                <title>Page not found | Spacre</title>
                 <link rel="icon" href="/favicon.ico" />
               </Head>
               <Layout
                 path="home"
                 content_one={
-                  <div className="flex justify-center mt-32 mb-32">
-                    <h1>Page not found</h1>
+                  <div className="h-screen">
+                    <div className="feed_contents_2 text-center flex justify-center items-center">
+                        <h2 className="mt-[20%] text-black dark:text-primary/80">
+                          Hmmm... This space doesn't exist.
+                        </h2>
+                    </div>
                   </div>
                 }
               />
@@ -105,8 +109,8 @@ function Space() {
               <Layout
                 path="home"
                 content_one={
-                  <div className="h-full">
-                    <div className="header-title-back pt-3 p-2 sticky top-0 mt-1 z-30 w-full bg-[rgba(255,255,255,0.85)] dark:bg-[rgba(26,26,26,0.7)] backdrop-blur-[12px]">
+                  <div className="h-screen bg-white dark:bg-darkMode   border border-gray-100  dark:border-borderDarkMode screen-sm:w-full">
+                    <div className="header-title-back pt-1 p-2 sticky top-0 mt-1 z-30 w-full bg-[rgba(255,255,255,0.85)] dark:bg-[rgba(26,26,26,0.7)] backdrop-blur-[12px]">
                       <div className="flex items-center space-x-3">
                         <BackButtton onClick={() => {
                             router.push("/" + profileID);

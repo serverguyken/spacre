@@ -1,5 +1,14 @@
 import { Meta } from "./Meta";
-
+export interface Search {
+    bio: string
+    content: string
+    id: string
+    link: string
+    profileImage: string
+    type: string
+    userName: string
+    verified: boolean
+}
 export type Constructor = {
     userId: string;
 }
@@ -74,6 +83,7 @@ export interface User {
     displayName: string;
     userName: string;
     profileImage: string | null;
+    bannerImage: string | null;
     blocked: boolean;
     premium: boolean;
     verified: boolean;
@@ -165,7 +175,10 @@ export interface UserContext<User> {
     getUsers: (id: any, cbs: {
         onSuccess: (result: any) => void, onError: (result: any) => void
     }) => void;
-    addSpace: (id: any, Space: Space,  cbs: {
+    getUsersFomClient: (id: any, cbs: {
+        onSuccess: (result: any) => void, onError: (result: any) => void
+    }) => void;
+    addSpace: (id: any, Space: Space, cbs: {
         onSuccess: (result: any) => void, onError: (result: any) => void
     }) => Promise<void>;
     updateSpace: (id: any, Space: Space, cbs: {
