@@ -29,6 +29,7 @@ import useUserContext from "../provider/userProvider"
 import { api_url, upload_api_url } from "../config"
 import API from "../config/api"
 import { LineLoader } from "../utils/loader"
+import { createCollectionRef, OnSnapshot } from "../config/auth/firebase"
 
 
 const mentionPlugin = createMentionPlugin({
@@ -107,38 +108,61 @@ const MobileTextCard = () => {
     const [fetchMeta, setFetchMeta] = useState(true)
     const [spaceCreated, setSpaceCreated] = useState(false)
 
-
     useEffect(() => {
-        if (user && user.uid) {
-            API.get(`${api_url}/get/users`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${user.uid}`
-                },
-            }).then((response) => {
-                if (response.data.users) {
-                    const users = response.data.users
-                    const newMentions: {
-                        id: string,
-                        name: string,
-                        displayName: string,
-                        avatar: string | null,
-                    }[] = []
-                    // create new properties for all users
-                    users.forEach((user: User) => {
-                        newMentions.push({
-                            id: user.uid,
-                            name: user.userName,
-                            displayName: user.displayName,
-                            avatar: user.profileImage,
-                        })
+        const ref = createCollectionRef("users");
+        OnSnapshot(ref, (snapshot) => {
+          if (snapshot) {
+            const fetchedUsers = snapshot.docs.map((doc) => doc.data() as User);
+                const newMentions: {
+                    id: string,
+                    name: string,
+                    displayName: string,
+                    avatar: string | null,
+                }[] = []
+                // create new properties for all users
+                fetchedUsers.forEach((user: User) => {
+                    newMentions.push({
+                        id: user.uid,
+                        name: user.userName,
+                        displayName: user.displayName,
+                        avatar: user.profileImage,
                     })
-                    setMentions(newMentions)
-                }
-            })
-        }
+                })
+                setMentions(newMentions)
+          }
+        });
+}, []);
+    // useEffect(() => {
+    //     if (user && user.uid) {
+    //         API.get(`${api_url}/get/users`, {
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 'Authorization': `Bearer ${user.uid}`
+    //             },
+    //         }).then((response) => {
+    //             if (response.data.users) {
+    //                 const users = response.data.users
+    //                 const newMentions: {
+    //                     id: string,
+    //                     name: string,
+    //                     displayName: string,
+    //                     avatar: string | null,
+    //                 }[] = []
+    //                 // create new properties for all users
+    //                 users.forEach((user: User) => {
+    //                     newMentions.push({
+    //                         id: user.uid,
+    //                         name: user.userName,
+    //                         displayName: user.displayName,
+    //                         avatar: user.profileImage,
+    //                     })
+    //                 })
+    //                 setMentions(newMentions)
+    //             }
+    //         })
+    //     }
         
-    }, [user])
+    // }, [user])
 
     useEffect(() => {
         VALTIO.watch((get) => {

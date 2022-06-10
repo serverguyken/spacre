@@ -1,4 +1,16 @@
 import { Meta } from "./Meta";
+export interface SearchData {
+    id: string;
+    content: string;
+    type: string;
+    link: string;
+    icon?: string | null;
+    profileImage?: string | null;
+    verified?: boolean;
+    bio?: string | null;
+    userName?: string | null;
+}
+
 export interface Search {
     bio: string
     content: string

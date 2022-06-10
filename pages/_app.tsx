@@ -1,5 +1,4 @@
 import '../styles/globals.css'
-import 'react-quill/dist/quill.snow.css'
 import type { AppProps } from 'next/app'
 import { UserProvider } from '../provider/userProvider'
 import { ThemeProvider } from 'next-themes'

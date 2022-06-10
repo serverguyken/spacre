@@ -51,16 +51,25 @@ function Space() {
       setTitle(`${space.displayName}'s on Spacre: "${space.text}"`);
     }
   }, [space]);
+  // useEffect(() => {
+  //   if (spaceUser) {
+  //     getUsers(spaceUser.uid, {
+  //       onSuccess: (data: User[]) => {
+  //         setUsers(data);
+  //       },
+  //       onError: (error: any) => {},
+  //     });
+  //   }
+  // }, [spaceUser]);
   useEffect(() => {
-    if (spaceUser) {
-      getUsers(spaceUser.uid, {
-        onSuccess: (data: User[]) => {
-          setUsers(data);
-        },
-        onError: (error: any) => {},
-      });
-    }
-  }, [spaceUser]);
+    const ref = createCollectionRef("users");
+    OnSnapshot(ref, (snapshot) => {
+      if (snapshot) {
+        const fetchedUsers = snapshot.docs.map((doc) => doc.data() as User);
+        setUsers(fetchedUsers);
+      }
+    });
+}, []);
 
  
 

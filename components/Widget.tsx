@@ -11,6 +11,7 @@ import WidgetFooter from "./WidgetFooter"
 import useUserContext from "../provider/userProvider"
 import { Constructor, User } from "../interface/User"
 import ProfileImage from "./ProfileImage"
+import { createCollectionRef, OnSnapshot } from "../config/auth/firebase"
 
 
 const jobs = [
@@ -83,20 +84,31 @@ const Widget = ({}) => {
     const { user:currentUser, getUsers, updateUser } = useUserContext()
     const [rendered, setRendered] = useState(false)
     const [suggestedFollowers, setSuggestedFollowers] = useState<User[]>([])
+    // useEffect(() => {
+    //     if (currentUser && currentUser.uid) {
+    //         getUsers(currentUser.uid, {
+    //             onSuccess: (data: User[]) => {
+    //                 const fetchedSuggestedFollowers = data.filter((user: User) => !isFollowing(currentUser.following, user))
+    //                 const filteredSuggestedFolloers = fetchedSuggestedFollowers.filter((user: User) => user.uid !== currentUser.uid)
+    //                 setSuggestedFollowers(filteredSuggestedFolloers)
+    //             },
+    //             onError: (error: any) => {
+    //                 return null;
+    //             }
+    //         });
+    //     }
+    // }, [currentUser]);
     useEffect(() => {
-        if (currentUser && currentUser.uid) {
-            getUsers(currentUser.uid, {
-                onSuccess: (data: User[]) => {
-                    const fetchedSuggestedFollowers = data.filter((user: User) => !isFollowing(currentUser.following, user))
-                    const filteredSuggestedFolloers = fetchedSuggestedFollowers.filter((user: User) => user.uid !== currentUser.uid)
-                    setSuggestedFollowers(filteredSuggestedFolloers)
-                },
-                onError: (error: any) => {
-                    return null;
-                }
-            });
-        }
-    }, [currentUser]);
+        const ref = createCollectionRef("users");
+        OnSnapshot(ref, (snapshot) => {
+          if (snapshot) {
+            const fetchedUsers = snapshot.docs.map((doc) => doc.data() as User);
+            const fetchedSuggestedFollowers = fetchedUsers.filter((user: User) => !isFollowing(currentUser.following, user))
+            const filteredSuggestedFolloers = fetchedSuggestedFollowers.filter((user: User) => user.uid !== currentUser.uid)
+            setSuggestedFollowers(filteredSuggestedFolloers)
+          }
+        });
+}, []);
     const setRender = () => {
         TimeOut(() => {
             setRendered(true)

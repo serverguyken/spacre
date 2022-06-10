@@ -76,16 +76,15 @@ const FeedProfile = () => {
   // })
 
   useEffect(() => {
-    getUsers(user.uid, {
-      onSuccess: (data: User[]) => {
-        setUsers(data);
-      },
-      onError: (error: any) => {
-        return null;
+    const ref = createCollectionRef("users");
+    OnSnapshot(ref, (snapshot) => {
+      if (snapshot) {
+        const fetchedUsers = snapshot.docs.map((doc) => doc.data() as User);
+        setUsers(fetchedUsers);
       }
     });
   }, []);
-
+  
 
   const likeHandler = (id: string) => {
     const like_count = document.getElementById(`${id}_like_count`);
