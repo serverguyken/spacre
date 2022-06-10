@@ -4,7 +4,6 @@ import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import useUserContext from '../provider/userProvider'
 import Sidebar from './Sidebar'
-import Feed from './Feed'
 import styles from '../styles/Main.module.css'
 import Header from './Header'
 
