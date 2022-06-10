@@ -489,7 +489,7 @@ const SpaceView = ({
                                     {
                                       space.images.map((url: string, index: number) => {
                                         return (
-                                          <div className="mt-4 max-w-[400px]"
+                                          <div className="mt-4 max-w-[400px] cursor-pointer"
                                             key={index}
                                             id={`${space.spaceId}_post_image_${index}`}
                                             onClick={(e: any) => {
@@ -509,7 +509,7 @@ const SpaceView = ({
                                               key={space.spaceId}
                                               src={url}
                                               alt="A post image"
-                                              className="rounded-lg max-w-[400px] max-h-[300px] object-cover object-center"
+                                              className="rounded-lg max-h-[300px] object-cover object-center"
                                             />
                                             
                                             <div className="hidden"
@@ -908,7 +908,7 @@ const SpaceView = ({
                                     {
                                       reply.images.map((url: string, index: number) => {
                                         return (
-                                          <div className="mt-4 max-w-[400px]"
+                                          <div className="mt-4 max-w-[400px] cursor-pointer"
                                             key={index}
                                             id={`${reply.replyId}_post_image_${index}`}
                                             onClick={(e: any) => {
@@ -928,7 +928,7 @@ const SpaceView = ({
                                               key={reply.replyId}
                                               src={url}
                                               alt="A post image"
-                                              className="rounded-lg max-w-[400px] max-h-[300px] object-cover object-center"
+                                              className="rounded-lg max-h-[300px] object-cover object-center"
                                             />
                                             
                                             <div className="hidden"

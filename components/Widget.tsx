@@ -80,8 +80,8 @@ const footer_links = [
         to: '/legal/cookies',
     },
 ]
-const Widget = ({}) => {
-    const { user:currentUser, getUsers, updateUser } = useUserContext()
+const Widget = ({ }) => {
+    const { user: currentUser, getUsers, updateUser } = useUserContext()
     const [rendered, setRendered] = useState(false)
     const [suggestedFollowers, setSuggestedFollowers] = useState<User[]>([])
     // useEffect(() => {
@@ -100,15 +100,21 @@ const Widget = ({}) => {
     // }, [currentUser]);
     useEffect(() => {
         const ref = createCollectionRef("users");
-        OnSnapshot(ref, (snapshot) => {
-          if (snapshot) {
-            const fetchedUsers = snapshot.docs.map((doc) => doc.data() as User);
-            const fetchedSuggestedFollowers = fetchedUsers.filter((user: User) => !isFollowing(currentUser.following, user))
-            const filteredSuggestedFolloers = fetchedSuggestedFollowers.filter((user: User) => user.uid !== currentUser.uid)
-            setSuggestedFollowers(filteredSuggestedFolloers)
-          }
+        const unsubscribe = OnSnapshot(ref, (snapshot) => {
+            if (snapshot) {
+
+                console.log('document changed');
+
+                const fetchedUsers = snapshot.docs.map((doc) => doc.data() as User);
+                const fetchedSuggestedFollowers = fetchedUsers.filter((user: User) => !isFollowing(currentUser.following, user))
+                const filteredSuggestedFolloers = fetchedSuggestedFollowers.filter((user: User) => user.uid !== currentUser.uid)
+                setSuggestedFollowers([...filteredSuggestedFolloers])
+            }
         });
-}, []);
+        return () => {
+            unsubscribe();
+        }
+    }, [currentUser]);
     const setRender = () => {
         TimeOut(() => {
             setRendered(true)
@@ -122,15 +128,15 @@ const Widget = ({}) => {
     const followUser = (userToFollow: User) => {
         const forUser = {
             ...userToFollow,
-            followers: [...userToFollow.followers, {userId: currentUser.uid}],
+            followers: [...userToFollow.followers, { userId: currentUser.uid }],
             followersCount: userToFollow.followersCount + 1,
-          };
-          const forCurrentUser = {
+        };
+        const forCurrentUser = {
             ...currentUser,
-            following: [...currentUser.following, {userId: userToFollow.uid}],
+            following: [...currentUser.following, { userId: userToFollow.uid }],
             followingsCount: currentUser.followingsCount + 1,
-          };
-          updateUser(userToFollow.uid, forUser, {
+        };
+        updateUser(userToFollow.uid, forUser, {
             onSuccess: () => {
                 updateUser(currentUser.uid, forCurrentUser, {
                     onSuccess: () => {
@@ -143,7 +149,7 @@ const Widget = ({}) => {
             },
             onError: (err: any) => {
             },
-          });
+        });
     }
 
     return (
@@ -191,8 +197,8 @@ const Widget = ({}) => {
                                 <Spinner width={'20'} color="var(--color-primary)" />
                             </div>
                     }
-                    
-                   
+
+
 
 
                 </div>
@@ -210,7 +216,7 @@ const Widget = ({}) => {
                                         return (
                                             <div key={person.uid} className="ptf_list_item flex items-center space-x-3 p-2 mb-3 cursor-pointer">
                                                 <div className="ptf_list_item_image">
-                                                <ProfileImage user={person}  />
+                                                    <ProfileImage user={person} />
                                                 </div>
                                                 <div className="flex justify-between items-center w-full">
                                                     <div className="ptf_list_item_name">
@@ -218,10 +224,10 @@ const Widget = ({}) => {
                                                         <p className="text-xs dark:text-gray-50 dark:text-opacity-50">@{person.userName}</p>
                                                     </div>
                                                     <div className="follow_btn">
-                                                        <SecondaryButton text="Follow" textColor="white" styles={'py-1 px-5 bg-black text-white dark:bg-white dark:text-black  rounded-full'} 
-                                                        action={() => {
-                                                            followUser(person)
-                                                        }} />
+                                                        <SecondaryButton text="Follow" textColor="white" styles={'py-1 px-5 bg-black text-white dark:bg-white dark:text-black  rounded-full'}
+                                                            action={() => {
+                                                                followUser(person)
+                                                            }} />
                                                     </div>
                                                 </div>
                                             </div>
@@ -236,7 +242,7 @@ const Widget = ({}) => {
                         </div>
                 }
             </div>
-           <WidgetFooter />
+            <WidgetFooter />
         </div>
     )
 }

@@ -484,13 +484,18 @@ body {
 
 
 .animation_moreaction_height {
-  max-height: 0px;
-  overflow: hidden;
-  transition: max-height 1s;
-  animation: more_actions_animation 1s ease-in-out;
-  -webkit-animation: more_actions_animation 1s ease-in-out;
+  animation: moreaction_height .3s ease-in-out;
 }
 
+
+@keyframes moreaction_height {
+  0% {
+    height: 0px;
+  }
+  100% {
+    height: 100%;
+  }
+}
 .animationHover:hover {
   background-color: var(--color-light);
   transition: all 0.5s ease-in-out;

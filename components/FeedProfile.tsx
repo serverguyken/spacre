@@ -68,7 +68,16 @@ const FeedProfile = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [spaces, setSpaces] = useState<Space[]>([]);
   const [isEmpty, setIsEmpty] = useState(false);
+  const [fetchError, setFetchError] = useState(false);
 
+
+    useEffect(() => {
+        if (users.length === 0 || spaces.length === 0) {
+            setTimeout(() => {
+                setFetchError(true);
+            }, 1000);
+        }
+    }, [users, spaces]);
   //console.log(user, spaces);
   // signOutUser({
   //     onSuccess: () => {},
@@ -304,7 +313,43 @@ const FeedProfile = () => {
   const viewUserPost = (username: string) => {
     router.push(`/${username}`);
   };
+  const setNoUserLoadingState = () => {
+    const [loading, setLoading] = useState(true);
+    const [fetched, setFetched] = useState(false);
+    useEffect(() => {
+        if (loading) {
+            setTimeout(() => {
+                setLoading(false);
+                setFetched(true);
+            }, 1000);
+        }
+    }, [loading]);
+    return (
+        <>
+            {loading && !fetched && (
+                <div className="flex flex-col items-center justify-center relative">
+                    <div className="text-center mt-10 mb-10">
+                        <h1>
+                            <div className="flex absolute top-60 left-1/2  justify-center">
+                                <MainLoader />
+                            </div>
 
+                        </h1>
+                    </div>
+                </div>
+            )}
+            {
+                !loading && fetched && (
+                    <div className="mt-6 text-center">
+                        <span>
+                            <span>Can't fetch spaces</span>
+                        </span>
+                    </div>
+                )
+            }
+        </>
+    )
+}
   return (
     <>
       {
@@ -534,20 +579,7 @@ const FeedProfile = () => {
                                           other_post_more_actions[i].classList.add(
                                             "hidden"
                                           );
-                                          const rendered_post_more_actions = document.querySelector(
-                                            '.animation_moreaction_height'
-                                          ) as HTMLDivElement;
-                                          if (rendered_post_more_actions) {
-                                            rendered_post_more_actions.style.maxHeight = '200px';
-                                          }
                                         }
-                                      }
-                                      // change max height of the rendered post more actions
-                                      const rendered_post_more_actions = document.querySelector(
-                                        '.animation_moreaction_height'
-                                      ) as HTMLDivElement;
-                                      if (rendered_post_more_actions) {
-                                        rendered_post_more_actions.style.maxHeight = '200px';
                                       }
                                     }}
                                   >
@@ -567,7 +599,7 @@ const FeedProfile = () => {
                                       </Tooltip>
                                     </div>
                                     <div
-                                      className="post_more_actions absolute -top-10 right-0 mt-10 hidden select-none z-40"
+                                      className="post_more_actions absolute -top-10 h-[200px] right-0 mt-10 hidden select-none z-40"
                                       id={`${space.spaceId}_post_more_actions`}
                                     >
                                       <RenderMoreAction
@@ -590,7 +622,7 @@ const FeedProfile = () => {
                                     {
                                       space.images.map((url: string, index: number) => {
                                         return (
-                                          <div className="mt-4 max-w-[400px]"
+                                          <div className="mt-4 max-w-[400px] cursor-pointer"
                                             key={index}
                                             id={`${space.spaceId}_post_image_${index}`}
                                             onClick={(e: any) => {
@@ -610,7 +642,7 @@ const FeedProfile = () => {
                                               key={space.spaceId}
                                               src={url}
                                               alt="A post image"
-                                              className="rounded-lg max-w-[400px] max-h-[300px] object-cover object-center"
+                                              className="rounded-lg w-full max-h-[300px] object-cover object-center"
                                             />
                                             
                                             <div className="hidden"
@@ -804,15 +836,26 @@ const FeedProfile = () => {
             )}
           </div>
           :
+          <>
           <div className="flex flex-col items-center justify-center relative">
-            <div className="text-center mt-10 mb-10">
-              <h1>
-                <div className="flex absolute top-60 left-1/2  justify-center">
-                  <MainLoader />
-                </div>
-              </h1>
-            </div>
+              <div className="text-center mt-10 mb-10">
+                  {
+                      fetchError ? (
+                          <div className="mt-6 text-center">
+                              <span>
+                                  <span>Can't fetch spaces</span>
+                              </span>
+                          </div>
+                      ) : (
+
+                          <div className="flex absolute top-60 left-1/2  justify-center">
+                              <MainLoader />
+                          </div>
+                      )
+                  }
+              </div>
           </div>
+      </>
       }
 
     </>

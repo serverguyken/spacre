@@ -71,6 +71,9 @@ const ProfileCardHover = ({
                     className={pocStyle(
                       "profile_fullname font-semibold whitespace-nowrap max-w-[10rem] text-ellipsis overflow-hidden hover:underline"
                     )}
+                    onClick={(e: any) => {
+                      stopPropagation(e);
+                    }}
                   >
                     <Link href={`/${userDB.userName}`}>
                       <a>{userDB.userName}</a>
@@ -86,6 +89,9 @@ const ProfileCardHover = ({
                   className={pocStyle(
                     "profile_username text-dimGray dark:text-darkText text-sm whitespace-nowrap max-w-[10rem] text-ellipsis overflow-hidden hover:underline"
                   )}
+                  onClick={(e: any) => {
+                    stopPropagation(e);
+                  }}
                 >
                   <Link href={`/${userDB.userName}`}>
                     <a>@{userDB.userName}</a>

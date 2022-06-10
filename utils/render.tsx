@@ -69,6 +69,13 @@ export const ToJSX = ({ text }: {
                     return <MentionComp key={index} text={item} />
                 } else if (item.match(HASHTAG_REGEX)) {
                     return <HashtagComp key={index} text={item} />
+                } else if (item.match('{nextLine}')) {
+                    return <br key={index} />
+                } else if (item.match('{nextLineWithSpaceAtEnd}')) {
+                    return <span>
+                        <br />
+                        <br key={index} />
+                    </span>
                 }
                 else if (Linky.match(item)) {
                     const link = item.split('\n')

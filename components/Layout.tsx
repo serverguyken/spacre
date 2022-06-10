@@ -61,7 +61,7 @@ const Layout = ({ path, content_one, content_two }: any) => {
         }
     })
     return (
-        <div className='layout_main dark:bg-darkMode'>
+        <div className='layout_main dark:bg-darkMode '>
             <div className='layout_main_contents main_container max-w-[1200px] ml-auto mr-auto flex justify-between'>
                 <div className='layout_sidebar fixed w-[210px] top-0 z-40 h-full bg-white dark:bg-darkMode'>
                     <Sidebar path={path} />
@@ -71,10 +71,8 @@ const Layout = ({ path, content_one, content_two }: any) => {
                         width: 'calc(100% - 210px)'
                     }}>
                     <div className='layout_flex flex justify-between space-x-4 screen-sm:block screen-sm:space-x-0'>
-                        <div className='layout_contents_one w-[75%]'>
-                            <div className=''>
-                                {content_one}
-                            </div>
+                        <div className='layout_contents_one w-[75%] bg-white dark:bg-darkMode  border border-gray-100  dark:border-borderDarkMode screen-sm:w-full'>
+                            {content_one}
                         </div>
                         <div className='layout_contents_two w-[35%]'>
                             {

@@ -46,14 +46,6 @@ const RenderMoreAction = ({
         <div className="w-[18rem] max-w-[20rem] bg-white dark:bg-darkMode rounded shadow-sm border border-gray-100 border-opacity-80 dark:border-borderDarkMode animation_moreaction_height">
           <div className="fixed top-0 left-0 cursor-default z-[-1] w-full h-screen" 
             onClick={(e) => {
-              const rendered_post_more_actions = document.querySelector(
-                '.animation_moreaction_height'
-              ) as HTMLDivElement;
-              if (rendered_post_more_actions) {
-                console.log(rendered_post_more_actions);
-                
-                rendered_post_more_actions.style.maxHeight = '0px';
-              }
             }}
           ></div>
           <ul>

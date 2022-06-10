@@ -118,7 +118,7 @@ function Space() {
               <Layout
                 path="home"
                 content_one={
-                  <div className="h-screen bg-white dark:bg-darkMode  border border-gray-100  dark:border-borderDarkMode screen-sm:w-full">
+                  <div>
                     <div className="header_title_back header_mobile pt-1 p-2 sticky top-0 mt-1 z-30 w-full bg-[rgba(255,255,255,0.85)] dark:bg-[rgba(26,26,26,0.7)] backdrop-blur-[12px]">
                       <div className="flex items-center space-x-3">
                         <BackButtton onClick={() => {
