@@ -175,11 +175,7 @@ export const RenderLinkCard = ({ url, fetchMeta, onClose, metaData }: {
                             </h3>
                             <div className="mt-1 ">
                                 <p className="text-sm text-gray-500 relative max-h-[40px] overflow-hidden text-ellipsis"
-                                    style={{
-                                        display: '-webkit-box',
-                                        WebkitLineClamp: '2',
-                                        WebkitBoxOrient: 'vertical',
-                                    }}
+                                   
                                 >
                                     {description}
                                 </p>

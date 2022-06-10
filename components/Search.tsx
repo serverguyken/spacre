@@ -92,7 +92,7 @@ const Search: NextPage = ({}) => {
         }
     }, [users])
 
-    console.log(searchList);
+  
     
 
     const setSearch = (isSearch: boolean, val: string | any) => {
