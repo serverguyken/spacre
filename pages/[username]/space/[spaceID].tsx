@@ -102,7 +102,7 @@ function Space() {
                   <div className="h-screen">
                     <div className="feed_contents_2 text-center flex justify-center items-center">
                         <h2 className="mt-[20%] text-black dark:text-primary/80">
-                          Hmmm... This space doesn't exist.
+                          Hmmm... This space doesn&apos;t exist.
                         </h2>
                     </div>
                   </div>

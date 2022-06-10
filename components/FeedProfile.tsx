@@ -796,7 +796,7 @@ const FeedProfile = () => {
                 )}
                 {isEmpty && !loading && (
                   <div className="mt-8 mb-8 text-center">
-                    <span>You've reached the end of the feed</span>
+                    <span>You&apos;ve reached the end of the feed</span>
                   </div>
                 )}
               </div>
