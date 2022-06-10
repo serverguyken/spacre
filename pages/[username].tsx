@@ -22,25 +22,23 @@ const UserProfile = ({ username, user, currentUser }: { username: User['userName
             {user && (
                 <div className='user_profile_view_contents'>
                     <div className="image_full_banner_container">
-                        <div className="image_full_banner top relative h-[200px]">
+                        <div className="image_full_banner top relative bg-red-300 h-[200px] w-full">
                             {
                                 user.bannerImage ? (
                                     <div
                                         style={{
                                             backgroundImage: `url(${user.bannerImage})`,
                                             backgroundSize: 'cover',
-                                            backgroundPosition: 'center center',
+                                            backgroundPosition: 'center',
                                             backgroundRepeat: 'no-repeat',
-                                            height: '200px',
-                                            width: '675px',
+                                            width: '100%',
+                                            height: 'inherit',
                                         }}
                                     >
-                                        <img src={user.bannerImage} alt="banner"
+                                        <img src={user.bannerImage} alt="banner" className='opacity-0'
                                             style={{
-                                                height: '200px',
-                                                width: '675px',
-                                                objectFit: 'cover',
-                                                objectPosition: 'center center',
+                                                width: '100%',
+                                                height: 'inherit',
                                             }}
                                         />
                                     </div>
@@ -54,19 +52,18 @@ const UserProfile = ({ username, user, currentUser }: { username: User['userName
                                 <div className='absolute -bottom-14'>
                                     {
                                         user.profileImage ? (
-                                            <div className='w-32 h-32 rounded-full cursor-pointer bg-white'
-                                                onClick={() => setShowImageModal(true)}
+                                            <div className='w-32 h-32 screen-sm:w-24 screen-sm:h-24 rounded-full cursor-pointer bg-white'
+                                                onClick={() => {
+                                                    setShowImageModal(true)
+                                                    
+                                                }}
                                             >
-                                                <ProfileImage user={user} width='w-32' height='h-32' styles={{
+                                                <ProfileImage user={user} width='w-32 screen-sm:w-24' height='h-32 screen-sm:h-24' styles={{
                                                     img: {
                                                         border: 'border-4 dark:border-darkMode'
                                                     }
                                                 }} />
-                                                {
-                                                    showImageModal && (
-                                                        <SpaceImageModal image={user.profileImage} onClose={() => setShowImageModal(false)} renderType="user" />
-                                                    )
-                                                }
+                                               
                                             </div>
 
                                         )
@@ -76,6 +73,16 @@ const UserProfile = ({ username, user, currentUser }: { username: User['userName
                                                 </div>
                                             )}
                                 </div>
+                                {
+                                    user.profileImage && 
+                                    <div> {
+                                        showImageModal && (
+                                            <SpaceImageModal image={user.profileImage} onClose={() => {
+                                                setShowImageModal(false)
+                                            }} renderType="user" />
+                                        )
+                                    }</div>
+                                }
                             </div>
                         </div>
                     </div>
