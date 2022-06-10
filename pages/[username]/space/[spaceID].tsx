@@ -20,7 +20,7 @@ import { isBrowser } from "../../../utils";
 
 function Space() {
   const router = useRouter();
-  const { profileID, spaceID } = router.query as any;
+  const { usernameID, spaceID } = router.query as any;
   const [title, setTitle] = useState("");
   const { authUser, signOutUser } = useUserContext();
   const [spaceRef, setSpaceRef] = useState(null as any);
@@ -122,7 +122,7 @@ function Space() {
                     <div className="header_title_back header_mobile pt-1 p-2 sticky top-0 mt-1 z-30 w-full bg-[rgba(255,255,255,0.85)] dark:bg-[rgba(26,26,26,0.7)] backdrop-blur-[12px]">
                       <div className="flex items-center space-x-3">
                         <BackButtton onClick={() => {
-                            router.push("/" + profileID);
+                            router.push("/" + usernameID);
                         }} />
                         <span className="text-[1.3rem] text-gray-700 font-bold dark:text-gray-100">
                           Space
