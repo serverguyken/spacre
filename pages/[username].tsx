@@ -1,5 +1,5 @@
 import type { GetServerSideProps, NextPage } from 'next'
-import { isBrowser, print, OnLoad } from '../utils'
+import { isBrowser, print, OnLoad, countSet } from '../utils'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import useUserContext from '../provider/userProvider'
@@ -172,7 +172,7 @@ const ProfileView: NextPage = () => {
                                     </p>
                                     <p className="text-sm text-dimGray dark:text-gray-100">
                                         {user && <span>
-                                            {user.spacesCount} {user.spacesCount === 1 || user.spacesCount === 0 ? 'space' : 'spaces'}
+                                            {countSet(user.spacesCount, true, 2).value} {user.spacesCount === 1 || user.spacesCount === 0 ? 'space' : 'spaces'}
                                         </span>
                                         }
                                     </p>

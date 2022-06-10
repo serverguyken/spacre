@@ -8,12 +8,14 @@ import API from '../config/api';
 import { Meta } from '../interface/Meta';
 import store from '../store';
 const MentionComp = ({ text }: { text: string }) => {
+    
+    
     return (
         <span className='text-link'
             onClick={(e: any) => {
                 stopPropagation(e);
             }}>
-            <Link href={`/${text.replace('@', '')}`}>
+            <Link href={`/${text.replace('@', '').replace(' ', '')}`}>
                 <a>{text}</a>
             </Link>
         </span>
@@ -26,7 +28,7 @@ const HashtagComp = ({ text }: { text: string }) => {
             onClick={(e: any) => {
                 stopPropagation(e);
             }}>
-            <Link href={`/search?q=${text.replace('#', '')}&click=hashtag`}>
+            <Link href={`/search?q=${text.replace('#', '')}&click=hashtag`.replace(' ', '')}>
                 <a>{text}</a>
             </Link>
         </span>
