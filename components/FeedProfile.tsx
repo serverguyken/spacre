@@ -85,13 +85,14 @@ const FeedProfile = () => {
   // })
 
   useEffect(() => {
-    const ref = createCollectionRef("users");
-    OnSnapshot(ref, (snapshot) => {
-      if (snapshot) {
-        const fetchedUsers = snapshot.docs.map((doc) => doc.data() as User);
-        setUsers(fetchedUsers);
-      }
-    });
+    getUsers(user.uid, {
+        onSuccess: (data: User[]) => {
+          console.log('user data changed');
+          
+          setUsers(data);
+        },
+        onError: (error: any) => {},
+      });
   }, []);
   
 

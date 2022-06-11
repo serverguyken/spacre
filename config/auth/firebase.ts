@@ -1,6 +1,6 @@
 import { initializeApp, getApp, getApps } from 'firebase/app';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { getFirestore, doc, getDoc, updateDoc, deleteDoc, onSnapshot, orderBy, query, limit, startAfter, collection, setDoc, getDocs, addDoc, } from 'firebase/firestore';
+import { getAuth, onAuthStateChanged, signInAnonymously } from 'firebase/auth';
+import { getFirestore, doc, getDoc, updateDoc, deleteDoc, onSnapshot, orderBy, query, limit, startAfter, collection, setDoc, getDocs, addDoc } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 interface FirebaseConfig {
     apiKey: string | undefined;
@@ -32,6 +32,9 @@ export const OnAuthStateChanged = (callback: (user: any) => void) => {
         callback(user);
     });
 };
+export const SignInAnonymously = () => {
+    return signInAnonymously(auth);
+}
 export const collectionRef = (name: string) => collection(db, name);
 export const docRef = (name: string, id: string) => doc(db, name, id);
 export const GetDocs = async (collection: any) => await getDocs(collection);

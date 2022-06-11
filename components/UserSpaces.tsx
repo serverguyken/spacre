@@ -263,7 +263,7 @@ const UserSpaces = ({ spaceUsername }: { spaceUsername: string }) => {
                     }
                     const newSpaces = snapshot.docs.map((docs: any) => docs.data());
                     const userSpace = newSpaces.filter((s: Space) => s.userName === spaceUsername);
-                    setSpaces([...spaces, ...userSpace]);
+                    setSpaces([...userSpace]);
                     const lastDoc = snapshot.docs[snapshot.docs.length - 1];
                     setLastDoc(lastDoc);
                     setLoading(false);

@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { auth, createDocRef, OnSnapshot } from "../config/auth/firebase";
+import { auth, createDocRef, OnSnapshot, SignInAnonymously } from "../config/auth/firebase";
 import {
     u_signInWithEmailAndPassword,
     u_createUserWithEmailAndPassword,
@@ -125,6 +125,9 @@ export const UserProvider = ({ children }: any) => {
                     }
                 })
             } else {
+               
+                    
+                        
                 const Uuser: AuthUser = {
                     isAuthenticated: false,
                     uid: "",
