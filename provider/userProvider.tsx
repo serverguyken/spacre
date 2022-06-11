@@ -168,6 +168,7 @@ export const UserProvider = ({ children }: any) => {
                         followers: data.followers,
                         following: data.following,
                         spaces: data.spaces,
+                        saves: data.saves,
                         followersCount: data.followersCount,
                         followingsCount: data.followingsCount,
                         spacesCount: data.spacesCount,

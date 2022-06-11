@@ -494,6 +494,10 @@ export const isLiked = (likes: Likes[], user: User) => {
 }
 
 export const isSaved = (id: string, user: User) => {
-  const saved_ = user.saves.find((save) => save.spaceId === id) !== undefined ? true : false;
-  return saved_;
+  if (user) {
+    const saved_ = user.saves.find((save) => save.spaceId === id) !== undefined ? true : false;
+    return saved_;
+  } else {
+    return false;
+  }
 }

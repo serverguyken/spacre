@@ -291,6 +291,7 @@ const Signup: NextPage = () => {
                 followers: [],
                 following: [],
                 spaces: [],
+                saves: [],
                 followersCount: 0,
                 followingsCount: 0,
                 spacesCount: 0,
@@ -314,7 +315,6 @@ const Signup: NextPage = () => {
                     setPasswordValue('')
                 },
                 onError: (error: string) => {
-                    console.log(error);
                     setSpinner(false)
                     setSignupError(true)
                     setErrorMessage(errors[error] ? errors[error].message : 'An error occurred')

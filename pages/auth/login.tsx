@@ -416,6 +416,14 @@ const Login: NextPage = () => {
                                                 </div>
 
                                                 <SocialButton disabled={false} color="bg-white" text="Continue with Github" styles=" border boder-gray-300" textStyle='text-lg dark:text-dark' width="px-16 py-3" icon="github" iconWidth='w-6' action={() => { handleGitHubLogin() }} />
+                                                <div className="demo_details">
+                                                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+                                                        <span className='font-bold text-black dark:text-white'>Demo user</span>: demo
+                                                    </p>
+                                                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+                                                        <span className='font-bold text-black dark:text-white'>Demo password</span>: demopassword
+                                                    </p>
+                                                </div>
                                                 <div className={setClass(styles.side_right_bottom)}>
                                                     <div className={setClass("signup_legal")}>
                                                         <p className={setClass("text-xs mt-5 w-9/12 text-center m-auto")}>By signing up, you agree to the <span className={setClass("text-primary underline")}><Link href="/legal/terms">Terms of Service</Link></span> and <span className={setClass("text-primary underline")}><Link href="/legal/privacy">Privacy Policy</Link></span>.</p>
