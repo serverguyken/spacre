@@ -283,7 +283,7 @@ const ProfileView: NextPage = () => {
                 loading && (
                     <div>
                         <Head>
-                            <title>{title}</title>
+                            <title>{'Loading....'}</title>
                             <link rel='icon' href='/favicon.ico' />
                         </Head>
                         <Layout
