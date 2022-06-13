@@ -434,7 +434,7 @@ const UserSpaces = ({ spaceUsername }: { spaceUsername: string }) => {
                                                                                         )[0].userName
                                                                                             }`}
                                                                                     >
-                                                                                        <a className="font-semibold feed_user_profile_name">
+                                                                                        <a className="font-semibold feed_user_profile_name screen-sm:text-[.85rem]">
                                                                                             {
                                                                                                 users.filter(
                                                                                                     (u) => u.uid === space.userId
@@ -453,7 +453,7 @@ const UserSpaces = ({ spaceUsername }: { spaceUsername: string }) => {
                                                                             </div>
                                                                             <div
                                                                                 id={`${space.spaceId}_profile_hover_card`}
-                                                                                className="profile_hover_card absolute pt-2 z-40  -left-14 w-auto hidden invisible opacity-0"
+                                                                                className="profile_hover_card absolute pt-2 z-40 -left-14 w-auto hidden invisible opacity-0"
                                                                             >
                                                                                 <ProfileCardHover
                                                                                     currentUser={user}
@@ -466,7 +466,7 @@ const UserSpaces = ({ spaceUsername }: { spaceUsername: string }) => {
                                                                                 />
                                                                             </div>
                                                                         </div>
-                                                                        <div className="profile_username_post_timestamp flex items-center">
+                                                                        <div className="profile_username_post_timestamp flex items-center -mt-1">
                                                                             <div className="profile_username whitespace-nowrap max-w-[16rem] text-ellipsis overflow-hidden"
                                                                                 onClick={(e: any) => {
                                                                                     stopPropagation(e);
@@ -478,7 +478,7 @@ const UserSpaces = ({ spaceUsername }: { spaceUsername: string }) => {
                                                                                     )[0].userName
                                                                                         }`}
                                                                                 >
-                                                                                    <a className="text-sm text-dimGray dark:text-darkText">
+                                                                                    <a className="text-sm text-dimGray dark:text-darkText screen-sm:text-[.85rem]">
                                                                                         @
                                                                                         {
                                                                                             users.filter(
@@ -488,7 +488,7 @@ const UserSpaces = ({ spaceUsername }: { spaceUsername: string }) => {
                                                                                     </a>
                                                                                 </Link>
                                                                             </div>
-                                                                            <p className="before:content-['•'] before:text-[12px] before:ml-[4px] before:mr-[4px] -mt-1 before:dark:text-gray-50 before:dark:text-opacity-30"></p>
+                                                                            <p className="before:content-['•'] screen-sm:text-[.85rem] screen-sm:mt-1 before:text-[12px] before:ml-[4px] before:mr-[4px] -mt-1 before:dark:text-gray-50 before:dark:text-opacity-30"></p>
                                                                             <Tooltip
                                                                                 title={formatDate(space.createdAt).format(
                                                                                     "MMMM Do YYYY, h:mm:ss a"
@@ -510,7 +510,7 @@ const UserSpaces = ({ spaceUsername }: { spaceUsername: string }) => {
                                                                                 }}
                                                                                 color="gray"
                                                                             >
-                                                                                <p className="text-sm text-dimGray hover:underline">
+                                                                                <p className="text-sm text-dimGray hover:underline screen-sm:text-[.85rem] screen-sm:mt-1">
                                                                                     {formatDate(space.createdAt).startOf("h")}
                                                                                 </p>
                                                                             </Tooltip>
@@ -574,9 +574,9 @@ const UserSpaces = ({ spaceUsername }: { spaceUsername: string }) => {
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div className="post_feed_contents mt-2 leading-[19px]">
+                                                            <div className="post_feed_contents mt-1 leading-[19px]">
                                                                 <div className="post_contents w-full">
-                                                                    <div className="post_text">
+                                                                    <div className="post_text text-black dark:text-white font-normal screen-sm:text-[.95rem]">
                                                                         <ToJSX text={space.text} />
                                                                     </div>
                                                                     {space.images && (
@@ -652,7 +652,7 @@ const UserSpaces = ({ spaceUsername }: { spaceUsername: string }) => {
                                                                         </div>
                                                                     )}
                                                                 </div>
-                                                                <div className="post_user_actions mt-3 pb-1 max-w-[80%]">
+                                                                <div className="post_user_actions mt-2 -ml-1 pb-1 max-w-[80%]">
                                                                     <div className="flex justify-between items-center">
                                                                         <Tooltip
                                                                             title={`${isLiked(space.likes, user) ? "Unlike" : "Like"}`}
@@ -804,9 +804,9 @@ const UserSpaces = ({ spaceUsername }: { spaceUsername: string }) => {
                                 {
                                     fetchError ? (
                                         <div className="mt-6 text-center">
-                                            <span>
+                                            {/* <span>
                                                 <span>Can&apos;t fetch spaces</span>
-                                            </span>
+                                            </span> */}
                                         </div>
                                     ) : (
 

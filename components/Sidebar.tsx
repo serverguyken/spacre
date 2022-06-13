@@ -48,7 +48,7 @@ const Sidebar = ({ path }: {
         return false
     }
     return (
-        <div className='sidebar_main bg-white dark:bg-darkMode  screen-sm:border-b screen-sm:border-opacity-10 screen-sm:dark:border-b-gray-50 screen-sm:dark:border-opacity-5'>
+        <div className='sidebar_main bg-white dark:bg-darkMode screen-sm:border-b screen-sm:border-opacity-10 screen-sm:dark:border-b-gray-50 screen-sm:dark:border-opacity-5'>
             <div className="sidebar_links_contents main_container pt-3 pb-3">
                 <div className='sidebar_links_main'>
                     <div className="sidebar_links_logo mb-2">
@@ -105,7 +105,7 @@ const Sidebar = ({ path }: {
                             </span>
                         </PrimaryButton>
                         <div className="relative">
-                            <PrimaryButton styles={'sidebar_post_button_mb animationScaleup w-12 h-12 fixed bottom-4 right-4 z-50 shadow-lg hidden screen-sm:block'}
+                            <PrimaryButton styles={'sidebar_post_button_mb animationScaleup w-12 h-12 fixed bottom-16 right-4 z-50 shadow-lg hidden screen-sm:block'}
                                 action={showPostTextBox}
                             >
                                 <span className='s_p_b_icon'>

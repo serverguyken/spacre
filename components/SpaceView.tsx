@@ -355,7 +355,7 @@ const SpaceView = ({
                               }}
                             >
                               <Link href={`/${space.userName}`}>
-                                <a className="font-semibold feed_user_profile_name">
+                                <a className="font-semibold  screen-sm:text-[.85rem]">
                                   {space.displayName}
                                 </a>
                               </Link>
@@ -385,15 +385,15 @@ const SpaceView = ({
                             />
                           </div>
                         </div>
-                        <div className="profile_username_post_timestamp flex items-center">
+                        <div className="profile_username_post_timestamp flex items-center -mt-1">
                           <div className="profile_username whitespace-nowrap max-w-[16rem] text-ellipsis overflow-hidden">
                             <Link href={`/${space.userName}`}>
-                              <a className="text-sm text-dimGray dark:text-darkText">
+                              <a className="text-sm text-dimGray dark:text-darkText screen-sm:text-[.85rem]">
                                 @{space.userName}
                               </a>
                             </Link>
                           </div>
-                          <p className="before:content-['•'] before:text-[12px] before:ml-[4px] before:mr-[4px] -mt-1 before:dark:text-gray-50 before:dark:text-opacity-30"></p>
+                          <p className="before:content-['•'] screen-sm:text-[.85rem] screen-sm:mt-1 before:text-[12px] before:ml-[4px] before:mr-[4px] -mt-1 before:dark:text-gray-50 before:dark:text-opacity-30"></p>
                           <Tooltip
                             title={formatDate(space.createdAt).format(
                               "MMMM Do YYYY, h:mm:ss a"
@@ -415,7 +415,7 @@ const SpaceView = ({
                             }}
                             color="gray"
                           >
-                            <p className="text-sm text-dimGray hover:underline">
+                            <p className="text-sm text-dimGray hover:underline screen-sm:text-[.85rem] screen-sm:mt-1">
                               {formatDate(space.createdAt).startOf("h")}
                             </p>
                           </Tooltip>
@@ -478,7 +478,7 @@ const SpaceView = ({
                       </div>
                     </div>
                   </div>
-                  <div className="post_feed_contents mt-2 leading-[19px]">
+                  <div className="post_feed_contents mt-1 leading-[19px]">
                     <div className="post_contents w-full">
                       <div className="post_text">
                         <ToJSX text={space.text} />
@@ -557,7 +557,7 @@ const SpaceView = ({
                         </div>
                       )}
                     </div>
-                    <div className="post_user_actions mt-3 pb-1 max-w-[80%]">
+                    <div className="post_user_actions mt-1 -ml-1 pb-1 max-w-[80%]">
                       <div className="flex justify-between items-center">
                         <Tooltip
                           title={`${isLiked(space.likes, currentUser) ? "Unlike" : "Like"
@@ -758,7 +758,7 @@ const SpaceView = ({
                                     )[0].userName
                                       }`}
                                   >
-                                    <a className="font-semibold feed_user_profile_name">
+                                    <a className="font-semibold feed_user_profile_name screen-sm:text-[.85rem]">
                                       {
                                         users.filter(
                                           (u) => u.uid === reply.userId
@@ -793,7 +793,7 @@ const SpaceView = ({
                                 />
                               </div>
                             </div>
-                            <div className="profile_username_post_timestamp flex items-center">
+                            <div className="profile_username_post_timestamp flex items-center -mt-1">
                               <div className="profile_username whitespace-nowrap max-w-[16rem] text-ellipsis overflow-hidden">
                                 <Link
                                   href={`/${users.filter(
@@ -801,7 +801,7 @@ const SpaceView = ({
                                   )[0].userName
                                     }`}
                                 >
-                                  <a className="text-sm text-dimGray dark:text-darkText">
+                                  <a className="text-sm text-dimGray dark:text-darkText screen-sm:text-[.85rem]">
                                     @
                                     {
                                       users.filter(
@@ -811,7 +811,7 @@ const SpaceView = ({
                                   </a>
                                 </Link>
                               </div>
-                              <p className="before:content-['•'] before:text-[12px] before:ml-[4px] before:mr-[4px] -mt-1 before:dark:text-gray-50 before:dark:text-opacity-30"></p>
+                              <p className="before:content-['•'] screen-sm:text-[.85rem] screen-sm:mt-1 before:text-[12px] before:ml-[4px] before:mr-[4px] -mt-1 before:dark:text-gray-50 before:dark:text-opacity-30"></p>
                               <Tooltip
                                 title={formatDate(reply.createdAt).format(
                                   "MMMM Do YYYY, h:mm:ss a"
@@ -833,7 +833,7 @@ const SpaceView = ({
                                 }}
                                 color="gray"
                               >
-                                <p className="text-sm text-dimGray hover:underline">
+                                <p className="text-sm text-dimGray hover:underline screen-sm:text-[.85rem] screen-sm:mt-1">
                                   {formatDate(reply.createdAt).startOf("h")}
                                 </p>
                               </Tooltip>
@@ -897,7 +897,7 @@ const SpaceView = ({
                         </div>
                       </div>
 
-                      <div className="post_feed_contents mt-2 leading-[19px]">
+                      <div className="post_feed_contents mt-1 leading-[19px]">
                         <div className="post_contents w-full">
                           <div className="post_text">
                             <ToJSX text={reply.text} />
@@ -976,7 +976,7 @@ const SpaceView = ({
                             </div>
                           )}
                         </div>
-                        <div className="post_user_actions mt-3 pb-1 max-w-[80%]">
+                        <div className="post_user_actions mt-2 -ml-1 pb-1 max-w-[80%]">
                           <div className="flex justify-between items-center">
                             <Tooltip
                               title={`${isLiked(reply.likes, currentUser) ? "Unlike" : "Like"

@@ -61,9 +61,9 @@ const Layout = ({ path, content_one, content_two }: any) => {
         }
     })
     return (
-        <div className='layout_main dark:bg-darkMode '>
+        <div className='layout_main dark:bg-darkMode'>
             <div className='layout_main_contents main_container max-w-[1200px] ml-auto mr-auto flex justify-between'>
-                <div className='layout_sidebar fixed w-[210px] top-0 z-40 h-full bg-white dark:bg-darkMode'>
+                <div className='layout_sidebar border-t border-t-gray-100  dark:border-borderDarkMode fixed w-[210px] bottom-0 z-40 h-full bg-white dark:bg-darkMode'>
                     <Sidebar path={path} />
                 </div>
                 <main className='layout_contents_main relative left-[210px]'

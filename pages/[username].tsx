@@ -28,8 +28,6 @@ import Image from 'next/image'
 const UserProfile = ({ username, user, currentUser }: { username: User['userName'], user: User | null, currentUser: User | null }) => {
     const [showImageModal, setShowImageModal] = useState(false)
     const ifUserisCurrentUser = currentUser && currentUser.userName === username
-    console.log();
-    
     const tabs = [ {
             id: 0,
             name: 'Spaces',
@@ -46,7 +44,7 @@ const UserProfile = ({ username, user, currentUser }: { username: User['userName
             {user && (
                 <div className='user_profile_view_contents'>
                     <div className="image_full_banner_container">
-                        <div className="image_full_banner top relative h-[200px] w-full">
+                        <div className="image_full_banner top relative h-[200px] screen-sm:h-[150px] w-full">
                             {
                                 user.bannerImage ? (
                                     <div className='relative'
@@ -63,12 +61,12 @@ const UserProfile = ({ username, user, currentUser }: { username: User['userName
                                     </div>
                                 )
                                     : (
-                                        <div className='bg-[rgb(207,217,222)] dark:bg-[rgba(66,83,100,0.69)] max-h-[200px] h-[200px]'>
+                                        <div className='bg-[rgb(207,217,222)] dark:bg-[rgba(66,83,100,0.69)] h-[200px] screen-sm:h-[150px]'>
                                         </div>
                                     )
                             }
                             <div className="image-full_banner-inner p-2">
-                                <div className='absolute -bottom-14 z-20'>
+                                <div className='absolute -bottom-14  z-20'>
                                     {
                                         user.profileImage ? (
                                             <div className='w-32 h-32 screen-sm:w-24 screen-sm:h-24 rounded-full cursor-pointer '
@@ -110,8 +108,8 @@ const UserProfile = ({ username, user, currentUser }: { username: User['userName
                                     <div className="flex justify-between">
                                         <div></div>
                                         <div className="edit_profile_button">
-                                            <DefaultButton styles={'border border-gray-200 dark:border-gray-200/20 dark:bg-darkMode px-4 py-2 rounded-full text-black dark:text-white font-medium hover:bg-gray-300/70 dark:hover:bg-darkModeBg/60'}>
-                                                Edit Profile
+                                            <DefaultButton styles={'border border-gray-200 dark:border-gray-200/20 dark:bg-darkMode screen-sm:text-[.95rem] px-4 py-1 rounded-full text-black dark:text-white font-medium hover:bg-gray-300/70 dark:hover:bg-darkModeBg/60'}>
+                                                Edit profile
                                             </DefaultButton>
                                         </div>
                                     </div>
@@ -138,35 +136,35 @@ const UserProfile = ({ username, user, currentUser }: { username: User['userName
                     </div>
                     <div className="user_profile_feilds pt-4">
                         <div className="profile_displayName_userName pl-3">
-                            <p className="font-bold text-xl text-black dark:text-white">{user.displayName}</p>
-                            <p className="text-gray-600 dark dark:text-white/60">@{user.userName}</p>
+                            <p className="font-bold text-xl text-black dark:text-white screen-sm:text-[1.1rem]">{user.displayName}</p>
+                            <p className="text-dimGray -mt-1 dark:text-darkText">@{user.userName}</p>
                         </div>
-                        <div className="profile_bio_container mt-3 text-black/90 dark:text-white pl-3">
+                        <div className="profile_bio_container mt-3 screen-sm:text-[.90rem] text-black/90 dark:text-white pl-3">
                             <ToJSX text={user.bio} />
                         </div>
-                        <div className="joined_date mt-3 pl-3">
-                            <div className="flex items-center space-x-1">
-                                <Icon type="calendar" styles={'text-black dark:text-white/60'} width="20" height='20' />
-                                <p className="text-black dark:text-white/60">Joined {moment(user.createdAt).format('MMMM YYYY')}</p>
+                        <div className="joined_date mt-1 pl-3">
+                            <div className="flex items-center space-x-1 screen-sm:text-[.90rem]">
+                                <Icon type="calendar" styles={'text-dimGray dark:text-darkText screen-sm:w-5'} width="20" height='20' />
+                                <p className="text-dimGray dark:text-darkText  screen-sm:mt-1">Joined {moment(user.createdAt).format('MMMM YYYY')}</p>
                             </div>
                         </div>
-                        <div className="user_following_followers mt-3 pl-3">
+                        <div className="user_following_followers mt-3 pl-3 screen-sm:text-[.90rem]">
                             <div className="flex space-x-3">
                                 <div className="flex items-center">
-                                    <p className="text-black dark:text-white font-bold">{countSet(user.followingsCount, true, 2).value} <span className='text-gray-600 dark:text-white/60 font-normal'>
+                                    <p className="text-black dark:text-white font-bold">{countSet(user.followingsCount, true, 2).value} <span className='text-dimGray dark:text-darkText font-normal'>
                                         Following
                                     </span>
                                     </p>
                                 </div>
                                 <div className="flex items-center">
-                                    <p className="text-black dark:text-white font-bold">{countSet(user.followersCount, true, 2).value} <span className='text-gray-600 dark:text-white/60 font-normal'>
+                                    <p className="text-black dark:text-white font-bold">{countSet(user.followersCount, true, 2).value} <span className='text-dimGray dark:text-darkText font-normal'>
                                         {user.followersCount === 1 || user.followersCount === 0 ? 'Follower' : 'Followers'}
                                     </span>
                                     </p>
                                 </div>
                             </div>
                         </div>
-                        <div className="tabs mt-6">
+                        <div className="tabs mt-4">
                             <Tabs tabs={tabs} tab={0} />
                         </div>
                     </div>
@@ -251,13 +249,13 @@ const ProfileView: NextPage = () => {
                             path="home"
                             content_one={
                                 <div className=''>
-                                    <div className="header_title_back  header_mobile pt-1 p-2 sticky top-0 mt-1 z-30 w-full bg-[rgba(255,255,255,0.85)] dark:bg-[rgba(26,26,26,0.7)] backdrop-blur-[12px]">
+                                    <div className="header_title_back  header_mobile pt-1 p-2 sticky top-0  z-30 w-full bg-[rgba(255,255,255,0.85)] dark:bg-[rgba(26,26,26,0.7)] backdrop-blur-[12px]">
                                         <div className="flex items-center space-x-3">
                                             <BackButtton onClick={() => {
                                                 router.push("/home");
                                             }} />
                                             <div className="diplay_name_sp_count">
-                                                <p className="text-[1.3rem] text-gray-700 font-bold dark:text-gray-100">
+                                                <p className="text-[1.3rem] screen-sm:text-[1rem] text-gray-700 font-bold dark:text-gray-100">
                                                     {user ? user.displayName : 'Profile'}
                                                 </p>
                                                 <p className="text-sm text-dimGray dark:text-gray-100">
@@ -269,8 +267,8 @@ const ProfileView: NextPage = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="mt-[4.5rem]">
-                                    <UserProfile username={username} user={user} currentUser={currentUser} />
+                                    <div className="screen-sm:mt-[3rem]">
+                                         <UserProfile username={username} user={user} currentUser={currentUser} />
                                     </div>
                                 </div>
                             }
@@ -292,13 +290,13 @@ const ProfileView: NextPage = () => {
                             path="home"
                             content_one={
                                 <div className='bg-white dark:bg-darkMode h-screen border border-gray-100  dark:border-borderDarkMode screen-sm:w-full'>
-                                    <div className="header_title_back pt-1 p-2 sticky top-0 mt-1 z-30 w-full bg-[rgba(255,255,255,0.85)] dark:bg-[rgba(26,26,26,0.7)] backdrop-blur-[12px]">
+                                    <div className="header_title_back pt-1 p-2 sticky top-0 z-30 w-full bg-[rgba(255,255,255,0.85)] dark:bg-[rgba(26,26,26,0.7)] backdrop-blur-[12px]">
                                         <div className="flex items-center space-x-3">
                                             <BackButtton onClick={() => {
                                                 router.push("/home");
                                             }} />
                                             <div className="diplay_name_sp_count">
-                                                <p className="text-[1.3rem] text-gray-700 font-bold dark:text-gray-100">
+                                                <p className="text-[1.3rem] screen-sm:text-[1rem] text-gray-700 font-bold dark:text-gray-100">
                                                     {user ? user.displayName : 'Profile'}
                                                 </p>
                                                 <p className="text-sm text-dimGray dark:text-gray-100">
