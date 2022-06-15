@@ -320,7 +320,7 @@ const FeedProfile = () => {
       {
         users.length > 0 && spaces.length > 0 ?
           <div
-            className="feedprofile_container relative mt-2 "
+            className="feedprofile_container relative mt-2 pb-10"
             id="feed_main_container"
           >
             <div>
